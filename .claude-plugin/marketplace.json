@@ -1,0 +1,21 @@
+{
+  "name": "session-kit-marketplace",
+  "owner": {
+    "name": "amattn"
+  },
+  "metadata": {
+    "description": "A suite of Claude Code skill plugins for making AI-assisted development sessions reliable and productive across time.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "session-kit",
+      "source": "./",
+      "description": "A suite of Claude Code skill plugins for making AI-assisted development sessions reliable and productive across time.",
+      "version": "0.1.0",
+      "keywords": ["session", "notes", "feedback", "dictation", "discipline", "patterns", "labels", "bootstrap", "multi-session", "productivity"],
+      "category": "productivity",
+      "skills": "./skills/"
+    }
+  ]
+}
