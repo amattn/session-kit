@@ -88,6 +88,23 @@ Renamed from `/label` (EX_7). The skill is more than labels — it's a system fo
 
 **Description pushiness:** per skill-creator best practices, description includes proactive triggers — fresh session with no canary, compaction detected mid-conversation, project with directive files but no loading structure.
 
+### /stable-label design decisions (2026-03-14)
+
+**Convention:**
+- Three-letter prefixes default (`XXX_N`), two-letter acceptable when unambiguous
+- Underscore separator — greppable + double-click selectable
+- Append-only, never renumber, never reuse
+
+**Prefix table location:** convention rules (behavioral directives) go in AGENTS.md and/or CLAUDE.md; prefix table (living reference data) goes in NOTES.md under Taxonomy / Conventions. Split because rules are directives, the table is reference data.
+
+**Consistency passes:** defined as suggested approaches at different scales (Quick, Standard, Sweep, Structural), not rigid levels. Other skills can follow the guidelines independently — /stable-label doesn't police them.
+
+**ID Lifecycle:** five patterns — splitting, merging, deprecation, promotion, crosscutting. All follow the same principle: retired IDs always resolve to meaningful content. Light guidelines, not hard rules — agent judgment is sufficient in most cases.
+
+**Crosscutting:** when a concern spans multiple domains, each domain gets its own ID with domain-relevant content. Not duplicates — different facets. Cross-reference between them.
+
+**Filenames:** zero-padded IDs optional guidance. Tradeoffs: two conventions (padded vs unpadded) + padding width is a guess (breaks at 1000). Let users decide.
+
 ### /discipline folded into /warmup + /patterns (2026-03-14)
 
 Dropped /discipline as a standalone skill. Its responsibilities split across two existing skills:
