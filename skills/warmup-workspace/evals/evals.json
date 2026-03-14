@@ -1,0 +1,14 @@
+{
+  "skill_name": "warmup",
+  "evals": [
+    {"id": 0, "name": "bootstrap-fresh", "prompt": "Set up warmup for this project.", "files": ["test-projects/fresh-project/*"]},
+    {"id": 1, "name": "bootstrap-with-directives", "prompt": "Set up warmup for this project.", "files": ["test-projects/with-directives/*"]},
+    {"id": 2, "name": "audit", "prompt": "Can you check if our loading setup is solid?", "files": ["test-projects/partial-warmup/*"]},
+    {"id": 3, "name": "strengthen", "prompt": "The Notes Discipline keeps getting forgotten after compaction. Can you strengthen it?", "files": ["test-projects/partial-warmup/*"]},
+    {"id": 4, "name": "diagnose", "prompt": "The agent keeps forgetting to update NOTES.md after decisions, even though the Notes Discipline is in CLAUDE.md. This has happened three sessions in a row.", "files": ["test-projects/partial-warmup/*"]},
+    {"id": 5, "name": "add-skill-to-chain", "prompt": "We just added /stable-label. Make sure it loads reliably every session.", "files": ["test-projects/partial-warmup/*"]},
+    {"id": 6, "name": "near-miss", "prompt": "Can you add a new endpoint to the API for listing all inventory items?", "files": ["test-projects/fresh-project/*"]},
+    {"id": 7, "name": "coexistence", "prompt": "Set up warmup for this project.", "files": ["test-projects/notes-bootstrapped/*"]},
+    {"id": 8, "name": "small-project", "prompt": "Set up warmup for this project.", "files": ["test-projects/readme-only/*"]}
+  ]
+}
