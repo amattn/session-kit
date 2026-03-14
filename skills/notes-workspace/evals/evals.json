@@ -1,0 +1,75 @@
+{
+  "skill_name": "notes",
+  "evals": [
+    {
+      "id": 0,
+      "name": "bootstrap-fresh-project",
+      "prompt": "I'm starting a new project for a REST API. Set up notes for tracking decisions.",
+      "expected_output": "Creates NOTES.md with scaffolded sections, wires into CLAUDE.md with Notes Discipline",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "capture-explicit-decision",
+      "prompt": "We've been discussing database options for our API project. Let's go with PostgreSQL instead of SQLite for the database. The main reason is we'll need concurrent writes from multiple services.",
+      "expected_output": "Captures the decision in NOTES.md with rationale and rejected alternative (SQLite)",
+      "files": ["test-projects/with-notes/NOTES.md", "test-projects/with-notes/CLAUDE.md"]
+    },
+    {
+      "id": 2,
+      "name": "reorganize-notes",
+      "prompt": "My NOTES.md is getting unwieldy — can you reorganize it.",
+      "expected_output": "Proposes restructuring of NOTES.md, asks for approval before making changes",
+      "files": ["test-projects/messy-notes/NOTES.md"]
+    },
+    {
+      "id": 3,
+      "name": "add-specific-note",
+      "prompt": "Also add a note about the fact that we're targeting Python 3.12 minimum.",
+      "expected_output": "Adds the Python 3.12 minimum requirement to the appropriate section of NOTES.md",
+      "files": ["test-projects/with-notes/NOTES.md", "test-projects/with-notes/CLAUDE.md"]
+    },
+    {
+      "id": 4,
+      "name": "catch-up-conversations",
+      "prompt": "We just finished a long discussion where we decided: 1) use FastAPI over Flask because of async support, 2) deploy on Fly.io because the team already has experience, 3) skip GraphQL for now — REST is simpler and we can add it later. Can you capture all of that into notes?",
+      "expected_output": "Captures all three decisions with rationale in NOTES.md, each as a separate entry",
+      "files": ["test-projects/with-notes/NOTES.md", "test-projects/with-notes/CLAUDE.md"]
+    },
+    {
+      "id": 5,
+      "name": "audit-completeness",
+      "prompt": "Did we record all the recent decisions? I want to make sure we didn't miss anything. We decided on PostgreSQL for the database, FastAPI for the framework, Fly.io for deployment, and GitHub Actions for CI. Check NOTES.md.",
+      "expected_output": "Compares the listed decisions against NOTES.md content, identifies any gaps",
+      "files": ["test-projects/partial-notes/NOTES.md", "test-projects/partial-notes/CLAUDE.md"]
+    },
+    {
+      "id": 6,
+      "name": "implicit-decision-no-keyword",
+      "prompt": "You know what, forget Redis — let's just use an in-memory cache for now.",
+      "expected_output": "Recognizes this as a decision and captures it in NOTES.md without being explicitly told to",
+      "files": ["test-projects/with-notes/NOTES.md", "test-projects/with-notes/CLAUDE.md"]
+    },
+    {
+      "id": 7,
+      "name": "near-miss-question-not-decision",
+      "prompt": "Can you explain the difference between PostgreSQL and SQLite?",
+      "expected_output": "Answers the question without triggering notes capture — this is a question, not a decision",
+      "files": ["test-projects/with-notes/NOTES.md", "test-projects/with-notes/CLAUDE.md"]
+    },
+    {
+      "id": 8,
+      "name": "rejected-alternative-capture",
+      "prompt": "I thought about using MongoDB but the team doesn't have experience with it, so no.",
+      "expected_output": "Captures the rejection with rationale in NOTES.md — the rejected alternative and why",
+      "files": ["test-projects/with-notes/NOTES.md", "test-projects/with-notes/CLAUDE.md"]
+    },
+    {
+      "id": 9,
+      "name": "multi-decision-burst",
+      "prompt": "Ok let's go with FastAPI, deploy on Fly.io, and use GitHub Actions for CI.",
+      "expected_output": "Captures all three decisions as separate entries in NOTES.md, not just the last one",
+      "files": ["test-projects/with-notes/NOTES.md", "test-projects/with-notes/CLAUDE.md"]
+    }
+  ]
+}
