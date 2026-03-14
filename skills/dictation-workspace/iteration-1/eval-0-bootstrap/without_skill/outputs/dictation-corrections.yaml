@@ -1,0 +1,78 @@
+# Dictation Corrections for KubeFlux
+#
+# This file maps common speech-to-text misrecognitions to their correct
+# project-specific spellings. Use this as a reference when reviewing
+# dictated text, or integrate it into your editor/dictation tool.
+#
+# Format:
+#   misheard_phrase: correct_phrase
+
+# Project name
+cube flux: KubeFlux
+cube flocks: KubeFlux
+kube flocks: KubeFlux
+q flux: KubeFlux
+
+# Kubernetes terms
+kubernetes: Kubernetes
+Cooper Netties: Kubernetes
+cooper net ease: Kubernetes
+cube cuddle: kubectl
+cube control: kubectl
+cube CTL: kubectl
+kube cuddle: kubectl
+cube C T L: kubectl
+custom resource definition: CRD
+C R D: CRD
+flux stream: FluxStream
+flux dream: FluxStream
+
+# gRPC and Protocol Buffers
+G R P C: gRPC
+grpc: gRPC
+grip c: gRPC
+protocol buffers: Protocol Buffers
+proto buff: Protobuf
+proto buf: Protobuf
+proto buffs: Protobuf
+pro to buff: Protobuf
+
+# Components
+flux cuttle: fluxctl
+flux control: fluxctl
+flux C T L: fluxctl
+flux CTL: fluxctl
+flux operator: flux-operator
+flux ingest: flux-ingest
+flux in jest: flux-ingest
+flux query: flux-query
+flux queery: flux-query
+
+# Infrastructure
+envoy: Envoy
+on voy: Envoy
+sidecars: sidecars
+side cars: sidecars
+click house: ClickHouse
+click mouse: ClickHouse
+scilla DB: ScyllaDB
+scylla DB: ScyllaDB
+silla D B: ScyllaDB
+sky la DB: ScyllaDB
+
+# Tools
+helm: Helm
+tilt: Tilt
+graph Q L: GraphQL
+graph QL: GraphQL
+graph cool: GraphQL
+
+# Go / Development
+go lang: Go
+go 1.22: Go 1.22
+helm three: Helm 3
+helm 3: Helm 3
+make proto: make proto
+tilt up: tilt up
+flux cuttle apply: fluxctl apply
+flux control apply: fluxctl apply

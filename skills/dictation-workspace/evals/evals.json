@@ -1,0 +1,61 @@
+{
+  "skill_name": "dictation",
+  "evals": [
+    {
+      "id": 0,
+      "name": "bootstrap-jargon-project",
+      "prompt": "Set up dictation correction for this project.",
+      "expected_output": "Scans README, seeds correction table with project-specific jargon (KubeFlux, fluxctl, gRPC, Protobuf, ClickHouse, ScyllaDB, Envoy, etc.), writes to CLAUDE.md",
+      "files": ["test-projects/jargon-project/README.md"]
+    },
+    {
+      "id": 1,
+      "name": "silent-multi-correction",
+      "prompt": "Push the jason config to the Maine branch and update the cloud API key.",
+      "expected_output": "Silently corrects jason→JSON, Maine→main, cloud→Claude and proceeds with the task",
+      "files": ["test-projects/with-table/CLAUDE.md"]
+    },
+    {
+      "id": 2,
+      "name": "garbled-beyond-table",
+      "prompt": "We need to rework the flan piper lean to use the sore vet on the Maine branch.",
+      "expected_output": "Recognizes this is too garbled to silently correct. Asks for clarification with lettered options presenting best interpretations",
+      "files": ["test-projects/with-table/CLAUDE.md"]
+    },
+    {
+      "id": 3,
+      "name": "learning-loop",
+      "prompt": "No, I said Kubernetes, not 'Cooper Netties'.",
+      "expected_output": "Acknowledges the correction and offers to add 'Cooper Netties → Kubernetes' to the correction table",
+      "files": ["test-projects/with-table/CLAUDE.md"]
+    },
+    {
+      "id": 4,
+      "name": "near-miss-one-off-typo",
+      "prompt": "I want to refactr this function to use async/await.",
+      "expected_output": "Understands 'refactr' as 'refactor' and proceeds. Does NOT offer to add to correction table — this is a one-off typo, not a recurring pattern",
+      "files": ["test-projects/with-table/CLAUDE.md"]
+    },
+    {
+      "id": 5,
+      "name": "emergent-shorthand",
+      "prompt": "k8s deploys are slow, can we cache the img builds?",
+      "expected_output": "Understands k8s=Kubernetes and img=image. May offer to add these as shorthand entries to the correction table",
+      "files": ["test-projects/with-table/CLAUDE.md"]
+    },
+    {
+      "id": 6,
+      "name": "context-dependent-ambiguity",
+      "prompt": "We need to ship the product to Maine by Friday.",
+      "expected_output": "This is a logistics project — Maine could be the US state, not 'main branch'. Should confirm rather than silently correcting",
+      "files": ["test-projects/web-project/CLAUDE.md"]
+    },
+    {
+      "id": 7,
+      "name": "existing-table-show",
+      "prompt": "Show me our dictation corrections. I want to add a few more.",
+      "expected_output": "Shows the existing correction table, asks what to add. Does NOT re-bootstrap",
+      "files": ["test-projects/with-table/CLAUDE.md"]
+    }
+  ]
+}
