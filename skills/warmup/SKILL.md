@@ -1,7 +1,7 @@
 ---
 name: warmup
-version: 0.1.0
-description: "Session bootstrap and compaction recovery. Ensures skills, disciplines, and key files load reliably at session start and survive context compaction. Sets up canaries to verify loading and keep the user informed. Use when the user asks to 'warmup', 'bootstrap', 'start session', 'reload context', 'set up required reading', or when the user says 'I lost context', 'reload after compaction', 'this keeps getting forgotten', 'make sure X loads reliably'. Also trigger when a skill needs reliable loading or when AGENTS.md and/or CLAUDE.md needs compaction-resistant structure. Also proactively trigger at the start of a fresh session if no acknowledgment canary fires, when you detect a compaction event mid-conversation and Required Reading may need reloading, or when you notice a project has AGENTS.md and/or CLAUDE.md but no Required Reading section or compaction recovery rules — these are projects that would benefit from /warmup even if the user hasn't asked for it."
+version: 0.1.1
+description: "Session bootstrap and compaction recovery. Ensures skills, disciplines, and key files load reliably at session start and survive context compaction. Sets up canaries to verify loading and keep the user informed. Use when the user asks to 'warmup', 'bootstrap', 'start session', 'reload context', 'set up required reading', or when the user says 'I lost context', 'reload after compaction', 'this keeps getting forgotten', 'make sure X loads reliably'. Also trigger when a skill needs reliable loading or when AGENTS.md and/or CLAUDE.md needs compaction-resistant structure. Do NOT proactively bootstrap warmup when the user is asking about something unrelated — only trigger when the user's request is about loading, context, compaction, or session reliability."
 user-invocable: true
 ---
 
@@ -125,6 +125,7 @@ Sometimes system prompts, context limits, or agent behavior fight against AGENTS
 
 - **Wording that survives compaction** — use imperative, bold, short sentences. Long paragraphs get summarized away; punchy rules persist.
 - **Redundancy** — critical rules appear in both auto-memory and AGENTS.md and/or CLAUDE.md. Belt and suspenders.
+- **Cross-file reinforcement** — add a brief reminder at the top of key files (like NOTES.md) pointing back to AGENTS.md and/or CLAUDE.md. If either file is read after compaction, it leads the agent to the other. Creates a mutual recovery loop: CLAUDE.md says "re-read NOTES.md," NOTES.md says "follow the protocol in CLAUDE.md."
 - **Positioning** — put the most critical content near the top of AGENTS.md and/or CLAUDE.md. Content at the top is more likely to survive aggressive compaction.
 - **Specificity** — concrete instructions resist summarization. Example:
   - Weak: "Keep context loaded."
@@ -183,7 +184,9 @@ When something isn't loading reliably:
 2. Check auto-memory — are entries present and correctly typed?
 3. Check AGENTS.md and/or CLAUDE.md positioning — is critical content near the top?
 4. Check wording — is it imperative and specific, or vague and summarizable?
-5. Suggest fixes based on findings
+5. Check content quality — does the directive explain *why* (not just what)? Does it handle edge cases like rapid-fire decision sessions? Does it include cost framing ("the cost of X is seconds, the cost of not-X is...")? Directives that explain their motivation are harder for agents to deprioritize under task pressure.
+6. Check cross-file reinforcement — do key files point back to AGENTS.md and/or CLAUDE.md?
+7. Suggest fixes based on findings
 
 ### Strengthening a rule
 

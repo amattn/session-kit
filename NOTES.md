@@ -79,6 +79,22 @@ Ran 10 eval pairs (with-skill vs baseline) on /notes. Key findings:
 - Bootstrap now seeds Open Questions from project context (the with-skill bootstrap was emptier than baseline on this)
 - Bootstrap step 5 (CLAUDE.md discipline) marked as "the most important step"
 
+### /warmup eval findings and adjustments (2026-03-14)
+
+Ran 9 eval pairs on /warmup. Key findings:
+
+**Full layered infrastructure is the differentiator.** The baseline handles individual concepts (compaction recovery, required reading) but doesn't build the complete system (Required Reading + canaries + post-compaction rule + breadcrumbs + auto-memory guidance) as integrated infrastructure.
+
+**Eval 6 over-trigger.** The skill's proactive description caused it to bootstrap warmup on an unrelated "add an endpoint" request. Fixed by removing proactive bootstrap triggers and adding explicit "Do NOT proactively bootstrap when the user is asking about something unrelated."
+
+**Baseline innovations adopted:**
+- Cross-file reinforcement loop (eval 3 baseline): CLAUDE.md and NOTES.md point to each other, creating mutual recovery after compaction. Added as a /warmup tactic.
+- Content quality diagnosis (eval 4 baseline): checking wording motivation, edge case handling, and cost framing — not just infrastructure. Added to diagnostic checklist.
+
+**AGENTS.md creation is unique to the skill (eval 8).** Baseline never created AGENTS.md for cross-platform compatibility.
+
+**Baseline was surprisingly creative on strengthen/diagnose (evals 3-4).** The two-file reinforcement loop and content-specific diagnosis were insights the skill didn't produce. The skill was more systematic; the baseline was more creative. Both innovations now incorporated into the skill.
+
 ### /warmup design decisions (2026-03-14)
 
 **Scope:** /warmup uses every tactic available to make skills load reliably at session start and after compaction. It's not just a CLAUDE.md helper — it's the reliability layer.

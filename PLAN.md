@@ -28,9 +28,9 @@ Found the "Skills for Judgment, Code for Compliance" insight — prose disciplin
 
 ## Next Steps
 
-### 6. Eval: /warmup
+### 6. Eval: /warmup ✓
 
-Test bootstrap, compaction recovery, canary setup, and loading diagnostics. Harder to eval because the value is cross-session — hard to test in a single subagent run. Need to design evals that capture what can be tested in isolation.
+9 test pairs. Key finding: full layered infrastructure is the differentiator — baseline handles individual concepts but doesn't build the complete system. Fixed over-trigger on unrelated requests. Adopted two baseline innovations: cross-file reinforcement loop and content quality diagnosis.
 
 ### 7. Eval: /sharpen (hardest)
 

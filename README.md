@@ -57,6 +57,8 @@ AI agents don't reliably read project files at session start, and context compac
 
 Why it matters: every other skill in session-kit depends on the agent actually reading and following project directives. `/warmup` is what makes that reliable instead of aspirational.
 
+What it adds over baseline Claude: the baseline can set up individual pieces (compaction recovery, required reading) but doesn't build the complete layered system — Required Reading + canaries + post-compaction rule + breadcrumbs + auto-memory guidance + cross-platform AGENTS.md — as integrated infrastructure. The skill also provides a systematic diagnostic checklist and escalation ladder for when rules aren't being followed reliably.
+
 ### `/stable-label` — Greppable Stable References
 
 Gives every referenceable thing an append-only ID using the `XXX_N` convention (`REQ_3`, `DEC_14`). IDs never renumber, never get reused, and always resolve to exactly one definition. `grep REQ_3` returns the definition and every reference across the entire project.
