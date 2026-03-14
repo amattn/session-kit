@@ -69,7 +69,9 @@ What it adds over baseline Claude: convention enforcement is the biggest win —
 
 Replaces prose-heavy back-and-forth with structured codes. Numbered questions with lettered options, batch answer codes (`1A, 2B, 3ok`), and a standard review prompt with situational options plus a stable Recommendations/Ok tail. This is an always-on communication style, not just a tool you invoke.
 
-Why it matters: every decision point in AI-assisted work is a potential bottleneck. Open-ended questions ("what do you think?") force the user to do generative work. Structured options let them do evaluative work — picking from a list instead of inventing from scratch. The speed gain compounds across hundreds of decisions per session.
+Why it matters: every decision point in AI-assisted work is a potential bottleneck. Open-ended questions ("what do you think?") force the user to do generative work. Structured options let them do evaluative work — picking from a list instead of inventing from scratch. The speed gain compounds across hundreds of decisions per session and hundreds of sessions per project.
+
+What it adds over baseline Claude: behavioral activation. Claude already *knows* these interaction patterns, but doesn't consistently *use* them — even when conventions are written in CLAUDE.md. The skill provides the activation energy to apply structured options to every decision point, use the review prompt for approvals, and avoid open-ended questions. The patterns themselves aren't novel; the consistent application is.
 
 ### `/dictation` — Correction Table
 

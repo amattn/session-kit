@@ -176,6 +176,23 @@ Ran 8 eval pairs on /dictation. Key findings:
 
 **Silent correction with a safety valve:** Most corrections applied silently. But when a correction changes meaning in a way that affects the action taken (e.g., "Maine" → "main"), briefly confirm.
 
+### /fast-chat eval findings (2026-03-14)
+
+Ran 8 eval pairs on /fast-chat. Key findings:
+
+**Behavioral activation is the primary value.** The baseline had identical CLAUDE.md conventions but didn't follow them (evals 4, 5). The skill makes Claude *act* on the patterns, not just know about them. This suggests the skill's value isn't the patterns themselves (Claude knows them) — it's the activation energy to consistently apply them.
+
+**Strongest differentiators:**
+- Single question → letters only + stable tail (eval 4): skill structured, baseline answered in prose
+- Open-ended avoidance (eval 5): skill used NL-style clarifying options, baseline asked open-ended questions despite CLAUDE.md saying not to
+- Review prompt structure (eval 3): skill used situational + stable tail, baseline gave suggestions without structure
+
+**Eval limitation: eval 6 (informational over-trigger).** The with-skill agent appended a review prompt to a pure informational answer ("explain how FastAPI handles async"). This has never been observed in actual usage — likely an artifact of single-turn eval stripping conversational context. In real sessions, the agent has enough context to know when a review prompt is appropriate. Noted under Things to Monitor rather than adjusted in the skill.
+
+**Compounding value.** The per-interaction savings from structured options over prose are small — seconds per decision. But across hundreds of decisions per session and hundreds of sessions per project, those seconds compound tremendously. The skill's value isn't visible in a single eval; it's in the cumulative time saved across the project's lifetime.
+
+**Non-discriminating when conventions exist:** When CLAUDE.md already had interaction conventions (evals 1, 2, 7), both with-skill and baseline followed them. The skill's bootstrap value is in creating those conventions; once they exist, the gap narrows.
+
 ### /fast-chat design decisions (2026-03-14)
 
 **Standard review prompt structure:** The review prompt has two parts — a variable number of situational options (could be 2, 3, 4, whatever fits) adapted to context, followed by a stable tail (Recommendations + Ok) that appears in nearly every review. The situational options default to Add/Change/Remove for artifact reviews, but the count and content change per situation. The stable tail is always the last two letters, regardless of how many situational options precede them.
@@ -279,7 +296,9 @@ Individual skills (like /notes) create their own discipline during bootstrap, pr
 
 ## Things to Monitor
 
-*(None yet)*
+- **Fast-chat review prompt on informational answers** — eval 6 showed the skill appending a review prompt to a pure explanation. Not seen in real usage (likely eval artifact from single-turn context stripping). If this appears in actual multi-session usage, add "don't append review prompts to informational answers" guidance to the skill.
+- **Stable-label token savings hypothesis** — IDs should save tokens in downstream usage (grep `REQ_3` vs restating full requirements). Unconfirmed — single evals can't measure cumulative cross-session savings. Monitor in real multi-session projects.
+- **/sharpen adoption of the name** — "sharpen" may not be intuitive for users who think in terms of "feedback" or "meta-feedback." Monitor whether the description triggers correctly for those mental models.
 
 ---
 

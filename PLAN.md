@@ -2,36 +2,44 @@
 
 ## Current Status
 
-All 6 skills implemented: `/notes`, `/warmup`, `/stable-label`, `/fast-chat`, `/dictation`, `/sharpen`. First eval pass completed on `/notes` — findings applied.
+All 6 skills implemented. Evals completed and findings applied for 4 of 6 skills: `/notes`, `/dictation`, `/stable-label`, `/fast-chat`.
+
+## Completed
+
+### 1. Re-evaluate EXTRACTABLE.md ✓
+
+Found the "Skills for Judgment, Code for Compliance" insight — prose disciplines drift, supplement with tooling when needed. Applied to /sharpen.
+
+### 2. Eval: /notes ✓
+
+10 test pairs. Key finding: CLAUDE.md discipline block is the killer feature. Adjustments: "quote the user, paraphrase everything else," bootstrap seeds Open Questions as an offer. Value-add sections moved from skills to README.
+
+### 3. Eval: /dictation ✓
+
+8 test pairs. Key finding: structured disambiguation is the main differentiator. Bootstrap format (CLAUDE.md with breadcrumb) matters. Adjustments applied.
+
+### 4. Eval: /stable-label ✓
+
+15 test pairs (11 + 4 lifecycle). Key findings: convention enforcement is the biggest win, lifecycle operations (split, merge, promote, crosscut) are the strongest differentiator. Added read/analyze vs create/modify heuristic for when NOT to assign IDs.
+
+### 5. Eval: /fast-chat ✓
+
+8 test pairs. Key finding: behavioral activation is the primary value — Claude knows the patterns but doesn't consistently use them without the skill. Eval 6 over-trigger noted as eval artifact, added to Things to Monitor.
 
 ## Next Steps
 
-### 1. Re-evaluate EXTRACTABLE.md
+### 6. Eval: /warmup
 
-Review `../plet-skills/EXTRACTABLE.md` with fresh eyes now that all 6 skills are built. The original extractable list was written before implementation — some patterns may have shifted, new patterns may have emerged during the build, and the sparkboard reference implementation may suggest gaps or overlaps we didn't see before.
+Test bootstrap, compaction recovery, canary setup, and loading diagnostics. Harder to eval because the value is cross-session — hard to test in a single subagent run. Need to design evals that capture what can be tested in isolation.
 
-**Goal:** Identify anything we missed, anything that should change, and confirm the current skill set is complete.
+### 7. Eval: /sharpen (hardest)
 
-### 2. Eval: /dictation (easiest)
+Test pattern detection, observation tracking (SHARPEN.md lifecycle), discipline creation, and the routing model (NOTES.md as intake → SHARPEN.md for tracking → CLAUDE.md for enforcement). Hardest because always-on detection is inherently multi-turn.
 
-Run evals on `/dictation`. Test bootstrap (correction table seeding), silent correction application, disambiguation behavior, and the learning loop (offering to add new corrections). Smallest skill, most straightforward behavior.
+### 8. Description optimization
 
-### 3. Eval: /stable-label
+After all evals complete, run the skill-creator trigger optimization loop on each skill's description to improve triggering accuracy.
 
-Run evals on `/stable-label`. Test bootstrap (prefix table creation), ID assignment, consistency passes, and lifecycle operations (split, merge, deprecation).
+### 9. Publish
 
-### 4. Eval: /fast-chat
-
-Run evals on `/fast-chat`. Test NL/NLR formatting, batch answer parsing, review prompt generation, and the always-on communication style (does it adopt the patterns without being asked?). The always-on behavior makes this trickier to eval than the explicitly-invoked skills.
-
-### 5. Eval: /warmup
-
-Run evals on `/warmup`. Test bootstrap, compaction recovery, canary setup, and loading diagnostics. Compare with-skill vs baseline. Harder to eval because the value is cross-session — hard to test in a single subagent run.
-
-### 6. Eval: /sharpen (hardest)
-
-Run evals on `/sharpen`. Test pattern detection (does it notice things?), observation tracking (SHARPEN.md lifecycle), discipline creation, and the routing model (NOTES.md as intake → SHARPEN.md for tracking → CLAUDE.md for enforcement). Hardest because the always-on detection is the core value and it's inherently multi-turn.
-
-### 7. Apply eval findings
-
-After all evals complete, apply findings to each skill (as done with /notes). May include description optimization via skill-creator's trigger optimization loop.
+Push to GitHub, set up marketplace listing.
