@@ -1,6 +1,6 @@
 ---
 name: notes
-version: 0.1.0
+version: 0.1.1
 description: "Maintain living development notes as institutional memory. Use when the user asks to 'notes', 'start notes', 'update notes', 'capture this decision', 'note this', 'add to notes', 'reorganize notes', or 'bootstrap notes'. Also trigger when a decision is made that should be recorded, when the user asks about past decisions, or when NOTES.md needs reorganization. Maintains a NOTES.md file that captures the why behind project decisions — rationale, rejected alternatives, user insights, invariants, and conventions."
 user-invocable: true
 ---
@@ -19,6 +19,18 @@ Maintain institutional memory across multi-session AI-assisted development. NOTE
 
 ---
 
+## Where /notes Adds Value
+
+Claude is already good at capturing decisions and updating files when asked. /notes' value isn't in those basics — it's in the infrastructure that makes notes *durable* across sessions:
+
+- **The CLAUDE.md discipline block** — this is the killer feature. Without it, note-taking behavior doesn't persist to the next session. The discipline block is what turns NOTES.md from "a file the agent might update" into "a system the agent is required to maintain."
+- **Consistent structure** — the suggested sections give every project the same shape, so agents and humans know where to look without learning a new layout each time.
+- **User quotes** — the skill consistently preserves the user's exact words, which resists paraphrasing drift that accumulates across sessions.
+
+The single-session tasks (add a note, capture a decision, answer a question) will often look similar with or without the skill. The differentiation is in setup and durability.
+
+---
+
 ## Bootstrap
 
 When invoked on a project with no NOTES.md:
@@ -26,8 +38,8 @@ When invoked on a project with no NOTES.md:
 1. **Create NOTES.md** with a Project Context section filled in from available context (CLAUDE.md, README, repo structure, git history)
 2. **Add suggested section headers** as scaffolding (see § Suggested Starting Sections) — empty sections are fine
 3. **Reference from CLAUDE.md** — add NOTES.md as a key file so every session loads it
-4. **Add Notes Discipline to CLAUDE.md** — add the discipline block so it's enforced every session (see § Notes Discipline for CLAUDE.md)
-5. **Inform the user** — explain what was created and how the Notes Discipline works
+4. **Add Notes Discipline to CLAUDE.md** — add the discipline block so it's enforced every session (see § Notes Discipline for CLAUDE.md). This is the most important step — without it, the note-taking behavior doesn't survive to the next session.
+5. **Inform the user** — explain what was created and how the Notes Discipline works. Offer to seed Open Questions by scanning the project for obvious unresolved topics (from README, existing issues, conversation context). An empty Open Questions section is a missed opportunity — even a few seeded questions give the user something to react to. But let the user decide whether to do this now or later.
 
 ---
 
@@ -58,7 +70,7 @@ These rules are the core of the skill. They make NOTES.md trustworthy.
 1. **Update immediately.** When a decision is made, update NOTES.md before moving on. Don't batch updates. "I'll catch up later" always fails — decisions accumulate faster than memory.
 2. **Decisions are permanent until revisited.** A decision in NOTES.md is settled. Don't re-litigate without the user raising it.
 3. **Capture rejected alternatives.** The "why not" is as valuable as the "why." Prevents future sessions from suggesting the same rejected approach.
-4. **Quote the user.** When the user expresses a principle or preference, capture it in their words. Paraphrasing loses nuance.
+4. **Quote the user, paraphrase everything else.** When the user expresses a principle or preference, capture it in their exact words — quotes resist drift across sessions, preserve tone and emphasis, and give the user ownership over the notes. Paraphrase freely for everything else: agent reasoning, conversation context, rationale analysis, rejected alternatives. The user's voice should stand out from the surrounding summary.
 5. **Keep it scannable.** Use headers, bold, bullet points. A fresh agent should be able to scan NOTES.md in seconds and know what's settled.
 6. **Reference from CLAUDE.md.** NOTES.md only works if it's loaded into every session. Add it as a key file in CLAUDE.md.
 7. **Cascade awareness.** Decisions captured in NOTES.md may need to propagate to other project artifacts. CLAUDE.md or other directive files may define project-specific cascading instructions. After capturing a decision, check whether it affects other artifacts.

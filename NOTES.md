@@ -63,6 +63,22 @@ Renamed from `/label` (EX_7). The skill is more than labels — it's a system fo
 - **Rejected:** `/ref_ids` — too specific, underscore in command name unusual
 - **Chosen:** `/stable-label` — self-documenting ("the labels are stable"), memorable rhyme is a feature not a bug. User: "i love that b rhymes, makes it memorable"
 
+### /notes eval findings and adjustments (2026-03-14)
+
+Ran 10 eval pairs (with-skill vs baseline) on /notes. Key findings:
+
+**Biggest differentiator:** Bootstrap — CLAUDE.md + discipline block is the killer feature. The baseline creates a reasonable NOTES.md but nothing persists the behavior to future sessions.
+
+**Second differentiator:** User quotes. The skill consistently captures the user's exact words; the baseline paraphrases. User preference: quote the user, paraphrase everything else (agent reasoning, conversation context, rationale, rejected alternatives).
+
+**Non-discriminating tests:** Add-a-note, implicit decisions, near-miss questions, and multi-decision bursts all performed similarly with and without the skill. Claude is already good at these — the skill doesn't need to over-specify them.
+
+**Adjustments made:**
+- Added "Where /notes Adds Value" section — focuses the skill on its unique value (discipline, structure, quotes) rather than things Claude handles well natively
+- Strengthened quote guidance: "Quote the user, paraphrase everything else" — user's voice should stand out from surrounding summary
+- Bootstrap now seeds Open Questions from project context (the with-skill bootstrap was emptier than baseline on this)
+- Bootstrap step 5 (CLAUDE.md discipline) marked as "the most important step"
+
 ### /warmup design decisions (2026-03-14)
 
 **Scope:** /warmup uses every tactic available to make skills load reliably at session start and after compaction. It's not just a CLAUDE.md helper — it's the reliability layer.
