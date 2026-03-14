@@ -88,6 +88,18 @@ Renamed from `/label` (EX_7). The skill is more than labels — it's a system fo
 
 **Description pushiness:** per skill-creator best practices, description includes proactive triggers — fresh session with no canary, compaction detected mid-conversation, project with directive files but no loading structure.
 
+### /discipline folded into /warmup + /patterns (2026-03-14)
+
+Dropped /discipline as a standalone skill. Its responsibilities split across two existing skills:
+
+- **/warmup** gets the **format and enforcement** — discipline block structure (scannable, enforceable, composable), writing blocks into AGENTS.md and/or CLAUDE.md, loading and verifying via Required Reading and canaries
+- **/patterns** gets the **detection and creation** — recognizing "this workflow should be a discipline," helping users express informal habits as named disciplines, the meta-pattern of identifying what needs formalization
+
+Individual skills (like /notes) create their own discipline during bootstrap, proving no separate /discipline skill is needed.
+
+- **Rejected:** standalone /discipline skill — too much overlap with /warmup (format, enforcement) and /patterns (detection)
+- **Chosen:** split across /warmup (infrastructure) and /patterns (recognition)
+
 ---
 
 ## Invariants & Critical Requirements
@@ -119,7 +131,7 @@ Renamed from `/label` (EX_7). The skill is more than labels — it's a system fo
 | 4 | /dictation | Confirmed | EX_3 |
 | 5 | /warmup | Confirmed | EX_5 |
 | 6 | /patterns | Confirmed | EX_4 |
-| 7 | /discipline | Confirmed | EX_6 |
+| 7 | ~~/discipline~~ | Folded into /patterns | EX_6 |
 | 8 | /stable-label | Confirmed | EX_7 |
 
 ---
