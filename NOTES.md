@@ -105,6 +105,14 @@ Renamed from `/label` (EX_7). The skill is more than labels — it's a system fo
 
 **Filenames:** zero-padded IDs optional guidance. Tradeoffs: two conventions (padded vs unpadded) + padding width is a guess (breaks at 1000). Let users decide.
 
+### /dictation design decisions (2026-03-14)
+
+**Scope broader than the name:** /dictation covers voice-to-text errors (primary use case), recurring typos, and emergent shorthand (like "1b1" for one-by-one). Kept the name because voice input is still the core value — the broader scope is noted in the intro and README rather than reflected in the name.
+
+**Seed table focus:** Bootstrap should emphasize project-specific jargon over common tech terms. JSON/API/CLI are usually recoverable without a table — the value is in project names, internal tools, and compound terms voice engines split.
+
+**Silent correction with a safety valve:** Most corrections applied silently. But when a correction changes meaning in a way that affects the action taken (e.g., "Maine" → "main"), briefly confirm.
+
 ### /fast-chat design decisions (2026-03-14)
 
 **Standard review prompt structure:** The review prompt has two parts — a variable number of situational options (could be 2, 3, 4, whatever fits) adapted to context, followed by a stable tail (Recommendations + Ok) that appears in nearly every review. The situational options default to Add/Change/Remove for artifact reviews, but the count and content change per situation. The stable tail is always the last two letters, regardless of how many situational options precede them.
@@ -155,7 +163,7 @@ Individual skills (like /notes) create their own discipline during bootstrap, pr
 | 1 | /notes | Confirmed | Existing |
 | 2 | /fast-chat | **Implemented** | EX_1 |
 | 3 | /sharpen | Confirmed | EX_2 |
-| 4 | /dictation | Confirmed | EX_3 |
+| 4 | /dictation | **Implemented** | EX_3 |
 | 5 | /warmup | Confirmed | EX_5 |
 | 6 | /patterns | Confirmed | EX_4 |
 | 7 | ~~/discipline~~ | Folded into /patterns | EX_6 |
