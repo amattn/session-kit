@@ -12,7 +12,7 @@ session-kit is a suite of Claude Code skill plugins for making AI-assisted devel
 
 ### Suite scope and skill roster (2026-03-13)
 
-All 7 extractable skills from plet-skills EXTRACTABLE.md will be included in session-kit, plus the existing `/notes` skill (8 total). Scaffolding first, then skills added incrementally.
+Originally planned 7 extractable skills plus `/notes` (8 total). After merging /patterns into /sharpen and folding /discipline into /warmup + /sharpen, final count is 6 skills.
 
 ### Skill naming philosophy: nouns for systems, verbs for actions (2026-03-13)
 
@@ -123,13 +123,17 @@ Renamed from `/label` (EX_7). The skill is more than labels — it's a system fo
 
 **Patterns are grouped, not counted:** Originally "10 patterns," reduced when "fenced code blocks" folded into NL as a formatting rule, and the review prompt was promoted to its own top-level section. The mechanics/principles grouping does the organizational work — the exact count doesn't matter.
 
+### /sharpen detection sources (2026-03-14)
+
+Detection sources are broader than just NOTES.md scanning. Five sources: conversation patterns (repeated corrections, consistent preferences), user interaction style (terse answers, shorthand, frustration signals), agent self-observation (own mistakes, inefficient workflows), project artifacts (git history, directive drift, code review comments), and cross-session signals (prior NOTES.md, recurring SHARPEN.md entries, stale auto-memory). NOTES.md remains the single intake *destination* for writing observations down, but these are the *inputs* that feed detection.
+
 ### /patterns merged into /sharpen (2026-03-14)
 
 Merged /patterns (EX_4) into /sharpen (EX_2). Both skills deal with process improvement — /patterns detects recurring patterns proactively, /sharpen tracks process observations with a resolution lifecycle. The user shouldn't have to choose between them when thinking "this process thing should be captured."
 
 **Merged skill features:**
 - Proactive detection ("I've seen this twice") — from /patterns
-- Resolution lifecycle (open → resolved → verified) — from /sharpen
+- Resolution lifecycle (open → resolved) — from /sharpen
 - Promotion paths (→ CLAUDE.md, → NOTES.md) — from both
 - Discipline creation ("express this as a named discipline") — from /patterns
 
@@ -176,14 +180,14 @@ Individual skills (like /notes) create their own discipline during bootstrap, pr
 
 | # | Current name | Status | Source |
 |---|-------------|--------|--------|
-| 1 | /notes | Confirmed | Existing |
+| 1 | /notes | **Implemented** | Existing |
 | 2 | /fast-chat | **Implemented** | EX_1 |
 | 3 | /sharpen | **Implemented** | EX_2 + EX_4 |
 | 4 | /dictation | **Implemented** | EX_3 |
-| 5 | /warmup | Confirmed | EX_5 |
+| 5 | /warmup | **Implemented** | EX_5 |
 | 6 | ~~/patterns~~ | Merged into /sharpen | EX_4 |
 | 7 | ~~/discipline~~ | Folded into /warmup + /sharpen | EX_6 |
-| 8 | /stable-label | Confirmed | EX_7 |
+| 8 | /stable-label | **Implemented** | EX_7 |
 
 ---
 

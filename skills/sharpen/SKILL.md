@@ -26,11 +26,20 @@ The core insight: if you've seen it twice, it's a pattern. If it's not written d
 
 Proactively notice what's not written down. This applies to everything: naming conventions, commit patterns, file organization, review workflows, testing strategies, communication preferences. The responsibility to notice and propose is the agent's — the human approves all changes.
 
+**Detection sources:**
+
+- **Conversation patterns** — the user repeatedly corrects the same behavior, always rejects a certain kind of suggestion, or consistently asks for something a specific way. These are conventions waiting to be written down.
+- **User interaction style** — how the user responds reveals preferences: terse answers, shorthand use, frustration with ceremony. These are /fast-chat or /dictation entries waiting to happen, or process observations worth capturing.
+- **Agent self-observation** — you notice you made the same mistake twice, or that a workflow you follow is inefficient. You're a source of observations too.
+- **Project artifacts** — git history reveals commit patterns, AGENTS.md and/or CLAUDE.md directives that aren't being followed reveal drift, code review comments reveal recurring concerns.
+- **Cross-session signals** — prior NOTES.md entries, existing SHARPEN.md entries that keep recurring after being resolved, auto-memory entries that feel stale or incomplete.
+
 **Detection triggers:**
 - You've done the same thing twice without it being documented
 - The user corrects your behavior — suggests a missing convention
 - You notice drift between what's documented and what's practiced
 - A workflow has recurring friction at the same point
+- A resolved SHARPEN.md entry keeps coming back — the fix didn't stick
 
 **When you detect something**, surface it immediately with a concrete proposal. Don't just observe — propose where to write it down and what to write. The user decides whether to accept.
 
@@ -124,7 +133,20 @@ When invoked on a project for the first time:
 
 1. **Check for existing process observations** — scan AGENTS.md and/or CLAUDE.md, NOTES.md, and conversation history for informal observations, corrections, or conventions that aren't written down.
 
-2. **Create SHARPEN.md** — initialize with any observations found during the scan. If none found, create an empty scaffold with Open/Resolved sections.
+2. **Create SHARPEN.md** — initialize with any observations found during the scan. If none found, create an empty scaffold. The scaffold should note its origin and purpose:
+
+   ```
+   # SHARPEN.md
+   <!-- managed by /sharpen -->
+
+   Process observations that need active lifecycle tracking. Observations
+   start in NOTES.md; promote here when they need monitoring across sessions.
+   See /sharpen for detection sources, routing, and discipline creation.
+
+   ## Open
+
+   ## Resolved
+   ```
 
 3. **Add self-improvement directive to AGENTS.md and/or CLAUDE.md** — a concise directive telling the agent to notice and surface patterns proactively. Mark with `<!-- managed by /sharpen -->`.
 
@@ -173,7 +195,7 @@ When an observation is ready to move:
 
 When detection fires, keep the suggestion lightweight. One or two sentences, a concrete proposal, and move on. Don't interrupt the user's flow with a ceremony.
 
-Good: "I've noticed we always run a consistency pass after renaming — want me to add that as a SHARPEN.md entry, or straight to a CLAUDE.md discipline?"
+Good: "I've noticed we always run a consistency pass after renaming — want me to note that in NOTES.md, or is it confirmed enough for a CLAUDE.md discipline?"
 
 Bad: "I have detected a potential process improvement opportunity. Let me create a detailed analysis of the pattern I've observed across multiple sessions..."
 
@@ -181,7 +203,7 @@ Bad: "I have detected a potential process improvement opportunity. Let me create
 
 ## What Does NOT Go in /sharpen
 
-- **Project decisions** — /sharpen tracks *process* observations; /notes captures *project* decisions. "We chose PostgreSQL" goes in /notes. "The agent keeps forgetting to check the migration" goes in /sharpen.
+- **Project decisions** — project decisions stay in NOTES.md. Process observations start in NOTES.md too, but get promoted to SHARPEN.md when they need lifecycle tracking. "We chose PostgreSQL" stays in /notes. "The agent keeps forgetting to check the migration" starts in /notes and gets promoted to SHARPEN.md if it needs active monitoring.
 - **Bug reports** — /sharpen is about process friction, not code defects. A bug is a code problem; a process observation is about how you work.
 - **Skill implementation** — /sharpen can identify that a skill's behavior is inconsistent, but the fix goes in the skill's SKILL.md, not in SHARPEN.md.
 - **Content for other artifacts** — /sharpen routes observations to the right place. It doesn't own the content once it arrives at NOTES.md or CLAUDE.md.

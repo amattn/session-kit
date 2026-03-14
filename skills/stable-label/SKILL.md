@@ -183,7 +183,7 @@ A consistency pass verifies that IDs are used correctly across the project — n
 
 ### When to suggest a pass
 
-Suggest a pass when you notice potential drift — a renamed item, a batch of new IDs, a deleted section that might leave orphaned references, or when another skill (like /patterns) flags ID inconsistencies. Match the approach to the scale of the change: targeted edits warrant a Quick check, broader changes warrant Standard or above.
+Suggest a pass when you notice potential drift — a renamed item, a batch of new IDs, a deleted section that might leave orphaned references, or when another skill (like /sharpen) flags ID inconsistencies. Match the approach to the scale of the change: targeted edits warrant a Quick check, broader changes warrant Standard or above.
 
 ---
 

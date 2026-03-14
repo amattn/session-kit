@@ -13,7 +13,7 @@ Extracted from patterns discovered during 500+ sessions of AI-assisted developme
 | `/stable-label` | Greppable stable references. Gives every referenceable thing an append-only ID (`REQ_3`, `DEC_14`) that never renumbers and always resolves to exactly one definition. |
 | `/fast-chat` | Structured interaction patterns. Numbered questions, lettered options, batch answer codes (`1A, 2B, 3 let's discuss pros/cons`). Always-on communication style that makes decisions faster. |
 | `/dictation` | Project-specific correction table. Originally designed for voice-to-text errors, but also useful for recurring typos and emergent shorthand — any systematic input pattern where the user means something other than what they literally typed. |
-| `/sharpen` | *(coming soon)* Process improvement — pattern detection, observation tracking, and discipline creation. Proactively notices recurring patterns, tracks process observations with a resolution lifecycle, and helps formalize workflows as named disciplines. |
+| `/sharpen` | Process improvement — pattern detection, observation tracking, and discipline creation. Proactively notices recurring patterns, tracks process observations with a resolution lifecycle, and helps formalize workflows as named disciplines. |
 
 ## Install
 
@@ -75,7 +75,7 @@ Why it matters: each uncorrected error costs a correction cycle — the user say
 
 ### `/sharpen` — Process Improvement
 
-*(Coming soon.)* The process improvement skill — combines pattern detection, observation tracking, and discipline creation into one place. Proactively notices recurring patterns ("I've seen this twice, should we write it down?"), tracks process observations with a resolution lifecycle (open → resolved → verified), and helps formalize important workflows as named disciplines.
+The process improvement skill — combines pattern detection, observation tracking, and discipline creation into one place. Proactively notices recurring patterns ("I've seen this twice, should we write it down?"), tracks process observations with a resolution lifecycle (open → resolved), and helps formalize important workflows as named disciplines.
 
 Why it matters: process improvements come from two directions — the agent notices patterns, and the user reports friction. Both need somewhere to go. Without `/sharpen`, observations get lost in conversation and patterns go unnoticed. With it, informal habits become named disciplines, friction becomes tracked observations, and the process gets sharper over time.
 
