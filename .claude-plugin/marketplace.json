@@ -13,7 +13,7 @@
       "source": "./",
       "description": "A suite of Claude Code skill plugins for making AI-assisted development sessions reliable and productive across time.",
       "version": "0.3.0",
-      "keywords": ["session", "notes", "feedback", "dictation", "discipline", "patterns", "labels", "bootstrap", "multi-session", "productivity"],
+      "keywords": ["session", "notes", "sharpen", "dictation", "labels", "bootstrap", "fast-chat", "multi-session", "productivity"],
       "category": "productivity",
       "skills": "./skills/"
     }

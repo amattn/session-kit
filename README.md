@@ -13,8 +13,7 @@ Extracted from patterns discovered during 500+ sessions of AI-assisted developme
 | `/stable-label` | Greppable stable references. Gives every referenceable thing an append-only ID (`REQ_3`, `DEC_14`) that never renumbers and always resolves to exactly one definition. |
 | `/fast-chat` | Structured interaction patterns. Numbered questions, lettered options, batch answer codes (`1A, 2B, 3 let's discuss pros/cons`). Always-on communication style that makes decisions faster. |
 | `/dictation` | Project-specific correction table. Originally designed for voice-to-text errors, but also useful for recurring typos and emergent shorthand — any systematic input pattern where the user means something other than what they literally typed. |
-| `/patterns` | *(coming soon)* Pattern detection and discipline creation. Recognizes recurring workflows worth formalizing and helps express them as named disciplines. |
-| `/sharpen` | *(coming soon)* Process meta-observations with resolution lifecycle. Tracks observations about process and tooling friction, with promotion paths to actionable changes. |
+| `/sharpen` | *(coming soon)* Process improvement — pattern detection, observation tracking, and discipline creation. Proactively notices recurring patterns, tracks process observations with a resolution lifecycle, and helps formalize workflows as named disciplines. |
 
 ## Install
 
@@ -74,17 +73,11 @@ Maintains a project-specific table for voice-to-text errors, recurring typos, an
 
 Why it matters: each uncorrected error costs a correction cycle — the user says it, the agent misunderstands, the user corrects, the agent apologizes. A correction table eliminates this for known patterns, and a learning loop captures new ones as they appear.
 
-### `/patterns` — Pattern Detection & Discipline Creation
+### `/sharpen` — Process Improvement
 
-*(Coming soon.)* Recognizes recurring workflows worth formalizing and helps express them as named disciplines — scannable, enforceable behavioral rule sets that make important practices reliable.
+*(Coming soon.)* The process improvement skill — combines pattern detection, observation tracking, and discipline creation into one place. Proactively notices recurring patterns ("I've seen this twice, should we write it down?"), tracks process observations with a resolution lifecycle (open → resolved → verified), and helps formalize important workflows as named disciplines.
 
-Why it matters: informal habits ("we always do X before Y") are invisible and fragile. Named disciplines make them visible, enforceable, and portable across sessions.
-
-### `/sharpen` — Process Meta-Observations
-
-*(Coming soon.)* Tracks meta-observations about process and tooling — things like "the agent keeps doing X wrong" or "this workflow has friction at step Y." Tagged entries with resolution lifecycle and promotion paths to actionable changes.
-
-Why it matters: process observations that don't have a home get lost in conversation. `/sharpen` gives them a place to live, a lifecycle to mature through, and a path to become concrete improvements.
+Why it matters: process improvements come from two directions — the agent notices patterns, and the user reports friction. Both need somewhere to go. Without `/sharpen`, observations get lost in conversation and patterns go unnoticed. With it, informal habits become named disciplines, friction becomes tracked observations, and the process gets sharper over time.
 
 ## How They Fit Together
 
@@ -104,11 +97,8 @@ Why it matters: process observations that don't have a home get lost in conversa
 /dictation       → removes input friction
                     (correction table for voice, typos, shorthand)
 
-/patterns        → detects workflows worth formalizing
-                    (turns habits into disciplines)
-
-/sharpen         → tracks process observations
-                    (friction → observation → improvement)
+/sharpen         → detects patterns, tracks observations, creates disciplines
+                    (process gets sharper over time)
 ```
 
 The skills are independent — install any subset. But they're designed to complement each other: `/warmup` ensures `/notes` loads every session, `/stable-label` gives `/notes` entries greppable IDs, `/fast-chat` speeds up the decisions `/notes` captures, and `/dictation` keeps voice input from garbling the whole conversation.
