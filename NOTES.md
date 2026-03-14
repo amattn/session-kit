@@ -63,6 +63,31 @@ Renamed from `/label` (EX_7). The skill is more than labels — it's a system fo
 - **Rejected:** `/ref_ids` — too specific, underscore in command name unusual
 - **Chosen:** `/stable-label` — self-documenting ("the labels are stable"), memorable rhyme is a feature not a bug. User: "i love that b rhymes, makes it memorable"
 
+### /warmup design decisions (2026-03-14)
+
+**Scope:** /warmup uses every tactic available to make skills load reliably at session start and after compaction. It's not just a CLAUDE.md helper — it's the reliability layer.
+
+**Three jobs:**
+1. Bootstrap CLAUDE.md with compaction-resistant wording, Required Reading, and discipline blocks
+2. Loading canaries — verification that files were actually consumed, not just referenced
+3. Reliability guidance — strategies for when system prompts or compaction fight CLAUDE.md directives
+
+**Tactics** (use whatever works):
+- CLAUDE.md wording and structure (discipline blocks, Required Reading sections)
+- Auto-memory entries for non-negotiable behaviors (strongest tactic — loads before CLAUDE.md)
+- Loading canaries for verification
+- Breadcrumbs in CLAUDE.md (e.g., `<!-- managed by /warmup -->`) so users know what /warmup created and can invoke it to add/edit more
+
+**Visibility model:**
+- At runtime: canaries and discipline blocks do the talking. No splash screen.
+- In CLAUDE.md: breadcrumbs marking /warmup-managed sections so users discover the skill organically.
+
+**Mid-session compaction role:** auditor, not executor. The Post-Compaction Rule handles re-reading files. /warmup checks whether the rule exists and was followed, flags issues, offers to strengthen. Does not re-read files itself.
+
+**Agent Harness Reference:** extracted to `references/harnesses.md` to keep SKILL.md lean and make the reference independently updatable. Covers Claude Code, Codex CLI, OpenCode, Cursor. Cross-platform strategy: AGENTS.md as single source of truth, strongly direct Claude Code to read it.
+
+**Description pushiness:** per skill-creator best practices, description includes proactive triggers — fresh session with no canary, compaction detected mid-conversation, project with directive files but no loading structure.
+
 ---
 
 ## Invariants & Critical Requirements
@@ -104,6 +129,7 @@ Renamed from `/label` (EX_7). The skill is more than labels — it's a system fo
 - ~~Suite name~~ → resolved: session-kit
 - ~~Skill 2 (/chatux) naming~~ → resolved: /fast-chat
 - ~~Skill 3 (/feedback) naming~~ → resolved: /sharpen (monitor adoption — name may not be intuitive for "feedback" mental model)
+- Opencode compatibility — skills should work with opencode as well as Claude Code. Need to investigate opencode's skill/plugin format and identify what (if anything) needs to differ.
 
 ---
 
