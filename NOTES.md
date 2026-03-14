@@ -121,6 +121,31 @@ Ran 10 eval pairs (with-skill vs baseline) on /notes. Key findings:
 
 **Filenames:** zero-padded IDs optional guidance. Tradeoffs: two conventions (padded vs unpadded) + padding width is a guess (breaks at 1000). Let users decide.
 
+### Value-add context belongs in README, not in skills (2026-03-14)
+
+After /notes and /dictation evals, we added "Where X Adds Value" sections to each skill describing what the skill does better than baseline Claude. Removed them after realizing two problems:
+
+1. **Dilution risk** — telling the agent "Claude already handles X well natively" could cause it to deprioritize the skill's instructions. The skill-creator explicitly warns about undertriggering; a preface that says "the baseline is fine" works against that.
+2. **Wrong audience** — eval findings are development insights for humans deciding whether to install, not behavioral instructions for the agent. Skills should confidently tell the agent what to do.
+
+**Chosen:** move value-add context to README per-skill descriptions ("What it adds over baseline Claude" paragraphs). Skills stay lean and confident. Eval findings stay in NOTES.md as institutional memory for future development.
+
+### /dictation eval findings and adjustments (2026-03-14)
+
+Ran 8 eval pairs on /dictation. Key findings:
+
+**Biggest differentiator:** Bootstrap format — skill puts the table in CLAUDE.md with breadcrumb. Baseline created a YAML file in an ad-hoc location. Format matters because CLAUDE.md is loaded every session.
+
+**Second differentiator:** Structured disambiguation. When input was garbled beyond the table (eval 2) or ambiguous in context (eval 6, "Maine" in a logistics project), the skill presented lettered options. Baseline guessed without asking.
+
+**"What Does NOT Go" works:** Eval 5 showed the skill correctly reasoning that k8s/img are abbreviations, not correction table entries. The boundary is load-bearing.
+
+**Non-discriminating tests:** Silent correction (eval 1), learning loop (eval 3), one-off typo (eval 4), and existing table (eval 7) performed similarly with and without the skill.
+
+**Adjustments made:**
+- Added "Where /dictation Adds Value" section — bootstrap format, structured disambiguation, boundary clarity
+- Pattern matches /notes eval: infrastructure and edge cases are the unique value, not single-shot behavior
+
 ### /dictation design decisions (2026-03-14)
 
 **Scope broader than the name:** /dictation covers voice-to-text errors (primary use case), recurring typos, and emergent shorthand (like "1b1" for one-by-one). Kept the name because voice input is still the core value — the broader scope is noted in the intro and README rather than reflected in the name.

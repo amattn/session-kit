@@ -49,6 +49,8 @@ The most common failure mode in multi-session AI work: decisions get re-litigate
 
 Why it matters: without institutional memory, session 12 reopens questions that session 3 settled. The rationale is gone, so the same arguments play out again. `/notes` makes this nearly impossible — the reasoning is written down, in the user's own words, before the conversation moves on.
 
+What it adds over baseline Claude: the CLAUDE.md discipline block is the killer feature — it makes note-taking behavior persist across sessions, not just the current one. The skill also enforces consistent structure (same sections every project) and preserves user quotes verbatim where baseline Claude tends to paraphrase.
+
 ### `/warmup` — Session Bootstrap & Compaction Recovery
 
 AI agents don't reliably read project files at session start, and context compaction mid-session can silently drop critical instructions. `/warmup` is the reliability layer — it uses every available tactic (auto-memory, Required Reading sections, discipline blocks, loading canaries) to ensure that what matters gets loaded and stays loaded.
@@ -72,6 +74,8 @@ Why it matters: every decision point in AI-assisted work is a potential bottlene
 Maintains a project-specific table for voice-to-text errors, recurring typos, and emergent shorthand. Originally designed for dictation (voice engines predictably mangle project jargon), but the table is useful for any systematic input pattern where the user means something other than what they literally typed.
 
 Why it matters: each uncorrected error costs a correction cycle — the user says it, the agent misunderstands, the user corrects, the agent apologizes. A correction table eliminates this for known patterns, and a learning loop captures new ones as they appear.
+
+What it adds over baseline Claude: the bootstrap puts the correction table in CLAUDE.md (loaded every session) rather than an ad-hoc file. When input is garbled beyond the table, the skill presents structured disambiguation options instead of guessing. And the "What Does NOT Go" boundaries prevent table bloat — one-off typos and standard abbreviations (k8s, img) stay out.
 
 ### `/sharpen` — Process Improvement
 

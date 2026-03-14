@@ -1,6 +1,6 @@
 ---
 name: dictation
-version: 0.1.0
+version: 0.1.1
 description: "Project-specific correction table for voice input errors, recurring typos, and emergent shorthand. Use when the user asks to 'dictation', 'voice correction', 'add misspelling', 'fix dictation', 'add shorthand', or when input garbles project-specific terms. Also proactively trigger when you notice the user correcting a misinterpretation that looks like a recurring pattern — offer to add it to the correction table. Also trigger the bootstrap flow when a project has jargon-heavy terms (framework names, internal tools, abbreviations) but no correction table yet."
 user-invocable: true
 ---

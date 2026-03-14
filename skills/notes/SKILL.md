@@ -19,18 +19,6 @@ Maintain institutional memory across multi-session AI-assisted development. NOTE
 
 ---
 
-## Where /notes Adds Value
-
-Claude is already good at capturing decisions and updating files when asked. /notes' value isn't in those basics — it's in the infrastructure that makes notes *durable* across sessions:
-
-- **The CLAUDE.md discipline block** — this is the killer feature. Without it, note-taking behavior doesn't persist to the next session. The discipline block is what turns NOTES.md from "a file the agent might update" into "a system the agent is required to maintain."
-- **Consistent structure** — the suggested sections give every project the same shape, so agents and humans know where to look without learning a new layout each time.
-- **User quotes** — the skill consistently preserves the user's exact words, which resists paraphrasing drift that accumulates across sessions.
-
-The single-session tasks (add a note, capture a decision, answer a question) will often look similar with or without the skill. The differentiation is in setup and durability.
-
----
-
 ## Bootstrap
 
 When invoked on a project with no NOTES.md:
