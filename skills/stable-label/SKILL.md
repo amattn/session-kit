@@ -1,6 +1,6 @@
 ---
 name: stable-label
-version: 0.1.0
+version: 0.1.1
 description: "Greppable stable references using the XXX_N convention. Append-only IDs that never renumber and always resolve to exactly one definition. Use when the user asks to 'stable-label', 'label', 'add id', 'add reference', 'define prefix', 'consistency pass', or when cross-referencing artifacts. Also trigger when you notice referenceable items without IDs, when cross-references use fragile text matching instead of stable IDs, when numbered lists would benefit from stable cross-references, when multiple documents reference each other by name or title instead of IDs, or when a project would benefit from greppable references even if the user hasn't asked for them."
 user-invocable: true
 ---
@@ -106,6 +106,23 @@ When /stable-label is invoked and the convention is already set up:
 1. Show the current prefix table and convention status
 2. Ask what the user needs — assign IDs, add a prefix, run a consistency pass, or something else
 3. Operate accordingly
+
+### When to assign IDs — and when not to
+
+Assign IDs when the user is **creating or modifying** project artifacts — adding a requirement, recording a decision, committing to a feature. These are items the user has decided should exist and be trackable.
+
+Do NOT assign IDs when the user is **reading, analyzing, or exploring** — listing options, brainstorming, asking questions, requesting summaries. These outputs are responses to queries, not committed artifacts. A brainstorm list might change completely after discussion; assigning permanent, append-only IDs to exploratory content creates orphans and unnecessary lifecycle management.
+
+The heuristic: if the user is asking a question or requesting analysis, don't assign IDs to the answer. If the user is telling you to add, create, or decide something, assign IDs.
+
+Examples:
+- "List the top 5 features we need" → read/analyze → **no IDs**
+- "Add a new requirement: 200ms response time" → create → **assign ID**
+- "What are our options for auth?" → read/analyze → **no IDs**
+- "Let's go with JWT for auth" → create (decision) → **assign ID**
+- "Summarize how decisions relate to requirements" → read/analyze → **no IDs**
+
+When in doubt, don't assign. The user can always ask for IDs after reviewing exploratory output — "ok, let's commit to features 1, 3, and 5 from that list" is a natural create operation that warrants IDs.
 
 ### Assigning IDs
 

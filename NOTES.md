@@ -104,6 +104,28 @@ Ran 10 eval pairs (with-skill vs baseline) on /notes. Key findings:
 
 **Description pushiness:** per skill-creator best practices, description includes proactive triggers — fresh session with no canary, compaction detected mid-conversation, project with directive files but no loading structure.
 
+### /stable-label eval findings and adjustments (2026-03-14)
+
+Ran 11 eval pairs on /stable-label. Key findings:
+
+**Convention enforcement is the biggest win.** Baseline invents its own format — kebab-case, dashes, zero-padding (`[DB-POSTGRES]`, `DEC-001`). The skill enforces `XXX_N` consistently.
+
+**Over-assignment problem (eval 4).** When asked "list the top 5 features," the skill assigned FEA_1-FEA_5 and created a new prefix — but this was a brainstorm, not a commitment. Permanent append-only IDs on exploratory content creates orphans.
+
+**Fix: read/analyze vs create/modify heuristic.** Read/analyze operations (list, summarize, explore) produce responses — no IDs. Create/modify operations (add, decide, commit) produce artifacts — assign IDs. Added "When to assign IDs — and when not to" section with examples.
+
+**Deprecation lifecycle is a genuine differentiator.** The skill's tombstone pattern (REQ_5 deprecated with pointer to DEC_6) is more principled than baseline strikethrough.
+
+**Token savings hypothesis (unconfirmed).** Eval 8 showed the with-skill run used MORE tokens (richer output). But the hypothesis is about long-term downstream savings (grep `REQ_3` vs restating the full requirement), not single-eval token counts. Worth monitoring in real multi-session usage.
+
+**Non-discriminating tests.** Assign ID (eval 1), cross-reference (eval 6), implicit ID (eval 10), and show existing convention (eval 5) all performed similarly — when the convention already exists, Claude follows it fine without the skill.
+
+**Lifecycle operations are the strongest differentiator (evals 11-14).** Every lifecycle test showed meaningful skill advantage:
+- Split (eval 11): skill adds provenance notes ("split from REQ_3") + consistency pass; baseline omits both
+- Merge (eval 12): skill keeps retired ID as tombstone redirect (DEC_4 still greppable); baseline absorbs into merged entry, losing standalone entry
+- Promote (eval 13): skill creates bidirectional cross-references (OBS_1 ↔ REQ_4) + consistency pass; baseline does one-way pointer
+- Crosscutting (eval 14): skill creates domain-specific faceted IDs (API_1, DBA_1) cross-referenced with REQ_5; baseline adds prose to REQ_5 without domain IDs
+
 ### /stable-label design decisions (2026-03-14)
 
 **Convention:**

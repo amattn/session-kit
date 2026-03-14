@@ -63,6 +63,8 @@ Gives every referenceable thing an append-only ID using the `XXX_N` convention (
 
 Why it matters: without stable IDs, cross-references are fragile text that breaks when things get renamed. With them, any ID is a permanent, greppable anchor — in docs, in code comments, in docstrings, anywhere text lives. Both humans and agents can trace a requirement from spec to implementation in seconds.
 
+What it adds over baseline Claude: convention enforcement is the biggest win — without the skill, Claude invents ad-hoc formats (kebab-case, dashes, zero-padding) that vary per session. The skill ensures consistent `XXX_N` format every time. Lifecycle operations are the second major differentiator: splits get provenance notes, merges keep tombstone redirects so every ID stays greppable, promotions get bidirectional cross-references, and crosscutting concerns get domain-specific faceted IDs instead of just prose. The baseline handles simple operations fine but loses ID traceability during lifecycle changes.
+
 ### `/fast-chat` — Structured Interaction Patterns
 
 Replaces prose-heavy back-and-forth with structured codes. Numbered questions with lettered options, batch answer codes (`1A, 2B, 3ok`), and a standard review prompt with situational options plus a stable Recommendations/Ok tail. This is an always-on communication style, not just a tool you invoke.
