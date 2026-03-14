@@ -1,0 +1,20 @@
+{
+  "skill_name": "stable-label",
+  "evals": [
+    {"id": 0, "name": "bootstrap", "prompt": "Set up stable labels for this project.", "files": ["test-projects/fresh-project/*"]},
+    {"id": 1, "name": "assign-id", "prompt": "Give this requirement an ID: Users must be able to reset their password via email.", "files": ["test-projects/with-labels/*"]},
+    {"id": 2, "name": "add-prefix", "prompt": "We need a prefix for API endpoints.", "files": ["test-projects/with-labels/*"]},
+    {"id": 3, "name": "consistency", "prompt": "Run a quick consistency pass — I just renamed DEC_3.", "files": ["test-projects/with-references/*"]},
+    {"id": 4, "name": "near-miss", "prompt": "List the top 5 features we need to build.", "files": ["test-projects/with-labels/*"]},
+    {"id": 5, "name": "existing", "prompt": "Show me our current label setup.", "files": ["test-projects/with-labels/*"]},
+    {"id": 6, "name": "cross-ref", "prompt": "The caching decision relates to REQ_3 — can you add that cross-reference?", "files": ["test-projects/with-labels/*"]},
+    {"id": 7, "name": "deprecation", "prompt": "REQ_5 is no longer relevant since we dropped the mobile app.", "files": ["test-projects/with-labels/*"]},
+    {"id": 8, "name": "cross-ref-heavy", "prompt": "Write a summary of how all our technical decisions relate to each other and which requirements they satisfy.", "files": ["test-projects/rich-project/*"]},
+    {"id": 9, "name": "batch", "prompt": "Label all the unlabeled decisions and requirements in NOTES.md.", "files": ["test-projects/fresh-project/*"]},
+    {"id": 10, "name": "implicit", "prompt": "Add a new requirement: the API must respond within 200ms for all endpoints under normal load.", "files": ["test-projects/with-labels/*"]},
+    {"id": 11, "name": "split", "prompt": "REQ_3 is actually two things — no mocking in integration tests AND no mocking in unit tests. Can you split it?", "files": ["test-projects/with-labels-split/*"]},
+    {"id": 12, "name": "merge", "prompt": "DEC_3 and DEC_4 are really the same concern — deployment infrastructure. Can you merge them?", "files": ["test-projects/with-labels-merge/*"]},
+    {"id": 13, "name": "promote", "prompt": "OBS_1 from SHARPEN.md turned out to be a real requirement. Promote it to a REQ.", "files": ["test-projects/with-labels-promote/*"]},
+    {"id": 14, "name": "crosscut", "prompt": "The 200ms response time requirement affects both the API layer and the database query layer.", "files": ["test-projects/with-labels-crosscut/*"]}
+  ]
+}
