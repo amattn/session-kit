@@ -143,6 +143,16 @@ Ran 10 eval pairs (with-skill vs baseline) on /notes. Key findings:
 
 From EXTRACTABLE.md EX_6 and PLET.md § "Skills for Judgment, Code for Compliance": disciplines are prose-based, and prose is re-interpreted each invocation — it drifts. When a prose discipline keeps getting violated (especially format compliance, schema rules, consistency checks), supplement with tooling (validation scripts shipped in `scripts/`). Escalation pattern: prose first → if agents drift → build a tool. Not every discipline needs this — most won't — but /sharpen should recognize when prose alone isn't working. /warmup's canaries are already an example of this pattern — prose says "load these files," canaries verify it happened. /stable-label's consistency passes are the most likely candidate for future tooling (a validation script enforcing no-duplicate-definitions, no-orphaned-references, no-renumbered-IDs). No tooling gaps are urgent yet, but /sharpen should recognize these patterns when drift appears.
 
+### Skill scripts: allowed-tools and portability (2026-03-14)
+
+Skills can ship scripts in `scripts/` and pre-approve them via `allowed-tools` in SKILL.md frontmatter — eliminates permission prompts. `${CLAUDE_SKILL_DIR}` resolves to the skill's install location regardless of where it's installed (personal, project, plugin).
+
+**Portable approach for Python scripts:** use path-based allowed-tools rather than language-based. `Bash(${CLAUDE_SKILL_DIR}/scripts/*)` approves only shipped scripts regardless of whether the system calls it `python` or `python3`. Scripts use `#!/usr/bin/env python3` shebangs and `chmod +x`. This is cleaner and more secure than `Bash(python *)` which would approve arbitrary python commands.
+
+**`python3` is the safe shebang.** On all modern systems that ship Python, the `python3` binary exists (macOS, Ubuntu, Fedora, Homebrew). The plain `python` binary is increasingly absent — removed from macOS 12.3, no default in Fedora since 26, intentionally not symlinked by Homebrew. PEP 394 recommends `python3` for scripts that require Python 3. `#!/usr/bin/env python3` is the right choice.
+
+No scripts needed in session-kit yet, but when /stable-label consistency passes or other enforcement tooling is warranted, this is the pattern to follow.
+
 ### /sharpen detection sources (2026-03-14)
 
 Detection sources are broader than just NOTES.md scanning. Five sources: conversation patterns (repeated corrections, consistent preferences), user interaction style (terse answers, shorthand, frustration signals), agent self-observation (own mistakes, inefficient workflows), project artifacts (git history, directive drift, code review comments), and cross-session signals (prior NOTES.md, recurring SHARPEN.md entries, stale auto-memory). NOTES.md remains the single intake *destination* for writing observations down, but these are the *inputs* that feed detection.
