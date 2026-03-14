@@ -1,0 +1,13 @@
+{
+  "skill_name": "fast-chat",
+  "evals": [
+    {"id": 0, "name": "bootstrap", "prompt": "Set up fast-chat interaction conventions for this project.", "files": ["test-projects/fresh-project/*"]},
+    {"id": 1, "name": "nlr", "prompt": "Here's what you just asked me: 'What database should we use? What about the ORM? And how should we handle auth?' — NLR", "files": ["test-projects/with-conventions/*"]},
+    {"id": 2, "name": "multi-decision", "prompt": "We need to decide on the ORM, the auth strategy, and the caching approach.", "files": ["test-projects/with-conventions/*"]},
+    {"id": 3, "name": "review-prompt", "prompt": "Here's the NOTES.md I drafted. Take a look.", "files": ["test-projects/with-conventions/draft-notes.md"]},
+    {"id": 4, "name": "single-question", "prompt": "What time zone should we use for timestamps?", "files": ["test-projects/with-conventions/*"]},
+    {"id": 5, "name": "open-ended-avoidance", "prompt": "I'm not sure what to name this module.", "files": ["test-projects/with-conventions/*"]},
+    {"id": 6, "name": "informational-near-miss", "prompt": "Explain how FastAPI handles async requests.", "files": ["test-projects/with-conventions/*"]},
+    {"id": 7, "name": "situational-review", "prompt": "I've narrowed the database options down to PostgreSQL and SQLite. Here's my analysis of both.", "files": ["test-projects/with-conventions/db-analysis.md"]}
+  ]
+}

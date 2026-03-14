@@ -1,0 +1,1 @@
+UTC is the standard choice for timestamps in an API. It avoids ambiguity, sorts correctly, and sidesteps daylight-saving edge cases. Store and transmit as ISO 8601 with the `Z` suffix (e.g., `2026-03-14T18:30:00Z`), and let clients convert to local time for display.
