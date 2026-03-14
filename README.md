@@ -89,6 +89,8 @@ The process improvement skill — combines pattern detection, observation tracki
 
 Why it matters: process improvements come from two directions — the agent notices patterns, and the user reports friction. Both need somewhere to go. Without `/sharpen`, observations get lost in conversation and patterns go unnoticed. With it, informal habits become named disciplines, friction becomes tracked observations, and the process gets sharper over time.
 
+What it adds over baseline Claude: when told about a recurring failure, baseline Claude apologizes and fixes the immediate problem. The skill treats it as a process improvement opportunity — creates a tracked observation, strengthens the relevant discipline, and flags escalation to tooling if prose keeps failing. The methodology (routing, discipline creation, prose→tooling escalation) is confirmed by evals. The proactive detection — the always-on capability where the agent notices patterns without being told — is the highest-value feature and requires real-world usage to fully validate.
+
 ## How They Fit Together
 
 ```

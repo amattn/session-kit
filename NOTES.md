@@ -142,6 +142,22 @@ Ran 11 eval pairs on /stable-label. Key findings:
 - Promote (eval 13): skill creates bidirectional cross-references (OBS_1 ↔ REQ_4) + consistency pass; baseline does one-way pointer
 - Crosscutting (eval 14): skill creates domain-specific faceted IDs (API_1, DBA_1) cross-referenced with REQ_5; baseline adds prose to REQ_5 without domain IDs
 
+### /sharpen eval findings (2026-03-14)
+
+Ran 8 eval pairs on /sharpen. **First skill where the eval confirmed the design rather than revealing problems.** No adjustments needed.
+
+**Important caveat:** These evals test /sharpen's infrastructure and methodology (routing, discipline creation, escalation), NOT proactive pattern detection. Detection — the agent noticing patterns without being told — is the highest-value capability and can only be validated through real multi-session usage.
+
+**Strongest differentiators (evals 5-6):** When told about recurring failures, the skill treats them as process improvement opportunities — creates observations, strengthens disciplines, flags prose→tooling escalation. The baseline just apologizes and offers to fix the immediate problem. This is the core /sharpen value.
+
+**Routing works (eval 2).** The skill correctly routed a project decision to NOTES.md + CLAUDE.md and explicitly reasoned that SHARPEN.md should not be touched.
+
+**`[escalated]` annotation emerged naturally (eval 6).** The skill used `[escalated]` as a status within the open state — not a formal lifecycle state, but an acceptable annotation. Similarly `[reopened]` in the test data. These annotations within the two-state model (open/resolved) are fine practice without adding formal states.
+
+**Baseline's four-stage lifecycle (eval 0) was interesting but unnecessary.** Baseline invented observed→validated→discipline→retired. Our two-stage model is simpler and sufficient — observation bodies capture confirmation context without a separate state.
+
+**No baseline innovations to adopt.** Unlike /warmup, the baseline didn't produce creative approaches worth incorporating.
+
 ### /stable-label design decisions (2026-03-14)
 
 **Convention:**
@@ -312,6 +328,7 @@ Individual skills (like /notes) create their own discipline during bootstrap, pr
 
 ## Things to Monitor
 
+- **Sharpen proactive detection** — single-turn evals can only test infrastructure and methodology, not proactive pattern detection. Detection ("I noticed you've done this twice") requires multi-session real-world usage to validate. The evals explicitly test "response to being told about a pattern," which is fundamentally different from the agent noticing on its own. This is the most important capability to monitor in real usage.
 - **Fast-chat review prompt on informational answers** — eval 6 showed the skill appending a review prompt to a pure explanation. Not seen in real usage (likely eval artifact from single-turn context stripping). If this appears in actual multi-session usage, add "don't append review prompts to informational answers" guidance to the skill.
 - **Stable-label token savings hypothesis** — IDs should save tokens in downstream usage (grep `REQ_3` vs restating full requirements). Unconfirmed — single evals can't measure cumulative cross-session savings. Monitor in real multi-session projects.
 - **/sharpen adoption of the name** — "sharpen" may not be intuitive for users who think in terms of "feedback" or "meta-feedback." Monitor whether the description triggers correctly for those mental models.

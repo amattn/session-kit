@@ -32,9 +32,9 @@ Found the "Skills for Judgment, Code for Compliance" insight — prose disciplin
 
 9 test pairs. Key finding: full layered infrastructure is the differentiator — baseline handles individual concepts but doesn't build the complete system. Fixed over-trigger on unrelated requests. Adopted two baseline innovations: cross-file reinforcement loop and content quality diagnosis.
 
-### 7. Eval: /sharpen (hardest)
+### 7. Eval: /sharpen ✓
 
-Test pattern detection, observation tracking (SHARPEN.md lifecycle), discipline creation, and the routing model (NOTES.md as intake → SHARPEN.md for tracking → CLAUDE.md for enforcement). Hardest because always-on detection is inherently multi-turn.
+8 test pairs. First skill where the eval confirmed the design — no adjustments needed. Strongest differentiators: evals 5-6 (recurring failures treated as process improvement, not just apologies). Prose→tooling escalation is unique to the skill. Caveat: proactive detection untestable in single-turn evals, added to Things to Monitor.
 
 ### 8. Description optimization
 
