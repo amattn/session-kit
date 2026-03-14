@@ -37,3 +37,23 @@ Bump when the marketplace listing itself changes, independent of any individual 
 - **PATCH**: description or metadata wording updates, keyword changes
 - **MINOR**: adding a new skill to the `plugins` array
 - **MAJOR**: removing a skill, restructuring the listing in a breaking way
+
+## Commit Style
+
+Single-line subject: `<verb> <what>: <brief description>`. Common verbs: Add, Update, Fix, Drop, Rename.
+
+Body uses **themed bullet lists** — group related changes under short theme headers. Each bullet is a concise fact, not a sentence. Example:
+
+```
+Add /fast-chat skill: structured interaction patterns for efficient communication
+
+Mechanics:
+- NL/NLR shorthands with recommendation formats
+- Batch answer parsing with "no answer = still open" rule
+
+Design:
+- Always-on communication style, not just a bootstrap tool
+- Version bumped to 0.2.0
+```
+
+Skip the body for trivial commits (single-file wording tweaks, typo fixes).

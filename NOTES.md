@@ -105,6 +105,16 @@ Renamed from `/label` (EX_7). The skill is more than labels — it's a system fo
 
 **Filenames:** zero-padded IDs optional guidance. Tradeoffs: two conventions (padded vs unpadded) + padding width is a guess (breaks at 1000). Let users decide.
 
+### /fast-chat design decisions (2026-03-14)
+
+**Standard review prompt structure:** The review prompt has two parts — a variable number of situational options (could be 2, 3, 4, whatever fits) adapted to context, followed by a stable tail (Recommendations + Ok) that appears in nearly every review. The situational options default to Add/Change/Remove for artifact reviews, but the count and content change per situation. The stable tail is always the last two letters, regardless of how many situational options precede them.
+
+**Always-on framing:** /fast-chat is an always-on communication style, not just a bootstrap tool. The patterns should be adopted immediately in every interaction where decisions are being made — no explicit invocation required. Invoking `/fast-chat` runs bootstrap (persists conventions to AGENTS.md/CLAUDE.md), but the behavior is immediate.
+
+**NLR formats:** Two common formats identified so far — inline marker (`← recommended`) and rationale paragraph at the end — but these aren't exhaustive. Other formats may emerge. NLR (agent proactively marking its pick when presenting options) is explicitly distinguished from the review prompt's "Recommendations" option (user asking the agent to surface concerns after seeing work). Different direction of flow.
+
+**Patterns are grouped, not counted:** Originally "10 patterns," reduced when "fenced code blocks" folded into NL as a formatting rule, and the review prompt was promoted to its own top-level section. The mechanics/principles grouping does the organizational work — the exact count doesn't matter.
+
 ### /discipline folded into /warmup + /patterns (2026-03-14)
 
 Dropped /discipline as a standalone skill. Its responsibilities split across two existing skills:
@@ -143,7 +153,7 @@ Individual skills (like /notes) create their own discipline during bootstrap, pr
 | # | Current name | Status | Source |
 |---|-------------|--------|--------|
 | 1 | /notes | Confirmed | Existing |
-| 2 | /fast-chat | Confirmed | EX_1 |
+| 2 | /fast-chat | **Implemented** | EX_1 |
 | 3 | /sharpen | Confirmed | EX_2 |
 | 4 | /dictation | Confirmed | EX_3 |
 | 5 | /warmup | Confirmed | EX_5 |

@@ -1,6 +1,6 @@
 {
   "name": "session-kit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A suite of Claude Code skill plugins for making AI-assisted development sessions reliable and productive across time.",
   "author": {
     "name": "amattn"
