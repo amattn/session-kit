@@ -12,7 +12,7 @@
       "name": "session-kit",
       "source": "./",
       "description": "A suite of Claude Code skill plugins for making AI-assisted development sessions reliable and productive across time.",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "keywords": ["session", "notes", "sharpen", "dictation", "labels", "bootstrap", "fast-chat", "multi-session", "productivity"],
       "category": "productivity",
       "skills": "./skills/"

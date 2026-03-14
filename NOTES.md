@@ -178,7 +178,7 @@ Individual skills (like /notes) create their own discipline during bootstrap, pr
 |---|-------------|--------|--------|
 | 1 | /notes | Confirmed | Existing |
 | 2 | /fast-chat | **Implemented** | EX_1 |
-| 3 | /sharpen | Confirmed | EX_2 + EX_4 |
+| 3 | /sharpen | **Implemented** | EX_2 + EX_4 |
 | 4 | /dictation | **Implemented** | EX_3 |
 | 5 | /warmup | Confirmed | EX_5 |
 | 6 | ~~/patterns~~ | Merged into /sharpen | EX_4 |
