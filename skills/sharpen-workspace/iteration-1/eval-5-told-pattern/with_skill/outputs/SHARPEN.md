@@ -1,0 +1,31 @@
+# SHARPEN.md
+<!-- managed by /sharpen -->
+
+Process observations that need active lifecycle tracking. Observations
+start in NOTES.md; promote here when they need monitoring across sessions.
+See /sharpen for detection sources, routing, and discipline creation.
+
+## Open
+
+### SPI_1: Agents skip consistency pass after file renames [convention]
+
+Noticed in sessions 2, 4, and 5. After renaming a file or variable, agents
+proceed without checking for stale references. Three occurrences — confirmed pattern.
+
+### SPI_2: Review cycles take too many round-trips [friction]
+
+The "anything else?" pattern forces 3+ rounds when structured options would take 1.
+/fast-chat's review prompt helps but agents don't always use it.
+`[resolved]` → Added interaction conventions to CLAUDE.md.
+`[reopened]` → Still happening in sessions 7 and 8 despite the fix.
+
+### SPI_4: Agent skips NOTES.md updates after decisions despite existing discipline [drift]
+
+Three failures in a single session. The CLAUDE.md discipline says "update NOTES.md after every decision, before moving to the next topic" but the agent proceeds to the next topic without writing the entry. Prose rule alone is insufficient — the agent re-interprets "I'll do it after this next thing" each time. Proposed fix: strengthen the discipline with a self-check gate (see CLAUDE.md update). If drift continues after strengthening, escalate to tooling (e.g., a pre-response checklist script).
+
+## Resolved
+
+### SPI_3: Commit messages inconsistent [convention]
+
+`[resolved]` → Added commit style section to CLAUDE.md. Themed bullet lists
+with verb-prefixed subject lines.

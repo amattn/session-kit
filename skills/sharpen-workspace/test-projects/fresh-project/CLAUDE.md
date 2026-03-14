@@ -1,0 +1,13 @@
+# CLAUDE.md
+
+## Project
+
+inventory-api — REST API for managing inventory.
+
+## NOTES.md Discipline
+
+**Update NOTES.md after every decision, before moving to the next topic.**
+
+## Key Files
+
+- `NOTES.md` — institutional memory
