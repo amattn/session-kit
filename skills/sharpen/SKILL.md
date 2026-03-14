@@ -116,6 +116,8 @@ A discipline is a named set of behavioral rules that makes a specific practice r
 - **Enforceable** — rules are concrete enough to verify compliance
 - **Composable** — disciplines can reference each other
 
+**Disciplines are prose-based, and prose has limits.** Disciplines work well for judgment calls, adaptation, and decision-making — where non-determinism is a feature. But when a discipline enforces format compliance, schema adherence, or consistency rules, agents may drift over many invocations because prose is re-interpreted each time. If a prose discipline keeps getting violated, consider supplementing it with tooling (e.g., a validation script shipped alongside the skill in `scripts/`). The escalation pattern: define the rule in prose first → if agents drift → build a tool that makes compliance automatic. Not every discipline needs tooling — most won't — but recognizing when prose alone isn't working is part of /sharpen's job.
+
 **When to create a discipline:**
 - A pattern has been observed multiple times and confirmed
 - The stakes of non-compliance are high (lost work, consistency failures, wasted cycles)
