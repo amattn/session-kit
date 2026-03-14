@@ -57,3 +57,9 @@ Design:
 ```
 
 Skip the body for trivial commits (single-file wording tweaks, typo fixes).
+
+**Before every commit**, check if `PLAN.md` needs updating to reflect completed work or changed priorities.
+
+## Evals
+
+All eval definitions (evals.json), test projects, and subagent outputs must be saved to disk in the corresponding `skills/<skill>-workspace/` directory. Eval artifacts are reference material — they document what was tested, how, and what the results were. Create the evals.json BEFORE running evals, not after. Commit eval workspaces alongside the findings they support.
