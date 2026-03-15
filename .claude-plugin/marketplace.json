@@ -5,17 +5,33 @@
   },
   "metadata": {
     "description": "A suite of Claude Code skill plugins for making AI-assisted development sessions reliable and productive across time.",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "plugins": [
     {
       "name": "session-kit",
       "source": "./",
-      "description": "A suite of Claude Code skill plugins for making AI-assisted development sessions reliable and productive across time.",
+      "description": "All 6 session-kit skills — the complete suite: /notes, /warmup, /stable-label, /fast-chat, /dictation, /sharpen.",
       "version": "0.4.0",
       "keywords": ["session", "notes", "sharpen", "dictation", "labels", "bootstrap", "fast-chat", "multi-session", "productivity"],
       "category": "productivity",
       "skills": "./skills/"
+    },
+    {
+      "name": "session-kit-core",
+      "source": "./plugins/session-kit-core",
+      "description": "Session experience layer: /warmup, /fast-chat, and /dictation. Loading reliability, rapid chat interaction, and input correction.",
+      "version": "0.4.0",
+      "keywords": ["session", "warmup", "fast-chat", "dictation", "bootstrap", "voice", "productivity"],
+      "category": "productivity"
+    },
+    {
+      "name": "session-kit-refine",
+      "source": "./plugins/session-kit-refine",
+      "description": "Knowledge management layer: /notes, /stable-label, and /sharpen. Institutional memory, stable references, and process improvement.",
+      "version": "0.4.0",
+      "keywords": ["session", "notes", "stable-label", "sharpen", "decisions", "process-improvement", "productivity"],
+      "category": "productivity"
     }
   ]
 }

@@ -1,0 +1,10 @@
+{
+  "name": "session-kit-core",
+  "version": "0.4.0",
+  "description": "Session experience layer: /warmup, /fast-chat, and /dictation. Loading reliability, rapid chat interaction, and input correction.",
+  "author": {
+    "name": "amattn"
+  },
+  "skills": "./skills/",
+  "keywords": ["session", "warmup", "fast-chat", "dictation", "bootstrap", "voice", "productivity"]
+}
