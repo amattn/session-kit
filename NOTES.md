@@ -323,6 +323,35 @@ Individual skills (like /notes) create their own discipline during bootstrap, pr
 - ~~Skill 2 (/chatux) naming~~ → resolved: /fast-chat
 - ~~Skill 3 (/feedback) naming~~ → resolved: /sharpen (monitor adoption — name may not be intuitive for "feedback" mental model)
 - Opencode compatibility — skills should work with opencode as well as Claude Code. Need to investigate opencode's skill/plugin format and identify what (if anything) needs to differ.
+- Plugin subsets — marketplace.json can list multiple plugins with different `source` paths within one repo. Each subset gets its own directory with its own plugin.json. plet-skills attempted this and hit duplication/symlink issues. Bundle design decided (see below), implementation deferred.
+
+### Plugin bundle design (2026-03-14)
+
+Three bundles planned:
+- **session-kit-core**: `/warmup` + `/fast-chat` + `/dictation` — session experience layer (loading, communication, input)
+- **session-kit-refine**: `/notes` + `/stable-label` + `/sharpen` — knowledge management layer (decisions, references, process improvement)
+- **session-kit** (full): all 6
+
+**Thematic split:** core makes each individual session smoother (immediate benefit). Refine builds institutional memory that compounds across sessions (long-term benefit).
+
+**Rejected alternatives for the knowledge bundle name:**
+- `session-kit-process-improvement` — descriptive but long
+- `session-kit-compound` — the value compounds, but sounds financial
+- `session-kit-knowledge` — accurate but generic
+- `session-kit-continuity`, `session-kit-evolve`, `session-kit-craft`, `session-kit-practice`, `session-kit-meta`, `session-kit-rigor` — various degrees of close but not quite right
+- **Chosen:** `session-kit-refine` — concise, matches /sharpen's ethos, conveys iterative improvement
+
+**Rejected alternative for the session bundle name:**
+- `session-kit-session` — redundant
+- `session-kit-flow`, `session-kit-live`, `session-kit-ux` — too vague or niche
+- **Chosen:** `session-kit-core` — the foundation you build on
+
+**Rejected bundle groupings:**
+- **Two bundles (core + knowledge):** clean split but "knowledge" was too generic for the bundle name
+- **Three bundles with /sharpen standalone:** /sharpen depends on /notes (NOTES.md as intake) — incomplete without it
+- **By use case (voice, docs, process):** too many bundles, creates "which one do I install?" confusion
+- **Essentials (/notes + /warmup) + full:** only two tiers but essentials leaves out /fast-chat which most users want immediately
+- **Chosen:** core (session experience) + refine (knowledge management) + full — two meaningful subsets plus the complete suite
 
 ---
 
