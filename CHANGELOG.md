@@ -2,6 +2,18 @@
 
 All notable changes to session-kit. Versions track the plugin version in `.claude-plugin/plugin.json`.
 
+## [0.5.0] — 2026-03-14
+
+### Added
+- README: How to Use section with setup and ongoing usage for each skill
+- README: "Best for" closing lines in The Skills section
+
+### Changed
+- Consistent skill ordering across all README sections: warmup, fast-chat, dictation, notes, stable-label, sharpen
+
+### Removed
+- Plugin bundles (`session-kit-core`, `session-kit-refine`) — skills are inert without explicit setup, so bundles add complexity without value
+
 ## [0.4.0] — 2026-03-14
 
 ### Added

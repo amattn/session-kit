@@ -48,9 +48,9 @@ Added How to Use section with setup/ongoing for each skill. Added "Best for" lin
 
 ## Next Steps
 
-### 11. Remove bundles from marketplace
+### 11. Remove bundles from marketplace ✓
 
-Remove session-kit-core and session-kit-refine from marketplace.json and delete bundle directories.
+Removed session-kit-core and session-kit-refine from marketplace.json, deleted bundle directories, bumped plugin version to 0.5.0.
 
 ### 12. Description optimization
 
