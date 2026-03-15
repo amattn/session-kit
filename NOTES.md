@@ -337,7 +337,7 @@ Individual skills (like /notes) create their own discipline during bootstrap, pr
 - ~~Skill 2 (/chatux) naming~~ → resolved: /fast-chat
 - ~~Skill 3 (/feedback) naming~~ → resolved: /sharpen (monitor adoption — name may not be intuitive for "feedback" mental model)
 - Opencode compatibility — skills should work with opencode as well as Claude Code. Need to investigate opencode's skill/plugin format and identify what (if anything) needs to differ.
-- Plugin subsets — marketplace.json can list multiple plugins with different `source` paths within one repo. Each subset gets its own directory with its own plugin.json. plet-skills attempted this and hit duplication/symlink issues. Bundle design decided (see below), implementation deferred.
+- ~~Plugin subsets~~ → resolved: symlinks work. See below.
 
 ### Plugin bundle design (2026-03-14)
 
@@ -366,6 +366,14 @@ Three bundles planned:
 - **By use case (voice, docs, process):** too many bundles, creates "which one do I install?" confusion
 - **Essentials (/notes + /warmup) + full:** only two tiers but essentials leaves out /fast-chat which most users want immediately
 - **Chosen:** core (session experience) + refine (knowledge management) + full — two meaningful subsets plus the complete suite
+
+### Symlinks confirmed working for plugin bundles (2026-03-14)
+
+**Tested:** installed `session-kit-core` via marketplace. Claude Code cloned the repo into `~/.claude-*/plugins/marketplaces/session-kit-marketplace/`, then the plugin cache resolved the relative symlinks (`../../../skills/dictation`) to absolute paths pointing at the marketplace clone's root `skills/` directory. All three core skills (`/warmup`, `/fast-chat`, `/dictation`) loaded correctly.
+
+**How it works:** cache directory contains symlinks → marketplace clone's `skills/` directory (source of truth). Claude Code follows the symlinks and reads SKILL.md from the resolved targets. No duplication, single source of truth.
+
+**plet-skills "symlink issues" did not reproduce.** The issues plet-skills encountered may have been specific to their directory layout or an older version of the plugin system. For session-kit's structure (root `skills/` + bundle `plugins/` with symlinks), it works cleanly.
 
 ---
 
