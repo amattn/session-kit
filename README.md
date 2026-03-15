@@ -119,6 +119,24 @@ Each skill has a one-time **setup** (first invocation creates project files) and
 - You want to add a new file to the Required Reading chain
 - You suspect compaction dropped something mid-session
 
+**Example:**
+```
+You: /warmup
+Agent: I've audited your CLAUDE.md. Here's what I set up:
+       - Required Reading: NOTES.md, PLAN.md
+       - Post-Compaction Rule: re-read Required Reading after compaction
+       - Session Start Canary: report git status before doing other work
+       - Auto-memory entry: "always read NOTES.md"
+
+You: (later) It keeps forgetting to read NOTES.md
+Agent: The Required Reading rule is present and auto-memory is set,
+       but the rule is positioned at the bottom of CLAUDE.md where
+       compaction is likely dropping it. I'll move it to the top
+       and strengthen the wording. I'll also add a cross-file
+       reinforcement pointer at the top of NOTES.md pointing back
+       to CLAUDE.md.
+```
+
 ### `/fast-chat`
 
 **Setup:** Run `/fast-chat` in your project. It adds an Interaction Conventions section to CLAUDE.md with the NL/NLR/1b1 shorthands, batch answer format, and the standard review prompt.
@@ -130,6 +148,32 @@ Each skill has a one-time **setup** (first invocation creates project files) and
 - Say `1b1` to discuss items one at a time instead of batching
 - Unanswered items stay open — silence is never treated as approval
 
+**Example:**
+```
+Agent: A few decisions needed:
+       1. Database engine?
+          A. SQLite
+          B. PostgreSQL ← recommended
+          C. Other
+       2. Auth strategy?
+          A. JWT
+          B. Session cookies
+          C. Other
+       3. Rate limiting?
+          A. Per-user token bucket
+          B. Global sliding window
+          C. Skip for now
+       4. Logging format?
+          A. Structured JSON
+          B. Plain text
+          C. Other
+
+You: 1A, 2B, 3 do you have any recommendations, 4 defer till later
+Agent: For 3, I'd recommend A (per-user token bucket) — it prevents
+       noisy-neighbor problems without penalizing well-behaved users.
+       Noted 4 as still open. Applied 1A and 2B.
+```
+
 ### `/dictation`
 
 **Setup:** Run `/dictation` in your project. It scans project jargon, proposes a correction table (focused on terms voice engines are likely to mangle), and writes the table to CLAUDE.md with a `<!-- managed by /dictation -->` breadcrumb.
@@ -137,6 +181,22 @@ Each skill has a one-time **setup** (first invocation creates project files) and
 **Ongoing:** Always-on — known corrections are applied silently. When input is garbled beyond the table, the agent presents disambiguation options instead of guessing. Your side:
 - When the agent misinterprets a recurring term, say something like "add 'pleat' means 'plet' to the correction table" — or just correct it and the agent will offer to add it
 - One-off typos don't need table entries; the table is for systematic, recurring patterns
+
+**Example:**
+```
+You: push the jason config to the Maine branch and update the cloud API key
+Agent: (silently corrects to "JSON config", "main branch", and "Claude API key",
+        proceeds with the task)
+
+You: we need to fix the pleet workflow
+Agent: I'm not sure what "pleet" refers to. Did you mean:
+       A. plet (the dev orchestrator)
+       B. fleet (deployment fleet)
+       C. Something else
+
+You: A
+Agent: Got it. Want me to add "pleet → plet" to the correction table?
+```
 
 ### `/notes`
 
@@ -147,6 +207,30 @@ Each skill has a one-time **setup** (first invocation creates project files) and
 - Set up routing for multiple NOTES.md files (e.g., `guide/NOTES.md` for a subfolder with its own decision history)
 - Set up a new project
 
+**Example:**
+```
+You: let's go with PostgreSQL for the event store
+Agent: (updates NOTES.md immediately)
+
+       ### Database choice: PostgreSQL for event store (2026-03-14)
+       User: "let's go with PostgreSQL for the event store"
+       Chosen for durability guarantees and JSONB support.
+       - Rejected: SQLite — insufficient for concurrent writes
+       - Rejected: DynamoDB — team has no AWS experience
+
+You: oh and we should never delete events, only soft-delete
+Agent: (adds to Invariants & Critical Requirements)
+
+       **Events are append-only — never hard-delete.**
+       Soft-delete via a `deleted_at` timestamp. This is load-bearing
+       for audit compliance and event replay.
+
+You: I keep saying this but — names should be verbs for actions, nouns for systems
+Agent: (adds to Important Concepts & Insights, under "From the user")
+
+       User: "names should be verbs for actions, nouns for systems"
+```
+
 ### `/stable-label`
 
 **Setup:** Run `/stable-label` in your project. It scans existing artifacts, proposes a prefix table (e.g., `DEC` for decisions, `REQ` for requirements), adds convention rules to CLAUDE.md, and writes the prefix table to NOTES.md under Taxonomy / Conventions.
@@ -156,6 +240,33 @@ Each skill has a one-time **setup** (first invocation creates project files) and
 - Run a consistency pass (Quick for a single ID, Standard for a batch, Sweep for a whole prefix)
 - Manage ID lifecycle — splitting, merging, deprecating, or promoting items
 
+**Example:**
+```
+You: add a new requirement: API responses must be under 200ms
+Agent: Added to the requirements spec:
+       REQ_7 — API responses must complete within 200ms (p95)
+
+You: let's go with Redis caching to meet that
+Agent: (adds to NOTES.md)
+
+       ### Caching strategy: Redis (2026-03-14)
+       DEC_12 — Use Redis for response caching to meet REQ_7.
+       - Rejected: CDN-only — doesn't help for authenticated endpoints
+
+You: ok now implement the caching middleware
+Agent: (writes code with traceability)
+
+       # Cache middleware for API responses
+       # Implements DEC_12 (Redis caching) to satisfy REQ_7 (200ms p95)
+       class ResponseCache:
+           ...
+
+You: (later) grep REQ_7
+       spec.md:         REQ_7 — API responses must complete within 200ms
+       NOTES.md:        DEC_12 — Redis caching to meet REQ_7
+       middleware.py:   # Implements DEC_12 to satisfy REQ_7
+```
+
 ### `/sharpen`
 
 **Setup:** Run `/sharpen` in your project. It creates SHARPEN.md (a tracker for process observations with open/resolved lifecycle) and adds a Self-Improvement directive to CLAUDE.md telling the agent to notice and surface patterns proactively.
@@ -164,6 +275,30 @@ Each skill has a one-time **setup** (first invocation creates project files) and
 - Review open observations in SHARPEN.md
 - Promote a confirmed pattern to a CLAUDE.md discipline
 - Create a named discipline block for a workflow you want enforced
+
+**Example:**
+```
+Agent: I've noticed you always ask me to check for stale imports
+       after moving files — that's the third time this session.
+       Want me to track this in NOTES.md, or is it confirmed
+       enough for a CLAUDE.md discipline?
+
+You: discipline
+
+Agent: Added to CLAUDE.md:
+       ## Post-Move Discipline
+       **After moving any file, grep for stale imports and update them.**
+       Created SPI_3 in SHARPEN.md → [resolved] promoted to discipline.
+
+You: (later, during a code review discussion)
+     that's a great insight — every time we add a new API route we
+     forget to update the OpenAPI spec. let me add that to sharpen
+
+Agent: Added SPI_4 to SHARPEN.md:
+       ### SPI_4: OpenAPI spec falls behind when adding routes [drift]
+       Observed during code review. Routes added without updating
+       the OpenAPI spec. Not yet a discipline — monitoring frequency.
+```
 
 ## How They Fit Together
 
