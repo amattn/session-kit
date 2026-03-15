@@ -38,12 +38,20 @@ Found the "Skills for Judgment, Code for Compliance" insight — prose disciplin
 
 Designed and implemented three bundles: session-kit (full), session-kit-core (/warmup, /fast-chat, /dictation), session-kit-refine (/notes, /stable-label, /sharpen). Symlinks from bundle skills/ directories to root skills/. Marketplace metadata bumped to 0.2.0.
 
+### 9. Publish ✓
+
+Published to GitHub marketplace.
+
+### 10. README: How to Use section, skill reordering, drop bundles ✓
+
+Added How to Use section with setup/ongoing for each skill. Added "Best for" lines to The Skills section. Reordered all sections to consistent order (warmup, fast-chat, dictation, notes, stable-label, sharpen). Removed bundle install options — skills are inert without explicit setup, so bundles add complexity without value.
+
 ## Next Steps
 
-### 9. Description optimization
+### 11. Remove bundles from marketplace
+
+Remove session-kit-core and session-kit-refine from marketplace.json and delete bundle directories.
+
+### 12. Description optimization
 
 Run the skill-creator trigger optimization loop on each skill's description to improve triggering accuracy.
-
-### 10. Publish
-
-Push to GitHub, set up marketplace listing.

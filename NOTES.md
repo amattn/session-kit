@@ -367,6 +367,10 @@ Three bundles planned:
 - **Essentials (/notes + /warmup) + full:** only two tiers but essentials leaves out /fast-chat which most users want immediately
 - **Chosen:** core (session experience) + refine (knowledge management) + full — two meaningful subsets plus the complete suite
 
+### Bundles dropped (2026-03-14)
+
+Bundles are unnecessary because no skill does anything without an explicit setup step (running `/skill-name`). Installing all 6 is harmless — unused skills sit inert. Bundles added complexity (symlinks, three plugin.json files, extra install instructions) without solving a real problem. Removed from README; marketplace bundle removal to follow.
+
 ### Symlinks confirmed working for plugin bundles (2026-03-14)
 
 **Tested:** installed `session-kit-core` via marketplace. Claude Code cloned the repo into `~/.claude-*/plugins/marketplaces/session-kit-marketplace/`, then the plugin cache resolved the relative symlinks (`../../../skills/dictation`) to absolute paths pointing at the marketplace clone's root `skills/` directory. All three core skills (`/warmup`, `/fast-chat`, `/dictation`) loaded correctly.
