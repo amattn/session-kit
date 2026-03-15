@@ -22,13 +22,33 @@ During build/review sessions where decisions come rapid-fire:
 
 The cost of writing notes is seconds. The cost of lost rationale is re-litigating settled decisions in the next session.
 
+## Decision Cascade
+
+After every decision, **cascade it through all affected artifacts before moving to the next topic.** NOTES.md Discipline handles *capturing* the decision. This section handles *propagating* it.
+
+Trace each decision through these artifacts:
+
+1. **NOTES.md** — the decision itself, rationale, rejected alternatives (always — per NOTES.md Discipline)
+2. **SKILL.md** — if it changes a skill's behavior, update the skill definition
+3. **README.md** — if it changes what the user sees (skill descriptions, install instructions, How They Fit Together)
+
+Not every decision touches all 3. Most touch 1. But always ask: "does this decision affect any other artifact?" The cost of checking is seconds. The cost of missing one is a consistency pass failure discovered later.
+
 ## Versioning
 
-When a skill's behavior changes, bump the **plugin** version in both `.claude-plugin/plugin.json` (`version` field) and `.claude-plugin/marketplace.json` (the corresponding entry's `version` in the `plugins` array). These two must stay in sync. Do **not** bump the marketplace-level `metadata.version` — that tracks the marketplace listing itself, not the plugin.
+Three independent version numbers, each following semver (PATCH/MINOR/MAJOR):
 
 - **PATCH** (0.1.x): bug fixes, wording tweaks, formatting changes, internal refactors
 - **MINOR** (0.x.0): new subcommands, new sections, meaningful feature additions
 - **MAJOR** (x.0.0): breaking changes to formats, removed subcommands, anything that would surprise an existing user
+
+### Skill version (`version` in each SKILL.md frontmatter)
+
+Bump when that specific skill's behavior changes. Scoped to the individual skill — a change to `/notes` doesn't bump `/warmup`'s version.
+
+### Plugin version (`version` in `plugin.json` and `marketplace.json` plugins entry)
+
+Bump when any skill changes. These two must stay in sync. The plugin version tracks the suite as a whole.
 
 ### Marketplace version (`metadata.version` in `marketplace.json`)
 
@@ -38,7 +58,13 @@ Bump when the marketplace listing itself changes, independent of any individual 
 - **MINOR**: adding a new skill to the `plugins` array
 - **MAJOR**: removing a skill, restructuring the listing in a breaking way
 
-**When any semver changes** (plugin, skill, or marketplace), update `CHANGELOG.md` with the new version, date, and a summary of what changed under Added/Changed/Removed headers.
+## Evals
+
+Evals are primarily generated with guidance from the official `skill-creator` skill. Load it for eval design, test case generation, and the with-skill vs baseline comparison framework.
+
+All eval definitions (evals.json), test projects, and subagent outputs must be saved to disk in the corresponding `skills/<skill>-workspace/` directory. Eval artifacts are reference material — they document what was tested, how, and what the results were. Create the evals.json BEFORE running evals, not after.
+
+**Reproducibility is critical.** Eval results are the evidence behind skill adjustments. If the artifacts aren't saved, future sessions can't verify findings, re-run comparisons, or build on previous iterations. Every eval should be re-runnable from what's on disk.
 
 ## Commit Style
 
@@ -58,10 +84,10 @@ Design:
 - Version bumped to 0.2.0
 ```
 
-Skip the body for trivial commits (single-file wording tweaks, typo fixes).
+Skip the body for trivial commits (single-file wording tweaks, typo fixes). Commit eval workspaces in a separate commit from the eval findings they support.
 
-**Before every commit**, check if `PLAN.md` needs updating to reflect completed work or changed priorities.
+## Before You Commit
 
-## Evals
-
-All eval definitions (evals.json), test projects, and subagent outputs must be saved to disk in the corresponding `skills/<skill>-workspace/` directory. Eval artifacts are reference material — they document what was tested, how, and what the results were. Create the evals.json BEFORE running evals, not after. Commit eval workspaces alongside the findings they support.
+- Check if `PLAN.md` needs updating to reflect completed work or changed priorities
+- If any version was bumped, update `CHANGELOG.md` (Added/Changed/Removed format)
+- If any version was bumped, ensure `plugin.json` and `marketplace.json` are in sync
