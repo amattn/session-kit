@@ -7,6 +7,11 @@ user-invocable: true
 
 # /fast-chat — Structured Interaction Patterns
 
+> **Quick Reference:** See [HELP.md](HELP.md) for setup, usage, and examples.
+> When the user asks how to use this skill, what it does, or asks for help,
+> read and respond from HELP.md — you may not need to read the full SKILL.md.
+> For detailed mechanics or edge cases, the full SKILL.md has the complete specification.
+
 Replace prose-heavy back-and-forth with structured codes. Numbered questions, lettered options, single-character responses. The result: decisions that used to take a paragraph take three characters ("1A, 2B").
 
 Originally developed for voice-input workflows where brevity is critical, but equally effective for typed interaction — the speed gain comes from reducing cognitive load, not just keystrokes.

@@ -7,6 +7,11 @@ user-invocable: true
 
 # /sharpen — Process Improvement
 
+> **Quick Reference:** See [HELP.md](HELP.md) for setup, usage, and examples.
+> When the user asks how to use this skill, what it does, or asks for help,
+> read and respond from HELP.md — you may not need to read the full SKILL.md.
+> For detailed mechanics or edge cases, the full SKILL.md has the complete specification.
+
 Make the process itself get better over time. /sharpen combines three capabilities: detecting patterns the agent notices, tracking observations with a resolution lifecycle, and formalizing important workflows as named disciplines.
 
 The core insight: if you've seen it twice, it's a pattern. If it's not written down, it will be forgotten by the next session.

@@ -2,6 +2,13 @@
 
 All notable changes to session-kit. Versions track the plugin version in `.claude-plugin/plugin.json`.
 
+## [0.6.0] — 2026-03-14
+
+### Added
+- HELP.md files for all 6 skills — lightweight quick reference seeded from README How to Use content
+- Quick Reference blockquote in each SKILL.md pointing to HELP.md with usage directive and escalation path
+- README: examples added to each skill in How to Use section
+
 ## [0.5.0] — 2026-03-14
 
 ### Added
@@ -10,9 +17,10 @@ All notable changes to session-kit. Versions track the plugin version in `.claud
 
 ### Changed
 - Consistent skill ordering across all README sections: warmup, fast-chat, dictation, notes, stable-label, sharpen
+- Replaced "bootstrap" with "setup" in user-facing README language
 
 ### Removed
-- Plugin bundles (`session-kit-core`, `session-kit-refine`) — skills are inert without explicit setup, so bundles add complexity without value
+- Plugin bundles (`session-kit-core`, `session-kit-refine`) and `plugins/` directory — skills are inert without explicit setup, so bundles add complexity without value
 
 ## [0.4.0] — 2026-03-14
 

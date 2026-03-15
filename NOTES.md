@@ -367,6 +367,20 @@ Three bundles planned:
 - **Essentials (/notes + /warmup) + full:** only two tiers but essentials leaves out /fast-chat which most users want immediately
 - **Chosen:** core (session experience) + refine (knowledge management) + full — two meaningful subsets plus the complete suite
 
+### Quick Reference / HELP.md convention (2026-03-14)
+
+**Problem:** When a user asks "how do I use /notes?", the agent reads the entire SKILL.md (hundreds of lines) — expensive and slow for a simple question. Inspired by plet-skills observation that skills need a `--help` equivalent.
+
+**Decision:** Each skill gets two things:
+1. A `HELP.md` file alongside SKILL.md, seeded with the corresponding How to Use section from README (nearly verbatim)
+2. A short Quick Reference section near the top of SKILL.md pointing to HELP.md
+
+**Ownership:** session-kit convention, not upstream to skill-creator. We implement it in our skills and document the pattern.
+
+- **Rejected:** Quick Reference only in SKILL.md (no separate file) — still forces the agent to load the full SKILL.md to find it
+- **Rejected:** README as the runtime source — README is for humans browsing GitHub, Quick Reference is for the agent at runtime
+- **Chosen:** HELP.md seeded from README content — lightweight file the agent can read without touching SKILL.md
+
 ### Bundles dropped (2026-03-14)
 
 Bundles are unnecessary because no skill does anything without an explicit setup step (running `/skill-name`). Installing all 6 is harmless — unused skills sit inert. Bundles added complexity (symlinks, three plugin.json files, extra install instructions) without solving a real problem. Removed from README; marketplace bundle removal to follow.

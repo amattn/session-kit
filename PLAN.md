@@ -46,12 +46,16 @@ Published to GitHub marketplace.
 
 Added How to Use section with setup/ongoing for each skill. Added "Best for" lines to The Skills section. Reordered all sections to consistent order (warmup, fast-chat, dictation, notes, stable-label, sharpen). Removed bundle install options — skills are inert without explicit setup, so bundles add complexity without value.
 
-## Next Steps
-
 ### 11. Remove bundles from marketplace ✓
 
 Removed session-kit-core and session-kit-refine from marketplace.json, deleted bundle directories, bumped plugin version to 0.5.0.
 
-### 12. Description optimization
+### 12. HELP.md and Quick Reference convention ✓
+
+Added HELP.md files to all 6 skills (seeded from README How to Use section). Added Quick Reference blockquote to top of each SKILL.md with directive to read HELP.md for usage questions and escalation path to full SKILL.md for edge cases. Plugin version bumped to 0.6.0.
+
+## Next Steps
+
+### 13. Description optimization
 
 Run the skill-creator trigger optimization loop on each skill's description to improve triggering accuracy.

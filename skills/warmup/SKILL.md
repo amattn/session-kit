@@ -7,6 +7,11 @@ user-invocable: true
 
 # /warmup — Session Bootstrap & Compaction Recovery
 
+> **Quick Reference:** See [HELP.md](HELP.md) for setup, usage, and examples.
+> When the user asks how to use this skill, what it does, or asks for help,
+> read and respond from HELP.md — you may not need to read the full SKILL.md.
+> For detailed mechanics or edge cases, the full SKILL.md has the complete specification.
+
 Ensure skills, disciplines, and key files load reliably at session start and survive context compaction. /warmup is the reliability layer — it uses every tactic available to guarantee that what matters gets loaded.
 
 ---

@@ -7,6 +7,11 @@ user-invocable: true
 
 # /notes — Living Development Notes
 
+> **Quick Reference:** See [HELP.md](HELP.md) for setup, usage, and examples.
+> When the user asks how to use this skill, what it does, or asks for help,
+> read and respond from HELP.md — you may not need to read the full SKILL.md.
+> For detailed mechanics or edge cases, the full SKILL.md has the complete specification.
+
 Maintain institutional memory across multi-session AI-assisted development. NOTES.md captures what other project artifacts don't: the *why* behind decisions, rejected alternatives, user insights, and conventions.
 
 ---

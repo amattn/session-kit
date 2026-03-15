@@ -7,6 +7,11 @@ user-invocable: true
 
 # /stable-label — Greppable Stable References
 
+> **Quick Reference:** See [HELP.md](HELP.md) for setup, usage, and examples.
+> When the user asks how to use this skill, what it does, or asks for help,
+> read and respond from HELP.md — you may not need to read the full SKILL.md.
+> For detailed mechanics or edge cases, the full SKILL.md has the complete specification.
+
 Give every referenceable thing a greppable ID. Any ID returns exactly one definition and all its references across the project. The convention is trivial to adopt but transforms how both humans and agents navigate a project — cross-referencing goes from fuzzy text matching to precise, machine-verifiable lookups.
 
 Originally designed for PRDs, requirements documents, and specs, but found to be useful for many kinds of documentation — and even in non-documentation codebases, inside comments and docstrings, where stable IDs link code back to the decisions and requirements that drove it.

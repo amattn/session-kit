@@ -7,6 +7,11 @@ user-invocable: true
 
 # /dictation — Voice Input Correction
 
+> **Quick Reference:** See [HELP.md](HELP.md) for setup, usage, and examples.
+> When the user asks how to use this skill, what it does, or asks for help,
+> read and respond from HELP.md — you may not need to read the full SKILL.md.
+> For detailed mechanics or edge cases, the full SKILL.md has the complete specification.
+
 Maintain a project-specific correction table. Originally designed for voice-to-text errors — voice engines mangle project jargon predictably ("jason" for JSON, "cloud" for Claude, "Maine" for main). But the table is useful beyond dictation: recurring typos, emergent shorthand (like "1b1" for one-by-one), and any recurring input pattern where the user means something other than what they literally typed. A correction table turns these from recurring friction into transparent fixes.
 
 ---
