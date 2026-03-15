@@ -2,7 +2,7 @@
 
 ## Current Status
 
-All 6 skills implemented. Evals completed and findings applied for 4 of 6 skills: `/notes`, `/dictation`, `/stable-label`, `/fast-chat`.
+All 6 skills implemented and eval'd. Findings applied to 5 of 6 (sharpen needed none).
 
 ## Completed
 
@@ -26,8 +26,6 @@ Found the "Skills for Judgment, Code for Compliance" insight — prose disciplin
 
 8 test pairs. Key finding: behavioral activation is the primary value — Claude knows the patterns but doesn't consistently use them without the skill. Eval 6 over-trigger noted as eval artifact, added to Things to Monitor.
 
-## Next Steps
-
 ### 6. Eval: /warmup ✓
 
 9 test pairs. Key finding: full layered infrastructure is the differentiator — baseline handles individual concepts but doesn't build the complete system. Fixed over-trigger on unrelated requests. Adopted two baseline innovations: cross-file reinforcement loop and content quality diagnosis.
@@ -36,9 +34,11 @@ Found the "Skills for Judgment, Code for Compliance" insight — prose disciplin
 
 8 test pairs. First skill where the eval confirmed the design — no adjustments needed. Strongest differentiators: evals 5-6 (recurring failures treated as process improvement, not just apologies). Prose→tooling escalation is unique to the skill. Caveat: proactive detection untestable in single-turn evals, added to Things to Monitor.
 
+## Next Steps
+
 ### 8. Description optimization
 
-After all evals complete, run the skill-creator trigger optimization loop on each skill's description to improve triggering accuracy.
+Run the skill-creator trigger optimization loop on each skill's description to improve triggering accuracy.
 
 ### 9. Publish
 
