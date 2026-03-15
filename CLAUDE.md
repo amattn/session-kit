@@ -38,6 +38,8 @@ Bump when the marketplace listing itself changes, independent of any individual 
 - **MINOR**: adding a new skill to the `plugins` array
 - **MAJOR**: removing a skill, restructuring the listing in a breaking way
 
+**When any semver changes** (plugin, skill, or marketplace), update `CHANGELOG.md` with the new version, date, and a summary of what changed under Added/Changed/Removed headers.
+
 ## Commit Style
 
 Single-line subject: `<verb> <what>: <brief description>`. Common verbs: Add, Update, Fix, Drop, Rename.

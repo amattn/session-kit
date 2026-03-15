@@ -1,0 +1,51 @@
+# CHANGELOG
+
+All notable changes to session-kit. Versions track the plugin version in `.claude-plugin/plugin.json`.
+
+## [0.4.0] — 2026-03-14
+
+### Added
+- `/sharpen` skill: process improvement through pattern detection, observation tracking, and discipline creation (merged /patterns EX_4 into /sharpen EX_2)
+- Prose-vs-tooling escalation pattern: disciplines are prose-based; supplement with scripts when prose drifts
+- Eval workspaces for all 6 skills (58 total eval pairs with baseline comparisons)
+- PLAN.md for tracking project progress
+- Eval discipline in CLAUDE.md (save all eval artifacts to disk)
+- Things to Monitor section in NOTES.md
+
+### Changed
+- `/notes` v0.1.1: "quote the user, paraphrase everything else" guidance; bootstrap offers to seed Open Questions
+- `/dictation` v0.1.1: structured disambiguation is the primary differentiator; bootstrap focuses on project-specific jargon
+- `/stable-label` v0.1.1: added "When to assign IDs — and when not to" (read/analyze vs create/modify heuristic); lifecycle eval findings (split, merge, promote, crosscut)
+- `/warmup` v0.1.1: fixed over-trigger on unrelated requests; adopted cross-file reinforcement loop and content quality diagnosis from baseline evals
+- `/fast-chat`: added compounding value note (seconds compound across sessions and projects)
+- Value-add paragraphs moved from skill files to README (skills stay lean, README does marketing)
+- README expanded with per-skill sections, install instructions, How They Fit Together diagram
+
+### Removed
+- `/patterns` skill — merged into `/sharpen`
+- "Where X Adds Value" sections from skill files (moved to README)
+
+## [0.3.0] — 2026-03-14
+
+### Added
+- `/dictation` skill: correction table for voice errors, recurring typos, and emergent shorthand
+- README skill table, per-skill descriptions, install instructions, origin and acknowledgments
+- CC BY-SA 4.0 license
+
+## [0.2.0] — 2026-03-14
+
+### Added
+- `/fast-chat` skill: structured interaction patterns (NL/NLR/1b1, batch answers, standard review prompt)
+
+## [0.1.0] — 2026-03-13
+
+### Added
+- `/notes` skill: institutional memory with Notes Discipline
+- `/warmup` skill: session bootstrap and compaction recovery
+- `/stable-label` skill: greppable stable references with XXX_N convention
+- Plugin metadata (`.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`)
+- Scaffolding for 7 placeholder skills (later reduced to 6)
+- CLAUDE.md with project config, NOTES.md discipline, versioning rules, commit style
+
+### Also in this release
+- `/discipline` skill dropped — responsibilities split across `/warmup` (format/enforcement) and `/patterns` (detection/creation)
