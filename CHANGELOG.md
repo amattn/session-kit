@@ -8,8 +8,11 @@ All notable changes to session-kit. Versions track the plugin version in `.claud
 - `/sharpen` skill: process improvement through pattern detection, observation tracking, and discipline creation (merged /patterns EX_4 into /sharpen EX_2)
 - Prose-vs-tooling escalation pattern: disciplines are prose-based; supplement with scripts when prose drifts
 - Eval workspaces for all 6 skills (58 total eval pairs with baseline comparisons)
+- Plugin bundles: `session-kit-core` (/warmup, /fast-chat, /dictation) and `session-kit-refine` (/notes, /stable-label, /sharpen) — subsets via symlinks to root skills/
 - PLAN.md for tracking project progress
 - Eval discipline in CLAUDE.md (save all eval artifacts to disk)
+- Decision Cascade and Before You Commit sections in CLAUDE.md
+- CHANGELOG.md
 - Things to Monitor section in NOTES.md
 
 ### Changed
@@ -19,7 +22,8 @@ All notable changes to session-kit. Versions track the plugin version in `.claud
 - `/warmup` v0.1.1: fixed over-trigger on unrelated requests; adopted cross-file reinforcement loop and content quality diagnosis from baseline evals
 - `/fast-chat`: added compounding value note (seconds compound across sessions and projects)
 - Value-add paragraphs moved from skill files to README (skills stay lean, README does marketing)
-- README expanded with per-skill sections, install instructions, How They Fit Together diagram
+- README expanded with per-skill sections, install instructions, How They Fit Together diagram, bundle install options
+- Marketplace metadata bumped to 0.2.0 (new plugins added to listing)
 
 ### Removed
 - `/patterns` skill — merged into `/sharpen`

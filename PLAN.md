@@ -34,12 +34,16 @@ Found the "Skills for Judgment, Code for Compliance" insight — prose disciplin
 
 8 test pairs. First skill where the eval confirmed the design — no adjustments needed. Strongest differentiators: evals 5-6 (recurring failures treated as process improvement, not just apologies). Prose→tooling escalation is unique to the skill. Caveat: proactive detection untestable in single-turn evals, added to Things to Monitor.
 
+### 8. Plugin bundles ✓
+
+Designed and implemented three bundles: session-kit (full), session-kit-core (/warmup, /fast-chat, /dictation), session-kit-refine (/notes, /stable-label, /sharpen). Symlinks from bundle skills/ directories to root skills/. Marketplace metadata bumped to 0.2.0.
+
 ## Next Steps
 
-### 8. Description optimization
+### 9. Description optimization
 
 Run the skill-creator trigger optimization loop on each skill's description to improve triggering accuracy.
 
-### 9. Publish
+### 10. Publish
 
 Push to GitHub, set up marketplace listing.

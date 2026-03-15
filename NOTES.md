@@ -249,6 +249,19 @@ Skills can ship scripts in `scripts/` and pre-approve them via `allowed-tools` i
 
 No scripts needed in session-kit yet, but when /stable-label consistency passes or other enforcement tooling is warranted, this is the pattern to follow.
 
+### CLAUDE.md prose drift: Before You Commit and cascade (2026-03-14)
+
+**Observed:** PLAN.md and CHANGELOG.md drifted during the plugin bundle work — the bundle was committed without updating either. Caught during a consistency pass, not during the commit.
+
+**Root causes:**
+1. Before You Commit was positioned at the bottom of CLAUDE.md — last section, deprioritized under task pressure
+2. Language was suggestive ("check if") not imperative ("update")
+3. PLAN.md and CHANGELOG.md were removed from the Decision Cascade as "bookkeeping" — which meant they weren't in the checklist the agent scans
+
+**Fix applied:** moved Before You Commit above Versioning, made language imperative, added PLAN.md and CHANGELOG.md back to Decision Cascade. This is exactly the escalation pattern /warmup teaches: tighten wording → improve positioning → add redundancy.
+
+**Meta-observation:** this is session-kit's own process eating its own dogfood. The cascade and before-you-commit disciplines are the same pattern /warmup and /sharpen teach to users. When they drifted in our own project, we applied the same fix the skills recommend.
+
 ### /sharpen detection sources (2026-03-14)
 
 Detection sources are broader than just NOTES.md scanning. Five sources: conversation patterns (repeated corrections, consistent preferences), user interaction style (terse answers, shorthand, frustration signals), agent self-observation (own mistakes, inefficient workflows), project artifacts (git history, directive drift, code review comments), and cross-session signals (prior NOTES.md, recurring SHARPEN.md entries, stale auto-memory). NOTES.md remains the single intake *destination* for writing observations down, but these are the *inputs* that feed detection.

@@ -31,8 +31,20 @@ Trace each decision through these artifacts:
 1. **NOTES.md** — the decision itself, rationale, rejected alternatives (always — per NOTES.md Discipline)
 2. **SKILL.md** — if it changes a skill's behavior, update the skill definition
 3. **README.md** — if it changes what the user sees (skill descriptions, install instructions, How They Fit Together)
+4. **PLAN.md** — if it completes work, changes priorities, or adds new steps
+5. **CHANGELOG.md** — if it triggers a version bump or adds/removes features
 
-Not every decision touches all 3. Most touch 1. But always ask: "does this decision affect any other artifact?" The cost of checking is seconds. The cost of missing one is a consistency pass failure discovered later.
+Not every decision touches all 5. Most touch 1-2. But always ask: "does this decision affect any other artifact?" The cost of checking is seconds. The cost of missing one is a consistency pass failure discovered later.
+
+## Before You Commit
+
+**Stop and verify before every commit:**
+
+- Update `PLAN.md` to reflect completed work or changed priorities
+- Update `CHANGELOG.md` if any version was bumped or features were added/changed/removed
+- Ensure `plugin.json` and `marketplace.json` versions are in sync if either changed
+
+This is not optional. These artifacts drifted when this checklist was positioned at the bottom of CLAUDE.md and used suggestive language ("check if"). It is now imperative: update, not check.
 
 ## Versioning
 
@@ -85,9 +97,3 @@ Design:
 ```
 
 Skip the body for trivial commits (single-file wording tweaks, typo fixes). Commit eval workspaces in a separate commit from the eval findings they support.
-
-## Before You Commit
-
-- Check if `PLAN.md` needs updating to reflect completed work or changed priorities
-- If any version was bumped, update `CHANGELOG.md` (Added/Changed/Removed format)
-- If any version was bumped, ensure `plugin.json` and `marketplace.json` are in sync
