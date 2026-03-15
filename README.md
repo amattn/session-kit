@@ -21,7 +21,26 @@ Extracted from patterns discovered during 500+ sessions of AI-assisted developme
 
 ```bash
 /plugin marketplace add amattn/session-kit
-/plugin install session-kit@session-kit-marketplace
+```
+
+Three bundles available:
+
+| Bundle | Skills | What you get |
+|--------|--------|-------------|
+| `session-kit` | All 6 | The complete suite |
+| `session-kit-core` | `/warmup`, `/fast-chat`, `/dictation` | Session experience — loading reliability, rapid chat interaction, input correction |
+| `session-kit-refine` | `/notes`, `/stable-label`, `/sharpen` | Knowledge management — institutional memory, stable references, process improvement |
+
+```bash
+/plugin install session-kit@session-kit-marketplace          # all 6
+```
+
+```bash
+/plugin install session-kit-core@session-kit-marketplace     # session experience
+```
+
+```bash
+/plugin install session-kit-refine@session-kit-marketplace   # knowledge management
 ```
 
 ### Option 2: Global Installation

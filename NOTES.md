@@ -297,6 +297,7 @@ Individual skills (like /notes) create their own discipline during bootstrap, pr
 - "label is more than the labels. it's stable references." — drove the /stable-label rename
 - "i love that b rhymes, makes it memorable but maybe too cute?" → decided it's a feature, not a bug
 - "i'm not worried about long. the claude code ui is awesome at autocomplete" — length of slash commands is not a concern; clarity and descriptiveness win
+- Fenced code blocks in README should be one command per block — GUI clients allow easy copy-paste of a whole fenced area, so combining unrelated commands in one block forces users to manually select
 
 ---
 
