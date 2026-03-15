@@ -1,5 +1,23 @@
 # CLAUDE.md
 
+## Required Reading
+<!-- managed by /warmup -->
+
+**Load these files at the start of every session and after any context compaction:**
+
+- `NOTES.md` — institutional memory (decisions, rationale, conventions)
+- `PLAN.md` — current priorities and completed work
+
+## Post-Compaction Rule
+<!-- managed by /warmup -->
+
+**After context compaction, immediately re-read all files listed in § Required Reading.** Acknowledge what was loaded before continuing work.
+
+## Session Start Canary
+<!-- managed by /warmup -->
+
+**At the start of every session, run `git status` and summarize unstaged changes, staged changes, and untracked files.** Report this before doing any other work. If there are none, say so.
+
 ## Project
 
 session-kit — a suite of Claude Code skill plugins for making AI-assisted development sessions reliable and productive across time.
