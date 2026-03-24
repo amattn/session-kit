@@ -8,6 +8,41 @@ session-kit is a suite of Claude Code skill plugins for making AI-assisted devel
 
 ---
 
+## Invariants & Critical Requirements
+
+*(None yet)*
+
+---
+
+## Important Concepts & Insights
+
+### From the user
+
+- "should a skill be a noun or verb?" — led to the nouns-for-systems principle
+- "label is more than the labels. it's stable references." — drove the /stable-label rename
+- "i love that b rhymes, makes it memorable but maybe too cute?" → decided it's a feature, not a bug
+- "i'm not worried about long. the claude code ui is awesome at autocomplete" — length of slash commands is not a concern; clarity and descriptiveness win
+- Fenced code blocks in README should be one command per block — GUI clients allow easy copy-paste of a whole fenced area, so combining unrelated commands in one block forces users to manually select
+
+---
+
+## Taxonomy / Conventions
+
+### Skill roster (in progress — names under review)
+
+| # | Current name | Status | Source |
+|---|-------------|--------|--------|
+| 1 | /notes | **Implemented** | Existing |
+| 2 | /fast-chat | **Implemented** | EX_1 |
+| 3 | /sharpen | **Implemented** | EX_2 + EX_4 |
+| 4 | /dictation | **Implemented** | EX_3 |
+| 5 | /warmup | **Implemented** | EX_5 |
+| 6 | ~~/patterns~~ | Merged into /sharpen | EX_4 |
+| 7 | ~~/discipline~~ | Folded into /warmup + /sharpen | EX_6 |
+| 8 | /stable-label | **Implemented** | EX_7 |
+
+---
+
 ## Key Design Decisions
 
 ### Suite scope and skill roster (2026-03-13)
@@ -294,40 +329,6 @@ Individual skills (like /notes) create their own discipline during bootstrap, pr
 - **Rejected:** standalone /discipline skill — too much overlap with /warmup (format, enforcement) and /patterns (detection)
 - **Chosen:** split across /warmup (infrastructure) and /sharpen (recognition)
 
----
-
-## Invariants & Critical Requirements
-
-*(None yet)*
-
----
-
-## Important Concepts & Insights
-
-### From the user
-
-- "should a skill be a noun or verb?" — led to the nouns-for-systems principle
-- "label is more than the labels. it's stable references." — drove the /stable-label rename
-- "i love that b rhymes, makes it memorable but maybe too cute?" → decided it's a feature, not a bug
-- "i'm not worried about long. the claude code ui is awesome at autocomplete" — length of slash commands is not a concern; clarity and descriptiveness win
-- Fenced code blocks in README should be one command per block — GUI clients allow easy copy-paste of a whole fenced area, so combining unrelated commands in one block forces users to manually select
-
----
-
-## Taxonomy / Conventions
-
-### Skill roster (in progress — names under review)
-
-| # | Current name | Status | Source |
-|---|-------------|--------|--------|
-| 1 | /notes | **Implemented** | Existing |
-| 2 | /fast-chat | **Implemented** | EX_1 |
-| 3 | /sharpen | **Implemented** | EX_2 + EX_4 |
-| 4 | /dictation | **Implemented** | EX_3 |
-| 5 | /warmup | **Implemented** | EX_5 |
-| 6 | ~~/patterns~~ | Merged into /sharpen | EX_4 |
-| 7 | ~~/discipline~~ | Folded into /warmup + /sharpen | EX_6 |
-| 8 | /stable-label | **Implemented** | EX_7 |
 
 ---
 
