@@ -1,6 +1,6 @@
 ---
 name: fast-chat
-version: 0.1.0
+version: 0.2.0
 description: "Structured interaction patterns for efficient human-AI communication. Codes (1A, 2B, 3ok) replace prose. Use when the user asks to 'fast-chat', 'set up options', 'set up fast chat', 'NL', 'NLR', '1b1', or wants structured decision-making. Also proactively adopt these patterns whenever you are presenting the user with choices, reviewing work for approval, or about to ask an open-ended question that could be lettered options instead — even if the user hasn't mentioned /fast-chat. These patterns are always-on communication defaults, not something that requires explicit invocation. Also trigger the bootstrap flow when setting up a new project's AGENTS.md and/or CLAUDE.md if no interaction conventions are defined yet."
 user-invocable: true
 ---
@@ -29,43 +29,89 @@ Originally developed for voice-input workflows where brevity is critical, but eq
 
 ## The Standard Review Prompt
 
-The single highest-leverage pattern. When presenting work for review, replace open-ended "anything else?" with structured options.
+The single highest-leverage pattern. When presenting work for review, replace open-ended "anything else?" with a structured prompt.
 
-The prompt has two parts:
+### Core rule: silence is not approval
 
-**Situational options** — the first N letters, adapted to the context. Could be two options, could be four — however many the situation calls for. The Add/Change/Remove set is a common default for reviewing artifacts, but other situations call for different choices. A naming decision might offer three candidate names. A plan review might offer "expand scope / narrow scope." Pick options that match what the user is actually deciding.
+**The review stays open until the user explicitly approves with O.** After executing any instruction (add, change, remove), re-present the item for further input. Do not treat the first instruction as implicit approval of everything else. The user may have more changes — wait for O.
 
-**Stable tail** — the last two options are always the same, regardless of how many situational options precede them:
+This is the most important rule for review prompts. Without it, the agent races ahead after one instruction and the user loses control of the review.
 
-```
-[last - 1]. Recommendations — tell me what you'd suggest
-[last].     Ok — approve as-is
-```
+Use the review prompt when presenting work for approval — artifacts, plans, decisions. Do not attach it to informational answers or explanations.
 
-"Recommendations" invites the agent to surface concerns proactively. "Ok" gives the user a fast exit. Together they ensure every review prompt supports both "I want your opinion" and "just approve it" without the user needing to invent a response.
+### The stable tail
 
-**Example with 3 situational options** (artifact review):
+Every review prompt ends with these two codes:
 
 ```
-A. Add something
-B. Change something
-C. Remove something
-D. Recommendations — tell me what you'd suggest
-E. Ok — approve as-is
+R. Show me recommendations
+O. Ok, approve
 ```
 
-**Example with 2 situational options** (direction choice):
+**R** asks the agent to surface concerns or suggestions. In a review context, R always produces NL-formatted options (lettered choices), not prose paragraphs. The user wants to pick, not read.
 
+**O** approves the current item and moves on. When a simple recommendation is displayed (e.g., "add GUI tools to the list"), O implicitly accepts it — no extra code needed. For non-trivial recommendations, the user engages with them directly (prose or picking from NL options) before saying O.
+
+### Free-form input needs no prefix
+
+The user just says what they want: "add X", "fix the wording on Y", "remove Z." No letter code required for instructions — prose is the default, not an option to select.
+
+### How it works in practice
+
+**Simple section review:**
+```
+Agent: [presents section]
+
+   R. Show me recommendations
+   O. Ok, approve
+
+User: fix the typo in line 3
+Agent: [fixes typo, re-presents section]
+
+   R. Show me recommendations
+   O. Ok, approve
+
+User: O
+```
+
+**With recommendations (R produces NL-formatted options):**
+```
+Agent: [presents section]
+
+   R. Show me recommendations
+   O. Ok, approve
+
+User: R
+Agent: 1. Error handling for the timeout case
+          A. Add try/catch with retry
+          B. Add try/catch, fail fast
+          C. Skip for now
+
+       2. Variable naming
+          A. Rename `data` to `response_payload`
+          B. Keep as-is
+
+       3. Retry logic
+          A. Refactor to use exponential backoff
+          B. Keep as-is
+
+   R. Show me recommendations
+   O. Ok, approve
+
+User: 1A, 2B, 3 note for later review
+Agent: [applies retry try/catch, keeps naming, notes retry logic for later, re-presents]
+```
+
+**Direction choice (situational options + tail):**
 ```
 A. Keep the current approach
 B. Try the alternative
-C. Recommendations — tell me what you'd suggest
-D. Ok — approve as-is
+
+R. Show me recommendations
+O. Ok, approve
 ```
 
-Composable: "A, C" means "keep the current approach, and also tell me what you'd change."
-
-This replaces the vague "what do you think?" or "any feedback?" with a menu that's faster to respond to. Use it after presenting any artifact, plan, or decision for approval — it applies everywhere.
+Situational options appear when the review involves a specific decision — the agent adapts the options to the context. The tail is always the same.
 
 ---
 
@@ -119,7 +165,7 @@ Numbered questions with lettered options. The core pattern.
 
   Inline markers work well when the rationale is obvious, rationale paragraphs when the "why" matters. Other formats may fit other situations — the goal is clarity, not rigid adherence to these two.
 
-  **NLR is different from the review prompt's "Recommendations" option.** NLR is the agent proactively marking its pick when presenting options (agent → user: "I recommend B"). The review prompt's Recommendations option is the user asking the agent to surface concerns after seeing completed work (user → agent: "tell me what you'd suggest"). Different direction of flow, different purpose.
+  **NLR is different from the review prompt's R code.** NLR is the agent proactively marking its pick when presenting options (agent → user: "I recommend B"). The review prompt's R is the user asking the agent to surface concerns after seeing completed work (user → agent: "give me recommendations"). Different direction of flow, different purpose.
 
 **Formatting rule:** always wrap NL options in a **fenced code block** (triple backticks). Indent lettered options by 3 spaces from the number. Without the code block, markdown rendering collapses the indentation and the hierarchy is lost. This is not optional — without it, the numbered-lettered hierarchy is visually flat and hard to scan.
 
@@ -208,8 +254,10 @@ Shorthands:
 Batch answers: "1A, 2C, 3ok" — re-present with only unanswered items.
 No answer = still open. Never assume approval.
 
-When reviewing, use the standard review prompt: situational options adapted to
-context, followed by Recommendations and Ok as the stable tail.
+When reviewing work, use the standard review prompt: present the item, then
+the R/O stable tail (R. Show me recommendations, O. Ok, approve). Silence is not
+approval — re-present after every change until the user says O.
+R always produces NL-formatted options in review context.
 Always suggest concrete options — never ask open-ended questions when options are possible.
 ```
 
@@ -258,7 +306,7 @@ Shorthands (NL, NLR, 1b1)  → voice-friendly commands to switch modes
                                (user says "NLR", agent reformats)
 
 Standard review prompt      → structured approval for any review cycle
-                               (situational options + Recommend / Ok tail)
+                               (R/O tail, silence is not approval)
 ```
 
 /fast-chat is the communication layer that makes every other skill's interactions faster. Without it, each decision is an open-ended conversation. With it, decisions are codes — precise, parseable, and fast enough for voice input.

@@ -2,6 +2,25 @@
 
 All notable changes to session-kit. Versions track the plugin version in `.claude-plugin/plugin.json`.
 
+## [0.7.0] — 2026-03-24
+
+### Changed
+- `/fast-chat` v0.2.0: redesigned standard review prompt based on live trial feedback (SPI_5)
+  - Stable tail simplified to R/O (recommendations / ok) — dropped S and the old A-E layout
+  - "Silence is not approval" as the headline rule — re-present after every change until explicit O
+  - R always produces NL-formatted options in review context
+  - O implicitly accepts simple displayed recommendations
+  - Free-form input needs no prefix — just type instructions
+  - Updated HELP.md with new review flow examples
+- `/warmup` v0.1.2: added concrete language-strengthening tactics to the escalation ladder (SPI_4)
+  - Bold directives, imperative qualifiers, standalone sentences, cost framing, remove hedging
+- `/notes` v0.1.2: reordered suggested starting sections for better reading flow (SPI_6)
+  - New order: Project Context → Invariants → Concepts → Taxonomy → Key Design Decisions
+  - Stable reference material first, growing decision log after
+
+### Added
+- SHARPEN.md: SPI_6 (notes default section order)
+
 ## [0.6.0] — 2026-03-14
 
 ### Added

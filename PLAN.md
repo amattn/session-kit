@@ -54,8 +54,15 @@ Removed session-kit-core and session-kit-refine from marketplace.json, deleted b
 
 Added HELP.md files to all 6 skills (seeded from README How to Use section). Added Quick Reference blockquote to top of each SKILL.md with directive to read HELP.md for usage questions and escalation path to full SKILL.md for edge cases. Plugin version bumped to 0.6.0.
 
+### 13. SPI_4, SPI_5, SPI_6 — sharpen-driven skill updates ✓
+
+Applied three process observations from SHARPEN.md:
+- SPI_5: /fast-chat review prompt redesigned (R/O tail, silence-is-not-approval, drop S and A-E layout)
+- SPI_4: /warmup escalation ladder gets concrete language-strengthening tactics
+- SPI_6: /notes suggested section order reordered (stable reference first, decision log after)
+
 ## Next Steps
 
-### 13. Description optimization
+### 14. Description optimization
 
 Run the skill-creator trigger optimization loop on each skill's description to improve triggering accuracy.

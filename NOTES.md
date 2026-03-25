@@ -329,6 +329,33 @@ Individual skills (like /notes) create their own discipline during bootstrap, pr
 - **Rejected:** standalone /discipline skill — too much overlap with /warmup (format, enforcement) and /patterns (detection)
 - **Chosen:** split across /warmup (infrastructure) and /sharpen (recognition)
 
+### /fast-chat review prompt redesign (2026-03-24)
+
+Redesigned the standard review prompt based on live trial feedback from a 16-section, ~25-decision-point spec review (SPI_5). The old A-E layout (Add/Change/Remove/Recommendations/Ok) didn't match actual usage.
+
+**Key findings:**
+- A/B/C (add/change/remove) are never used as letter codes — users just type prose instructions
+- "Recommendations" was ambiguous — unclear if user is requesting recs or accepting displayed recs
+- S ("something else") was dead weight — never used in trial
+
+**New design:**
+- **Stable tail: R/O** — "R. Show me recommendations" and "O. Ok, approve"
+- **"Show me recommendations"** wording chosen over "More recommendations" (implies prior recs) and plain "Recommendations" (ambiguous — category label vs request). "Show me" is unambiguously a user request to the agent.
+- **Silence is not approval** — the headline rule. Re-present after every change until explicit O.
+- **O implicitly accepts simple recs** — context-dependent and natural
+- **Free-form input needs no prefix** — just type instructions
+- **R always produces NL-formatted options** in review context — prose recs are less useful
+- **Scoped to reviews** — do not attach the review prompt to informational answers or explanations (eval 6 flagged over-triggering on these)
+
+**Rejected:** S/R/O tail (S dropped after trial showed it was never used). Rejected: separate "Y" code for accepting recs (O covers simple recs; non-trivial recs get discussed via prose or NL options). Rejected: redundant summary section at end of review prompt — every bullet was a restatement of what's already explained above.
+
+### /warmup language-strengthening tactics (2026-03-24)
+
+Added concrete tactics to the escalation ladder's "tighten wording" step (SPI_4). The original guidance ("make it shorter, bolder, more imperative") was too vague — agents interpreted it as "change a word or two." Now includes specific moves: bold directives, imperative qualifiers (MUST/ALWAYS/NEVER), standalone sentences over paragraphs, cost framing, remove hedging. Framed as a toolkit to pick from ("pick the moves that fit the specific failure"), not a checklist — with explicit encouragement for the agent to try its own ideas.
+
+### /notes default section order (2026-03-24)
+
+Reordered "Suggested Starting Sections" to put stable reference material before the growing decision log (SPI_6). New order: Project Context → Invariants → Concepts → Taxonomy → Key Design Decisions. Rationale: a new reader or agent recovering from compaction gets high-signal orientation context before hitting the detailed (and often very long) decision history. Session-kit's own NOTES.md already follows this order after a reorg.
 
 ---
 

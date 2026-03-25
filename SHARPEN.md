@@ -42,53 +42,8 @@ Zero-padding IDs (e.g., `REQ_003` instead of `REQ_3`) preserves lexical sort ord
 
 **Current NOTES.md guidance (from design decisions):** "zero-padded IDs optional guidance. Tradeoffs: two conventions (padded vs unpadded) + padding width is a guess. Let users decide." — this is correct but doesn't address the grep tension explicitly.
 
-### SPI_3: Review prompt recommendation is not a selectable option [friction]
 
-During section-by-section reviews, the agent produces a form like:
-
-```
-1. §7 Agent Flows
-   A. ok as-is
-   B. add/change/remove something
-
-   REC: B — add AFL_4 for plan session milestone...
-```
-
-The recommendation is displayed but isn't selectable — there's no letter code to accept it or ask for more recommendations. The user sees the REC but has to rephrase it as a manual instruction rather than just picking a code.
-
-**Expected stable tail:** The review prompt should have selectable options for the common actions:
-- A. Add something
-- B. Change something
-- C. Remove something
-- D or R. Accept recommendation (do what REC says)
-- E or O. Ok as-is
-
-This way batch responses work naturally: "1D, 2O, 3D, 4A add a note about X" — accept rec, ok, accept rec, add with details.
-
-**Also missing:** a code to ask for *more* recommendations on an item — "I don't love the rec but I don't know what I want either, give me more options."
-
-**User quote:** "the rec is shown but i can't easily select it. or ask for more recs."
-
-**Not yet a pattern** — noted from a single review session. Promote to /fast-chat skill adjustment if this keeps surfacing.
-
-### SPI_4: /warmup escalation lacks concrete language-strengthening tactics [gap]
-
-/warmup's escalation ladder says "tighten wording — make it shorter, bolder, more imperative" but doesn't give the agent concrete tactics for *how* to strengthen language. In practice, when a directive is being ignored or dropped after compaction, the fix is often mechanical:
-
-- **Bold the directive** — `**Always do X**` survives compaction better than plain text
-- **Use MUST/ALWAYS/EVERY TIME** — imperative qualifiers signal non-negotiable rules
-- **Move from paragraph to standalone sentence** — short punchy rules resist summarization
-- **Add redundancy** — repeat the rule in multiple places (CLAUDE.md + auto-memory + inline in the section it governs)
-
-These are the actual moves a user or agent makes when strengthening wording. The current SKILL.md mentions the concept but leaves the agent to figure out the specifics. Adding a concrete "strengthening toolkit" to /warmup would make the escalation ladder actionable instead of aspirational.
-
-**User quote:** "strengthen language make them bold or use stronger must always or every time kind of wording"
-
-**Tension:** Prescriptive tactics risk mechanical over-application (bold everything, MUST everything). But vague guidance gets interpreted as "change a word or two" — which is why the escalation ladder isn't working. The advantage of agent discretion is situational awareness (don't bold what's already bold, pick the tactic that fits the gap). The disadvantage is that if agents were good at this judgment, /warmup wouldn't need to exist.
-
-**Action:** Promote to /warmup skill update — add a concrete language-strengthening section to the escalation ladder.
-
-### SPI_5: /fast-chat review prompt layout doesn't match actual usage patterns [redesign]
+### SPI_5: /fast-chat review prompt layout doesn't match actual usage patterns [implemented]
 
 The current review prompt design (SPI_3 proposed A/B/C/D/E for add/change/remove/rec/ok) is awkward in practice. Three problems:
 
@@ -178,6 +133,81 @@ Reviewed all ~25 decision points. Revised findings:
 - Silence is not approval (the core rule)
 - Free-form input needs no prefix — just type
 
+**Resolution (2026-03-29):** Implemented in /fast-chat v0.2.0. Final wording:
+- **"R. Show me recommendations"** — chosen over "More recommendations" (implies prior recs exist) and plain "Recommendations" (ambiguous category label vs request). "Show me" is unambiguously a user request to the agent.
+- **"O. Ok, approve"** — period-capitalized format for consistency
+- **Silence is not approval** as the headline rule, positioned before the stable tail
+- **Scoped to reviews** — "Do not attach it to informational answers or explanations" (eval 6 over-trigger)
+- **Redundant summary section removed** — every bullet was a restatement
+- **R example uses NL-formatted recs with A/B options** per recommendation, so batch syntax (1A, 2B) is valid
+- User testing confirms the design is superior to the old A-E layout. Keeping `[implemented]` for continued monitoring.
+
 ## Resolved
 
-*(None yet)*
+### SPI_3: Review prompt recommendation is not a selectable option [superseded by SPI_5]
+
+During section-by-section reviews, the agent produces a form like:
+
+```
+1. §7 Agent Flows
+   A. ok as-is
+   B. add/change/remove something
+
+   REC: B — add AFL_4 for plan session milestone...
+```
+
+The recommendation is displayed but isn't selectable — there's no letter code to accept it or ask for more recommendations. The user sees the REC but has to rephrase it as a manual instruction rather than just picking a code.
+
+**Expected stable tail:** The review prompt should have selectable options for the common actions:
+- A. Add something
+- B. Change something
+- C. Remove something
+- D or R. Accept recommendation (do what REC says)
+- E or O. Ok as-is
+
+This way batch responses work naturally: "1D, 2O, 3D, 4A add a note about X" — accept rec, ok, accept rec, add with details.
+
+**Also missing:** a code to ask for *more* recommendations on an item — "I don't love the rec but I don't know what I want either, give me more options."
+
+**User quote:** "the rec is shown but i can't easily select it. or ask for more recs."
+
+**Not yet a pattern** — noted from a single review session. Promote to /fast-chat skill adjustment if this keeps surfacing.
+
+**Resolution (2026-03-24):** Superseded by SPI_5, which identified the structural issue (flat A-E layout doesn't match actual review flow) and was implemented with the R/O tail design.
+
+### SPI_4: /warmup escalation lacks concrete language-strengthening tactics [resolved 2026-03-24]
+
+/warmup's escalation ladder says "tighten wording — make it shorter, bolder, more imperative" but doesn't give the agent concrete tactics for *how* to strengthen language. In practice, when a directive is being ignored or dropped after compaction, the fix is often mechanical:
+
+- **Bold the directive** — `**Always do X**` survives compaction better than plain text
+- **Use MUST/ALWAYS/EVERY TIME** — imperative qualifiers signal non-negotiable rules
+- **Move from paragraph to standalone sentence** — short punchy rules resist summarization
+- **Add redundancy** — repeat the rule in multiple places (CLAUDE.md + auto-memory + inline in the section it governs)
+
+These are the actual moves a user or agent makes when strengthening wording. The current SKILL.md mentions the concept but leaves the agent to figure out the specifics. Adding a concrete "strengthening toolkit" to /warmup would make the escalation ladder actionable instead of aspirational.
+
+**User quote:** "strengthen language make them bold or use stronger must always or every time kind of wording"
+
+**Tension:** Prescriptive tactics risk mechanical over-application (bold everything, MUST everything). But vague guidance gets interpreted as "change a word or two" — which is why the escalation ladder isn't working. The advantage of agent discretion is situational awareness (don't bold what's already bold, pick the tactic that fits the gap). The disadvantage is that if agents were good at this judgment, /warmup wouldn't need to exist.
+
+**Resolution (2026-03-24):** Added concrete tactics to warmup SKILL.md § Strengthening a rule. Framed as a toolkit ("pick the moves that fit the specific failure"), not a checklist. Added encouragement for the agent to try its own ideas when it has a better approach for the specific situation.
+
+### SPI_6: /notes default section order doesn't match natural reading flow [resolved 2026-03-24]
+
+The /notes SKILL.md "Suggested Starting Sections" lists Key Design Decisions first, followed by Invariants, Concepts, and Taxonomy. But after reorganizing session-kit's own NOTES.md, the better reading order is:
+
+1. **Project Context** — what is this (already near top)
+2. **Invariants & Critical Requirements** — non-negotiable rules, scan first
+3. **Important Concepts & Insights** — principles and user values
+4. **Taxonomy / Conventions** — canonical vocabulary
+5. **Key Design Decisions** — the largest, most active section, grows into a log
+
+**Rationale:** Invariants, concepts, and taxonomy are stable reference material — you scan them to orient yourself. Key Design Decisions is a growing log that can get very long. Putting the stable sections first means a new reader (or agent after compaction) gets the high-signal context before hitting the detailed decision history.
+
+**Current SKILL.md order:** Key Design Decisions → Invariants → Concepts → Taxonomy (positions 1-4 of "most important")
+
+**Proposed order:** Invariants → Concepts → Taxonomy → Key Design Decisions
+
+**Also affects:** the bootstrap flow — when /notes creates a new NOTES.md, it should scaffold in this order. And the "float stale content down" guidance in § Size Management already supports this principle.
+
+**Resolution (2026-03-24):** Updated /notes SKILL.md § Suggested Starting Sections to the new order. Project Context promoted to #1, Key Design Decisions moved to #5.

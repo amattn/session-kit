@@ -1,6 +1,6 @@
 ---
 name: warmup
-version: 0.1.1
+version: 0.1.2
 description: "Session bootstrap and compaction recovery. Ensures skills, disciplines, and key files load reliably at session start and survive context compaction. Sets up canaries to verify loading and keep the user informed. Use when the user asks to 'warmup', 'bootstrap', 'start session', 'reload context', 'set up required reading', or when the user says 'I lost context', 'reload after compaction', 'this keeps getting forgotten', 'make sure X loads reliably'. Also trigger when a skill needs reliable loading or when AGENTS.md and/or CLAUDE.md needs compaction-resistant structure. Do NOT proactively bootstrap warmup when the user is asking about something unrelated — only trigger when the user's request is about loading, context, compaction, or session reliability."
 user-invocable: true
 ---
@@ -197,9 +197,15 @@ When something isn't loading reliably:
 
 When a user reports that a rule is inconsistently loaded or applied, escalate through tactics in order:
 
-1. **Tighten wording** — make it shorter, bolder, more imperative
-2. **Improve positioning** — move it higher in AGENTS.md and/or CLAUDE.md
-3. **Add redundancy** — add the rule to a second location (e.g., both a discipline block and Required Reading)
+1. **Tighten wording** — pick the moves that fit the specific failure. Not a checklist — apply what's needed, skip what's already strong:
+   - **Bold the directive** — `**Always do X**` survives compaction better than plain text
+   - **Use imperative qualifiers** — MUST, ALWAYS, EVERY TIME, NEVER signal non-negotiable rules
+   - **Standalone sentences over paragraphs** — short punchy rules resist summarization; long paragraphs get compressed away
+   - **Add cost framing** — "The cost of X is seconds. The cost of not-X is re-litigating settled decisions." Motivation makes rules harder to deprioritize under task pressure
+   - **Remove hedging** — replace "consider," "try to," "when possible" with direct imperatives
+   - These are starting points — if you have a better idea for the specific situation, try it
+2. **Improve positioning** — move it higher in AGENTS.md and/or CLAUDE.md. Content near the top survives aggressive compaction.
+3. **Add redundancy** — add the rule to a second location (e.g., both a discipline block and Required Reading). Repeat critical rules in multiple places so compaction can't eliminate all copies.
 4. **Promote to auto-memory** — create a memory entry that loads before everything else
 5. **Duplicate as fallback** — if pointers aren't working, duplicate the full directive into auto-memory
 

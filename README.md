@@ -9,7 +9,7 @@ Extracted from patterns discovered during 500+ sessions of AI-assisted developme
 | Skill | What it does |
 |-------|-------------|
 | `/warmup` | Session bootstrap and compaction recovery. Ensures skills, disciplines, and key files load reliably and survive context compaction. |
-| `/fast-chat` | Structured interaction patterns. Numbered questions, lettered options, batch answer codes (`1A, 2B, 3 let's discuss pros/cons`). Always-on communication style that makes decisions faster. |
+| `/fast-chat` | Structured interaction patterns. Numbered questions, lettered options, batch answer codes (`1A, 2B, 3 let's discuss pros/cons`), and a review prompt with R/O stable tail. Always-on communication style that makes decisions faster. |
 | `/dictation` | Project-specific correction table. Originally designed for voice-to-text errors, but also useful for recurring typos and emergent shorthand — any systematic input pattern where the user means something other than what they literally typed. |
 | `/notes` | Institutional memory. Captures decisions, rationale, and conventions in NOTES.md so future sessions don't re-litigate settled questions. |
 | `/stable-label` | Greppable stable references. Gives every referenceable thing an append-only ID (`REQ_3`, `DEC_14`) that never renumbers and always resolves to exactly one definition. |
@@ -58,7 +58,7 @@ Best for: long sessions that hit context limits, projects with CLAUDE.md directi
 
 ### `/fast-chat` — Structured Interaction Patterns
 
-Replaces prose-heavy back-and-forth with structured codes. Numbered questions with lettered options, batch answer codes (`1A, 2B, 3ok`), and a standard review prompt with situational options plus a stable Recommendations/Ok tail. This is an always-on communication style, not just a tool you invoke.
+Replaces prose-heavy back-and-forth with structured codes. Numbered questions with lettered options, batch answer codes (`1A, 2B, 3ok`), and a standard review prompt with an R/O stable tail (R — show me recommendations, O — ok, approve). Silence is not approval — the review stays open until you say O. This is an always-on communication style, not just a tool you invoke.
 
 Why it matters: every decision point in AI-assisted work is a potential bottleneck. Open-ended questions ("what do you think?") force the user to do generative work. Structured options let them do evaluative work — picking from a list instead of inventing from scratch. The speed gain compounds across hundreds of decisions per session and hundreds of sessions per project.
 
@@ -141,14 +141,37 @@ Agent: The Required Reading rule is present and auto-memory is set,
 
 **Setup:** Run `/fast-chat` in your project. It adds an Interaction Conventions section to CLAUDE.md with the NL/NLR/1b1 shorthands, batch answer format, and the standard review prompt.
 
-**Ongoing:** Always-on — no invocation needed. The agent presents choices as numbered questions with lettered options and uses the review prompt (situational options + Recommendations + Ok) for approvals. Your side:
+**Ongoing:** Always-on — no invocation needed. The agent presents choices as numbered questions with lettered options and uses the review prompt (R/O tail) for approvals. Your side:
 - Answer with batch codes: `1A, 2B, 3ok`
 - Say `NL` to reformat a question as numbered-letters options
 - Say `NLR` for options with the agent's recommendation marked
 - Say `1b1` to discuss items one at a time instead of batching
+- Say `R` during a review to get NL-formatted recommendations
+- Say `O` to approve — implicitly accepts any simple displayed rec
+- Just type instructions (add/change/remove) — no prefix needed
 - Unanswered items stay open — silence is never treated as approval
 
-**Example:**
+**Example — review flow:**
+```
+Agent: [presents section for review]
+
+   R. Show me recommendations
+   O. Ok, approve
+
+You: fix the typo in paragraph 2
+Agent: [fixes typo, re-presents section]
+
+   R. Show me recommendations
+   O. Ok, approve
+
+You: R
+Agent: 1. Add a note about edge cases
+       2. Keep the current examples
+
+You: do 1, O
+```
+
+**Example — batch decisions:**
 ```
 Agent: A few decisions needed:
        1. Database engine?
@@ -200,7 +223,7 @@ Agent: Got it. Want me to add "pleet → plet" to the correction table?
 
 ### `/notes`
 
-**Setup:** Run `/notes` on a project without NOTES.md. It creates NOTES.md with suggested sections (Key Design Decisions, Invariants, Important Concepts, Taxonomy, Open Questions), references it from CLAUDE.md, and adds a Notes Discipline block that enforces note-taking in every future session.
+**Setup:** Run `/notes` on a project without NOTES.md. It creates NOTES.md with suggested sections (Project Context, Invariants, Important Concepts, Taxonomy, Key Design Decisions, Open Questions), references it from CLAUDE.md, and adds a Notes Discipline block that enforces note-taking in every future session.
 
 **Ongoing:** Mostly automatic — the discipline block tells the agent to update NOTES.md after every decision before moving on. You don't need to invoke `/notes` for routine note-taking. Invoke it when you want to:
 - Reorganize sections that have grown unwieldy

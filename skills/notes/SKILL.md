@@ -1,6 +1,6 @@
 ---
 name: notes
-version: 0.1.1
+version: 0.1.2
 description: "Maintain living development notes as institutional memory. Use when the user asks to 'notes', 'start notes', 'update notes', 'capture this decision', 'note this', 'add to notes', 'reorganize notes', or 'bootstrap notes'. Also trigger when a decision is made that should be recorded, when the user asks about past decisions, or when NOTES.md needs reorganization. Maintains a NOTES.md file that captures the why behind project decisions — rationale, rejected alternatives, user insights, invariants, and conventions."
 user-invocable: true
 ---
@@ -40,18 +40,20 @@ When invoked on a project with no NOTES.md:
 
 These are a **suggested starting point**, not a rigid template. The structure should evolve with emergent content — new sections will appear, existing ones may merge, split, or occasionally be retired (content migrated elsewhere). The structure should serve the project, not constrain it.
 
-The first four are the most important — they carry the most weight and get referenced and updated most frequently:
+The order below reflects natural reading flow: stable reference material first (orient quickly), then the growing decision log. A new reader — or an agent recovering from compaction — gets the high-signal context before hitting detailed history.
 
-1. **Key Design Decisions** — What was decided, why, rejected alternatives, status (decided/open/revisiting). Change rationale and review pass changes belong here as dated entries. Typically the largest and most active section.
+The first five are the most important — they carry the most weight and get referenced and updated most frequently:
+
+1. **Project Context** — Brief "what is this," "where did it come from," one-liner on how it works. Near the top of the document. Mostly static after kickoff.
 2. **Invariants & Critical Requirements** — Load-bearing rules that must not be violated. Each stated as a checkable rule, justified, and scoped. Small but high-impact.
 3. **Important Concepts & Insights** — Principles, user values, design insights. Sub-categories: "From the user" (direct quotes) and "Emergent" (crystallized during design).
 4. **Taxonomy / Conventions** — Canonical vocabulary definitions, naming conventions, formatting rules. Prevents vocabulary disputes from resurfacing.
+5. **Key Design Decisions** — What was decided, why, rejected alternatives, status (decided/open/revisiting). Change rationale and review pass changes belong here as dated entries. Typically the largest and most active section — placed after reference sections so it doesn't push them out of view.
 
 The rest are useful but lower-traffic:
 
-5. **Open Questions** — Unresolved topics, things to investigate, items awaiting user input.
-6. **Things to Monitor** — Watchlist items: drift risks, size concerns, potential problems.
-7. **Project Context** — Brief "what is this," "where did it come from," one-liner on how it works. Near the top of the document. Mostly static after kickoff.
+6. **Open Questions** — Unresolved topics, things to investigate, items awaiting user input.
+7. **Things to Monitor** — Watchlist items: drift risks, size concerns, potential problems.
 8. **Artifact Approval Status** — Section-by-section tracking of what's been reviewed and approved. Most useful when there's no separate plan file tracking this.
 
 ---
