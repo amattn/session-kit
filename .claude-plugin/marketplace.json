@@ -5,15 +5,15 @@
   },
   "metadata": {
     "description": "A suite of Claude Code skill plugins for making AI-assisted development sessions reliable and productive across time.",
-    "version": "0.3.0"
+    "version": "0.4.0"
   },
   "plugins": [
     {
       "name": "session-kit",
       "source": "./",
-      "description": "Skills for making AI-assisted development sessions reliable and productive across time: /warmup, /fast-chat, /dictation, /notes, /stable-label, /sharpen.",
-      "version": "0.7.0",
-      "keywords": ["session", "notes", "sharpen", "dictation", "labels", "warmup", "fast-chat", "multi-session", "productivity"],
+      "description": "Skills for making AI-assisted development sessions reliable and productive across time: /warmup, /fast-chat, /dictation, /notes, /stable-label, /feedback-foo (/foo, /feedback, /observation).",
+      "version": "0.8.0",
+      "keywords": ["session", "notes", "foo", "feedback", "feedback-foo", "observation", "dictation", "labels", "warmup", "bootstrap", "fast-chat", "multi-session", "productivity"],
       "category": "productivity",
       "skills": "./skills/"
     }
