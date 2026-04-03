@@ -1,0 +1,8 @@
+{
+  "expectations": [
+    {"text": "Recognizes this is a recurring failure, not a first-time observation", "passed": true, "evidence": "Response acknowledges 'keeps recurring despite being resolved' and that 'the original fix added interaction conventions to CLAUDE.md but agents continued using the anything else? pattern'"},
+    {"text": "Proposes escalation beyond the original fix", "passed": false, "evidence": "Applied the same type of fix (a CLAUDE.md instruction) that already failed. Self-assessment explicitly notes: 'I rewrote the same type of fix that already failed once. There's no analysis of why the instruction didn't stick.'"},
+    {"text": "Updates FOO_2 in FEEDBACK_FOO.md with escalation context", "passed": false, "evidence": "FEEDBACK_FOO.md was left unchanged — no escalation status added. Response says 'Left FEEDBACK_FOO.md unchanged'."},
+    {"text": "Suggests concrete next steps (stronger wording, discipline, or tooling)", "passed": false, "evidence": "Only rewrote a soft CLAUDE.md instruction with slightly 'clearer wording'. No discipline, no tooling, no structured escalation plan. Self-assessment acknowledges all these gaps."}
+  ]
+}

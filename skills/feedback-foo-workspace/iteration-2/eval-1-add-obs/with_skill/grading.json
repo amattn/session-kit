@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "New FOO_4 entry added to FEEDBACK_FOO.md", "passed": true, "evidence": "FEEDBACK_FOO.md contains '### FOO_4: Agent forgets to run tests after making changes [workflow]' in the Open section"},
+    {"text": "New entry has a descriptive title about forgetting tests", "passed": true, "evidence": "Title is 'Agent forgets to run tests after making changes'"},
+    {"text": "New entry has a category tag in brackets", "passed": true, "evidence": "Entry is tagged with [workflow]"},
+    {"text": "New entry is in the Open section", "passed": true, "evidence": "FOO_4 appears under '## Open' heading, before '## Resolved'"},
+    {"text": "NOTES.md is updated with the observation", "passed": true, "evidence": "NOTES.md contains 'Process Observations' section with 'Agent skips tests after changes' and cross-reference to FOO_4"}
+  ]
+}

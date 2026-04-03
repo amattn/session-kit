@@ -1,0 +1,7 @@
+{
+  "expectations": [
+    {"text": "NOTES.md is updated with UTC timestamp decision", "passed": true, "evidence": "NOTES.md contains '### Timestamps — Always UTC' under Key Design Decisions"},
+    {"text": "FEEDBACK_FOO.md is NOT modified (this is a project decision, not a process observation)", "passed": true, "evidence": "No FEEDBACK_FOO.md file in outputs/ — it was not modified"},
+    {"text": "Decision includes rationale or context", "passed": true, "evidence": "Entry says 'No local timezone conversions at the storage or API layer' providing context"}
+  ]
+}

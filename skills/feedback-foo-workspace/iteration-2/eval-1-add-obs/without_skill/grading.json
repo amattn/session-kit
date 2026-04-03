@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "New FOO_4 entry added to FEEDBACK_FOO.md", "passed": false, "evidence": "FEEDBACK_FOO.md was not modified; no FOO_4 entry exists. Response explicitly notes 'Did not add a tracked observation to FEEDBACK_FOO.md'"},
+    {"text": "New entry has a descriptive title about forgetting tests", "passed": false, "evidence": "No entry was created in FEEDBACK_FOO.md"},
+    {"text": "New entry has a category tag in brackets", "passed": false, "evidence": "No entry was created; no category tag assigned"},
+    {"text": "New entry is in the Open section", "passed": false, "evidence": "No entry was created in FEEDBACK_FOO.md"},
+    {"text": "NOTES.md is updated with the observation", "passed": true, "evidence": "NOTES.md has a 'Process Notes' section with 'Run tests after changes' entry noting the user's observation"}
+  ]
+}

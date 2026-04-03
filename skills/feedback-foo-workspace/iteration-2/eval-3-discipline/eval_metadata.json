@@ -1,0 +1,11 @@
+{
+  "eval_id": 3,
+  "eval_name": "create-discipline",
+  "prompt": "We always do a consistency pass after renames, then update NOTES.md, then check for stale references. Can you make that a discipline?",
+  "assertions": [
+    {"text": "CLAUDE.md contains a new discipline block with numbered steps", "type": "content"},
+    {"text": "Discipline block has a breadcrumb comment", "type": "content"},
+    {"text": "Discipline covers all three steps: consistency pass, NOTES.md update, stale reference check", "type": "content"},
+    {"text": "FEEDBACK_FOO.md FOO_1 is marked resolved or cross-referenced", "type": "content"}
+  ]
+}

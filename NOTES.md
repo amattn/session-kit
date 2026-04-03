@@ -2,7 +2,7 @@
 
 ## Project Context
 
-session-kit is a suite of Claude Code skill plugins for making AI-assisted development sessions reliable and productive across time. Extracted from patterns discovered during hundreds of sessions of plet-skills development. 6 skills total: `/notes`, `/warmup`, `/stable-label`, `/fast-chat`, `/dictation`, `/sharpen`.
+session-kit is a suite of Claude Code skill plugins for making AI-assisted development sessions reliable and productive across time. Extracted from patterns discovered during hundreds of sessions of plet-skills development. 6 skills total: `/notes`, `/warmup`, `/stable-label`, `/fast-chat`, `/dictation`, `/foo`.
 
 **Origin:** Extracted from patterns discovered during plet-skills development (`../plet-skills/`).
 
@@ -34,11 +34,11 @@ session-kit is a suite of Claude Code skill plugins for making AI-assisted devel
 |---|-------------|--------|--------|
 | 1 | /notes | **Implemented** | Existing |
 | 2 | /fast-chat | **Implemented** | EX_1 |
-| 3 | /sharpen | **Implemented** | EX_2 + EX_4 |
+| 3 | /foo (was /sharpen) | **Implemented** | EX_2 + EX_4 |
 | 4 | /dictation | **Implemented** | EX_3 |
 | 5 | /warmup | **Implemented** | EX_5 |
-| 6 | ~~/patterns~~ | Merged into /sharpen | EX_4 |
-| 7 | ~~/discipline~~ | Folded into /warmup + /sharpen | EX_6 |
+| 6 | ~~/patterns~~ | Merged into /foo (was /sharpen) | EX_4 |
+| 7 | ~~/discipline~~ | Folded into /warmup + /foo | EX_6 |
 | 8 | /stable-label | **Implemented** | EX_7 |
 
 ---
@@ -47,7 +47,7 @@ session-kit is a suite of Claude Code skill plugins for making AI-assisted devel
 
 ### Suite scope and skill roster (2026-03-13)
 
-Originally planned 7 extractable skills plus `/notes` (8 total). After merging /patterns into /sharpen and folding /discipline into /warmup + /sharpen, final count is 6 skills.
+Originally planned 7 extractable skills plus `/notes` (8 total). After merging /patterns into /foo (was /sharpen) and folding /discipline into /warmup + /foo, final count is 6 skills.
 
 ### Skill naming philosophy: nouns for systems, verbs for actions (2026-03-13)
 
@@ -55,7 +55,7 @@ Most skills in this suite are noun-shaped — they manage a system or artifact, 
 
 ### Suite name: session-kit (2026-03-13)
 
-Kept the original name. The suite name doesn't need to carry the value prop — the individual skill names already do that (`/fast-chat`, `/stable-label`, `/sharpen`). The suite name just says "here's a collection of session tools."
+Kept the original name. The suite name doesn't need to carry the value prop — the individual skill names already do that (`/fast-chat`, `/stable-label`, `/foo`). The suite name just says "here's a collection of session tools."
 
 - **Rejected:** `/steady-session` — follows the [value]-[domain] pattern but feels ostentatious, "too much bragging." Promises a result rather than describing what the tool does.
 - **Rejected:** `/session-craft` — aspirational but unnecessary weight
@@ -75,7 +75,7 @@ Renamed from `/chatux` (EX_1). The core value is speed — structured codes (1A,
 
 **Key insight:** Skill names should mix the value proposition into the name, not just describe the mechanism. `/options` describes what you see; `/fast-chat` describes what you get.
 
-### /sharpen naming (2026-03-13)
+### /sharpen naming (2026-03-13) — later renamed to /foo (2026-04-03)
 
 Renamed from `/feedback` (EX_2). The skill tracks meta-observations about process and tooling, with resolution lifecycle and promotion paths. The value prop is process improvement, not just collecting feedback.
 
@@ -177,7 +177,7 @@ Ran 11 eval pairs on /stable-label. Key findings:
 - Promote (eval 13): skill creates bidirectional cross-references (OBS_1 ↔ REQ_4) + consistency pass; baseline does one-way pointer
 - Crosscutting (eval 14): skill creates domain-specific faceted IDs (API_1, DBA_1) cross-referenced with REQ_5; baseline adds prose to REQ_5 without domain IDs
 
-### /sharpen eval findings (2026-03-14)
+### /foo (was /sharpen) eval findings (2026-03-14)
 
 Ran 8 eval pairs on /sharpen. **First skill where the eval confirmed the design rather than revealing problems.** No adjustments needed.
 
@@ -272,7 +272,7 @@ Ran 8 eval pairs on /fast-chat. Key findings:
 
 ### Disciplines: prose first, tooling when prose drifts (2026-03-14)
 
-From EXTRACTABLE.md EX_6 and PLET.md § "Skills for Judgment, Code for Compliance": disciplines are prose-based, and prose is re-interpreted each invocation — it drifts. When a prose discipline keeps getting violated (especially format compliance, schema rules, consistency checks), supplement with tooling (validation scripts shipped in `scripts/`). Escalation pattern: prose first → if agents drift → build a tool. Not every discipline needs this — most won't — but /sharpen should recognize when prose alone isn't working. /warmup's canaries are already an example of this pattern — prose says "load these files," canaries verify it happened. /stable-label's consistency passes are the most likely candidate for future tooling (a validation script enforcing no-duplicate-definitions, no-orphaned-references, no-renumbered-IDs). No tooling gaps are urgent yet, but /sharpen should recognize these patterns when drift appears.
+From EXTRACTABLE.md EX_6 and PLET.md § "Skills for Judgment, Code for Compliance": disciplines are prose-based, and prose is re-interpreted each invocation — it drifts. When a prose discipline keeps getting violated (especially format compliance, schema rules, consistency checks), supplement with tooling (validation scripts shipped in `scripts/`). Escalation pattern: prose first → if agents drift → build a tool. Not every discipline needs this — most won't — but /foo should recognize when prose alone isn't working. /warmup's canaries are already an example of this pattern — prose says "load these files," canaries verify it happened. /stable-label's consistency passes are the most likely candidate for future tooling (a validation script enforcing no-duplicate-definitions, no-orphaned-references, no-renumbered-IDs). No tooling gaps are urgent yet, but /foo should recognize these patterns when drift appears.
 
 ### Skill scripts: allowed-tools and portability (2026-03-14)
 
@@ -295,43 +295,43 @@ No scripts needed in session-kit yet, but when /stable-label consistency passes 
 
 **Fix applied:** moved Before You Commit above Versioning, made language imperative, added PLAN.md and CHANGELOG.md back to Decision Cascade. This is exactly the escalation pattern /warmup teaches: tighten wording → improve positioning → add redundancy.
 
-**Meta-observation:** this is session-kit's own process eating its own dogfood. The cascade and before-you-commit disciplines are the same pattern /warmup and /sharpen teach to users. When they drifted in our own project, we applied the same fix the skills recommend.
+**Meta-observation:** this is session-kit's own process eating its own dogfood. The cascade and before-you-commit disciplines are the same pattern /warmup and /foo teach to users. When they drifted in our own project, we applied the same fix the skills recommend.
 
-### /sharpen detection sources (2026-03-14)
+### /foo (was /sharpen) detection sources (2026-03-14)
 
-Detection sources are broader than just NOTES.md scanning. Five sources: conversation patterns (repeated corrections, consistent preferences), user interaction style (terse answers, shorthand, frustration signals), agent self-observation (own mistakes, inefficient workflows), project artifacts (git history, directive drift, code review comments), and cross-session signals (prior NOTES.md, recurring SHARPEN.md entries, stale auto-memory). NOTES.md remains the single intake *destination* for writing observations down, but these are the *inputs* that feed detection.
+Detection sources are broader than just NOTES.md scanning. Five sources: conversation patterns (repeated corrections, consistent preferences), user interaction style (terse answers, shorthand, frustration signals), agent self-observation (own mistakes, inefficient workflows), project artifacts (git history, directive drift, code review comments), and cross-session signals (prior NOTES.md, recurring FEEDBACK_FOO.md entries, stale auto-memory). NOTES.md remains the single intake *destination* for writing observations down, but these are the *inputs* that feed detection.
 
-### /patterns merged into /sharpen (2026-03-14)
+### /patterns merged into /foo (was /sharpen) (2026-03-14)
 
-Merged /patterns (EX_4) into /sharpen (EX_2). Both skills deal with process improvement — /patterns detects recurring patterns proactively, /sharpen tracks process observations with a resolution lifecycle. The user shouldn't have to choose between them when thinking "this process thing should be captured."
+Merged /patterns (EX_4) into what was then /sharpen (EX_2), now /foo. Both skills deal with process improvement — /patterns detects recurring patterns proactively, /foo tracks process observations with a resolution lifecycle. The user shouldn't have to choose between them when thinking "this process thing should be captured."
 
 **Merged skill features:**
 - Proactive detection ("I've seen this twice") — from /patterns
-- Resolution lifecycle (open → resolved) — from /sharpen
+- Resolution lifecycle (open → resolved) — from /foo (was /sharpen)
 - Promotion paths (→ CLAUDE.md, → NOTES.md) — from both
 - Discipline creation ("express this as a named discipline") — from /patterns
 
-**Name: /sharpen** — conveys the value prop (your process gets sharper). /patterns is descriptive but flat.
+**Name** was /sharpen at the time of this merge, later renamed to /foo (2026-04-03).
 
-**Artifact: SHARPEN.md** — observations with IDs, lifecycle states, and promotion paths.
+**Artifact:** `FEEDBACK_FOO.md` (was `SHARPEN.md`) — observations with IDs, lifecycle states, and promotion paths.
 
 **Result:** 6 skills total instead of 7.
 
-### /discipline folded into /warmup + /sharpen (2026-03-14)
+### /discipline folded into /warmup + /foo (was /sharpen) (2026-03-14)
 
 Dropped /discipline as a standalone skill. Its responsibilities split across two existing skills:
 
 - **/warmup** gets the **format and enforcement** — discipline block structure (scannable, enforceable, composable), writing blocks into AGENTS.md and/or CLAUDE.md, loading and verifying via Required Reading and canaries
-- **/sharpen** gets the **detection and creation** — recognizing "this workflow should be a discipline," helping users express informal habits as named disciplines, the meta-pattern of identifying what needs formalization
+- **/foo** (was /sharpen) gets the **detection and creation** — recognizing "this workflow should be a discipline," helping users express informal habits as named disciplines, the meta-pattern of identifying what needs formalization
 
 Individual skills (like /notes) create their own discipline during bootstrap, proving no separate /discipline skill is needed.
 
 - **Rejected:** standalone /discipline skill — too much overlap with /warmup (format, enforcement) and /patterns (detection)
-- **Chosen:** split across /warmup (infrastructure) and /sharpen (recognition)
+- **Chosen:** split across /warmup (infrastructure) and /foo (recognition)
 
 ### /fast-chat review prompt redesign (2026-03-24)
 
-Redesigned the standard review prompt based on live trial feedback from a 16-section, ~25-decision-point spec review (SPI_5). The old A-E layout (Add/Change/Remove/Recommendations/Ok) didn't match actual usage.
+Redesigned the standard review prompt based on live trial feedback from a 16-section, ~25-decision-point spec review (FOO_5). The old A-E layout (Add/Change/Remove/Recommendations/Ok) didn't match actual usage.
 
 **Key findings:**
 - A/B/C (add/change/remove) are never used as letter codes — users just type prose instructions
@@ -351,11 +351,24 @@ Redesigned the standard review prompt based on live trial feedback from a 16-sec
 
 ### /warmup language-strengthening tactics (2026-03-24)
 
-Added concrete tactics to the escalation ladder's "tighten wording" step (SPI_4). The original guidance ("make it shorter, bolder, more imperative") was too vague — agents interpreted it as "change a word or two." Now includes specific moves: bold directives, imperative qualifiers (MUST/ALWAYS/NEVER), standalone sentences over paragraphs, cost framing, remove hedging. Framed as a toolkit to pick from ("pick the moves that fit the specific failure"), not a checklist — with explicit encouragement for the agent to try its own ideas.
+Added concrete tactics to the escalation ladder's "tighten wording" step (FOO_4). The original guidance ("make it shorter, bolder, more imperative") was too vague — agents interpreted it as "change a word or two." Now includes specific moves: bold directives, imperative qualifiers (MUST/ALWAYS/NEVER), standalone sentences over paragraphs, cost framing, remove hedging. Framed as a toolkit to pick from ("pick the moves that fit the specific failure"), not a checklist — with explicit encouragement for the agent to try its own ideas.
 
 ### /notes default section order (2026-03-24)
 
-Reordered "Suggested Starting Sections" to put stable reference material before the growing decision log (SPI_6). New order: Project Context → Invariants → Concepts → Taxonomy → Key Design Decisions. Rationale: a new reader or agent recovering from compaction gets high-signal orientation context before hitting the detailed (and often very long) decision history. Session-kit's own NOTES.md already follows this order after a reorg.
+Reordered "Suggested Starting Sections" to put stable reference material before the growing decision log (FOO_6). New order: Project Context → Invariants → Concepts → Taxonomy → Key Design Decisions. Rationale: a new reader or agent recovering from compaction gets high-signal orientation context before hitting the detailed (and often very long) decision history. Session-kit's own NOTES.md already follows this order after a reorg.
+
+### /sharpen renamed to /feedback-foo (2026-04-03)
+
+"Sharpen" was too conceptual — users naturally say "add an observation" or "add a feedback item," not "sharpen this." The monitoring note from the original naming decision proved correct: the name wasn't intuitive for the "feedback" mental model.
+
+**New name:** `/feedback-foo` — FOO = Feedback, Observation, Oversight. A bucket concept for items observed in the wild that need triage or action. The `foo` metavariable reference is intentional and easy to disambiguate in context.
+
+- **Aliases:** `/foo`, `/feedback`, `/observation` — all four invoke the same skill
+- **Artifact:** `SHARPEN.md` → `FEEDBACK_FOO.md`
+- **Item prefix:** `SPI_N` → `FOO_N`
+- **Directory:** `skills/sharpen/` → `skills/feedback-foo/`
+- **Primary name swap:** initially chose `/foo` as primary, then swapped to `/feedback-foo` — eval 0 baseline showed that "foo" alone is opaque (baseline agent didn't know what it meant). `/feedback-foo` is self-documenting while `/foo` stays as the quick alias.
+- **`/observation` alias:** added because "add an observation" is the other natural verb alongside "add a feedback item"
 
 ---
 
@@ -363,7 +376,7 @@ Reordered "Suggested Starting Sections" to put stable reference material before 
 
 - ~~Suite name~~ → resolved: session-kit
 - ~~Skill 2 (/chatux) naming~~ → resolved: /fast-chat
-- ~~Skill 3 (/feedback) naming~~ → resolved: /sharpen (monitor adoption — name may not be intuitive for "feedback" mental model)
+- ~~Skill 3 (/feedback) naming~~ → resolved: /feedback-foo (renamed from /sharpen → /foo → /feedback-foo as primary)
 - Opencode compatibility — skills should work with opencode as well as Claude Code. Need to investigate opencode's skill/plugin format and identify what (if anything) needs to differ.
 - ~~Plugin subsets~~ → resolved: symlinks work. See below.
 
@@ -371,7 +384,7 @@ Reordered "Suggested Starting Sections" to put stable reference material before 
 
 Three bundles planned:
 - **session-kit-core**: `/warmup` + `/fast-chat` + `/dictation` — session experience layer (loading, communication, input)
-- **session-kit-refine**: `/notes` + `/stable-label` + `/sharpen` — knowledge management layer (decisions, references, process improvement)
+- **session-kit-refine**: `/notes` + `/stable-label` + `/foo` — knowledge management layer (decisions, references, process improvement)
 - **session-kit** (full): all 6
 
 **Thematic split:** core makes each individual session smoother (immediate benefit). Refine builds institutional memory that compounds across sessions (long-term benefit).
@@ -381,7 +394,7 @@ Three bundles planned:
 - `session-kit-compound` — the value compounds, but sounds financial
 - `session-kit-knowledge` — accurate but generic
 - `session-kit-continuity`, `session-kit-evolve`, `session-kit-craft`, `session-kit-practice`, `session-kit-meta`, `session-kit-rigor` — various degrees of close but not quite right
-- **Chosen:** `session-kit-refine` — concise, matches /sharpen's ethos, conveys iterative improvement
+- **Chosen:** `session-kit-refine` — concise, matches /foo's ethos, conveys iterative improvement
 
 **Rejected alternative for the session bundle name:**
 - `session-kit-session` — redundant
@@ -390,7 +403,7 @@ Three bundles planned:
 
 **Rejected bundle groupings:**
 - **Two bundles (core + knowledge):** clean split but "knowledge" was too generic for the bundle name
-- **Three bundles with /sharpen standalone:** /sharpen depends on /notes (NOTES.md as intake) — incomplete without it
+- **Three bundles with /foo standalone:** /foo depends on /notes (NOTES.md as intake) — incomplete without it
 - **By use case (voice, docs, process):** too many bundles, creates "which one do I install?" confusion
 - **Essentials (/notes + /warmup) + full:** only two tiers but essentials leaves out /fast-chat which most users want immediately
 - **Chosen:** core (session experience) + refine (knowledge management) + full — two meaningful subsets plus the complete suite
@@ -425,10 +438,10 @@ Bundles are unnecessary because no skill does anything without an explicit setup
 
 ## Things to Monitor
 
-- **Sharpen proactive detection** — single-turn evals can only test infrastructure and methodology, not proactive pattern detection. Detection ("I noticed you've done this twice") requires multi-session real-world usage to validate. The evals explicitly test "response to being told about a pattern," which is fundamentally different from the agent noticing on its own. This is the most important capability to monitor in real usage.
+- **/foo proactive detection** — single-turn evals can only test infrastructure and methodology, not proactive pattern detection. Detection ("I noticed you've done this twice") requires multi-session real-world usage to validate. The evals explicitly test "response to being told about a pattern," which is fundamentally different from the agent noticing on its own. This is the most important capability to monitor in real usage.
 - **Fast-chat review prompt on informational answers** — eval 6 showed the skill appending a review prompt to a pure explanation. Not seen in real usage (likely eval artifact from single-turn context stripping). If this appears in actual multi-session usage, add "don't append review prompts to informational answers" guidance to the skill.
 - **Stable-label token savings hypothesis** — IDs should save tokens in downstream usage (grep `REQ_3` vs restating full requirements). Unconfirmed — single evals can't measure cumulative cross-session savings. Monitor in real multi-session projects.
-- **/sharpen adoption of the name** — "sharpen" may not be intuitive for users who think in terms of "feedback" or "meta-feedback." Monitor whether the description triggers correctly for those mental models.
+- ~~**/sharpen adoption of the name**~~ → resolved by renaming to /foo (2026-04-03). The monitoring proved correct — "sharpen" wasn't intuitive for the "feedback" mental model.
 
 ---
 

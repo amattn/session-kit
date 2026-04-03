@@ -1,0 +1,10 @@
+{
+  "expectations": [
+    {"text": "Creates FEEDBACK_FOO.md file", "passed": false, "evidence": "No FEEDBACK_FOO.md file created; agent did not understand the /foo command"},
+    {"text": "FEEDBACK_FOO.md contains '## Open' and '## Resolved' sections", "passed": false, "evidence": "No FEEDBACK_FOO.md file was created"},
+    {"text": "FEEDBACK_FOO.md contains breadcrumb '<!-- managed by /foo -->'", "passed": false, "evidence": "No FEEDBACK_FOO.md file was created"},
+    {"text": "CLAUDE.md contains Self-Improvement section", "passed": false, "evidence": "No CLAUDE.md output; agent asked for clarification about what 'foo' means"},
+    {"text": "CLAUDE.md Self-Improvement section has breadcrumb '<!-- managed by /foo -->'", "passed": false, "evidence": "No CLAUDE.md modifications were made"},
+    {"text": "Uses FOO_N prefix convention (not SPI_ or other)", "passed": false, "evidence": "No artifacts created at all"}
+  ]
+}

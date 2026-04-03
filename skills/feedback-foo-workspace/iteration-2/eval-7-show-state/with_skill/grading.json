@@ -1,0 +1,7 @@
+{
+  "expectations": [
+    {"text": "Lists FOO_1 and FOO_2 as open observations", "passed": true, "evidence": "Response lists both 'FOO_1: Agents skip consistency pass after file renames [convention]' and 'FOO_2: Review cycles take too many round-trips [friction]' as open"},
+    {"text": "Includes titles and tags for each observation", "passed": true, "evidence": "FOO_1 has title and [convention] tag; FOO_2 has title and [friction] tag"},
+    {"text": "Offers next actions (promote, resolve, add new)", "passed": true, "evidence": "Suggests promoting FOO_1 to discipline, investigating FOO_2's recurrence, and asks 'promote FOO_1, investigate FOO_2 recurrence, add a new observation, or something else?'"}
+  ]
+}

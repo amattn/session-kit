@@ -2,13 +2,13 @@
 
 ## Current Status
 
-All 6 skills implemented and eval'd. Findings applied to 5 of 6 (sharpen needed none).
+All 6 skills implemented and eval'd. Findings applied to 5 of 6 (/foo, formerly /sharpen, needed none).
 
 ## Completed
 
 ### 1. Re-evaluate EXTRACTABLE.md ✓
 
-Found the "Skills for Judgment, Code for Compliance" insight — prose disciplines drift, supplement with tooling when needed. Applied to /sharpen.
+Found the "Skills for Judgment, Code for Compliance" insight — prose disciplines drift, supplement with tooling when needed. Applied to /foo.
 
 ### 2. Eval: /notes ✓
 
@@ -30,13 +30,13 @@ Found the "Skills for Judgment, Code for Compliance" insight — prose disciplin
 
 9 test pairs. Key finding: full layered infrastructure is the differentiator — baseline handles individual concepts but doesn't build the complete system. Fixed over-trigger on unrelated requests. Adopted two baseline innovations: cross-file reinforcement loop and content quality diagnosis.
 
-### 7. Eval: /sharpen ✓
+### 7. Eval: /foo (was /sharpen) ✓
 
 8 test pairs. First skill where the eval confirmed the design — no adjustments needed. Strongest differentiators: evals 5-6 (recurring failures treated as process improvement, not just apologies). Prose→tooling escalation is unique to the skill. Caveat: proactive detection untestable in single-turn evals, added to Things to Monitor.
 
 ### 8. Plugin bundles ✓
 
-Designed and implemented three bundles: session-kit (full), session-kit-core (/warmup, /fast-chat, /dictation), session-kit-refine (/notes, /stable-label, /sharpen). Symlinks from bundle skills/ directories to root skills/. Marketplace metadata bumped to 0.2.0.
+Designed and implemented three bundles: session-kit (full), session-kit-core (/warmup, /fast-chat, /dictation), session-kit-refine (/notes, /stable-label, /foo). Symlinks from bundle skills/ directories to root skills/. Marketplace metadata bumped to 0.2.0.
 
 ### 9. Publish ✓
 
@@ -44,7 +44,7 @@ Published to GitHub marketplace.
 
 ### 10. README: How to Use section, skill reordering, drop bundles ✓
 
-Added How to Use section with setup/ongoing for each skill. Added "Best for" lines to The Skills section. Reordered all sections to consistent order (warmup, fast-chat, dictation, notes, stable-label, sharpen). Removed bundle install options — skills are inert without explicit setup, so bundles add complexity without value.
+Added How to Use section with setup/ongoing for each skill. Added "Best for" lines to The Skills section. Reordered all sections to consistent order (warmup, fast-chat, dictation, notes, stable-label, foo). Removed bundle install options — skills are inert without explicit setup, so bundles add complexity without value.
 
 ### 11. Remove bundles from marketplace ✓
 
@@ -54,15 +54,19 @@ Removed session-kit-core and session-kit-refine from marketplace.json, deleted b
 
 Added HELP.md files to all 6 skills (seeded from README How to Use section). Added Quick Reference blockquote to top of each SKILL.md with directive to read HELP.md for usage questions and escalation path to full SKILL.md for edge cases. Plugin version bumped to 0.6.0.
 
-### 13. SPI_4, SPI_5, SPI_6 — sharpen-driven skill updates ✓
+### 13. FOO_4, FOO_5, FOO_6 — foo-driven skill updates ✓
 
-Applied three process observations from SHARPEN.md:
-- SPI_5: /fast-chat review prompt redesigned (R/O tail, silence-is-not-approval, drop S and A-E layout)
-- SPI_4: /warmup escalation ladder gets concrete language-strengthening tactics
-- SPI_6: /notes suggested section order reordered (stable reference first, decision log after)
+Applied three process observations from FEEDBACK_FOO.md:
+- FOO_5: /fast-chat review prompt redesigned (R/O tail, silence-is-not-approval, drop S and A-E layout)
+- FOO_4: /warmup escalation ladder gets concrete language-strengthening tactics
+- FOO_6: /notes suggested section order reordered (stable reference first, decision log after)
+
+### 14. Rename /sharpen → /foo ✓
+
+Renamed skill from `/sharpen` to `/foo` (FOO = Feedback, Observation, Oversight). `/feedback` and `/feedback-foo` as aliases. Artifact `SHARPEN.md` → `FEEDBACK_FOO.md`, prefix `SPI_N` → `FOO_N`, directory `skills/sharpen/` → `skills/feedback-foo/`. Plugin version bumped to 0.8.0.
 
 ## Next Steps
 
-### 14. Description optimization
+### 15. Description optimization
 
 Run the skill-creator trigger optimization loop on each skill's description to improve triggering accuracy.

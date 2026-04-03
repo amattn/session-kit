@@ -1,0 +1,12 @@
+{
+  "eval_id": 1,
+  "eval_name": "add-observation",
+  "prompt": "I've noticed the agent keeps forgetting to run tests after making changes. Can you track that?",
+  "assertions": [
+    {"text": "New FOO_4 entry added to FEEDBACK_FOO.md", "type": "content"},
+    {"text": "New entry has a descriptive title about forgetting tests", "type": "content"},
+    {"text": "New entry has a category tag in brackets", "type": "content"},
+    {"text": "New entry is in the Open section", "type": "content"},
+    {"text": "NOTES.md is updated with the observation", "type": "content"}
+  ]
+}

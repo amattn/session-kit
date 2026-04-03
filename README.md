@@ -13,7 +13,7 @@ Extracted from patterns discovered during 500+ sessions of AI-assisted developme
 | `/dictation` | Project-specific correction table. Originally designed for voice-to-text errors, but also useful for recurring typos and emergent shorthand — any systematic input pattern where the user means something other than what they literally typed. |
 | `/notes` | Institutional memory. Captures decisions, rationale, and conventions in NOTES.md so future sessions don't re-litigate settled questions. |
 | `/stable-label` | Greppable stable references. Gives every referenceable thing an append-only ID (`REQ_3`, `DEC_14`) that never renumbers and always resolves to exactly one definition. |
-| `/sharpen` | Process improvement — pattern detection, observation tracking, and discipline creation. Proactively notices recurring patterns, tracks process observations with a resolution lifecycle, and helps formalize workflows as named disciplines. |
+| `/feedback-foo` | Process improvement — pattern detection, observation tracking, and discipline creation. FOO = Feedback, Observation, Oversight. Proactively notices recurring patterns, tracks process observations with a resolution lifecycle, and helps formalize workflows as named disciplines. (Also invocable as `/foo`, `/feedback`, or `/observation`. Renamed from `/sharpen`.) |
 
 ## Install
 
@@ -96,11 +96,11 @@ What it adds over baseline Claude: convention enforcement is the biggest win —
 
 Best for: spec-driven projects, requirements tracking, any project with cross-referenced documents where you need to trace a decision from origin to implementation.
 
-### `/sharpen` — Process Improvement
+### `/feedback-foo` — Process Improvement
 
-The process improvement skill — combines pattern detection, observation tracking, and discipline creation into one place. Proactively notices recurring patterns ("I've seen this twice, should we write it down?"), tracks process observations with a resolution lifecycle (open → resolved), and helps formalize important workflows as named disciplines.
+FOO = Feedback, Observation, Oversight — a bucket concept for items observed in the wild that need triage or action. Combines pattern detection, observation tracking, and discipline creation into one place. Proactively notices recurring patterns ("I've seen this twice, should we write it down?"), tracks process observations with a resolution lifecycle (open → resolved), and helps formalize important workflows as named disciplines. Also invocable as `/foo`, `/feedback`, or `/observation`. (Renamed from `/sharpen` — the old name was too conceptual; the natural inclination is to say "add an observation" or "add a feedback item.")
 
-Why it matters: process improvements come from two directions — the agent notices patterns, and the user reports friction. Both need somewhere to go. Without `/sharpen`, observations get lost in conversation and patterns go unnoticed. With it, informal habits become named disciplines, friction becomes tracked observations, and the process gets sharper over time.
+Why it matters: process improvements come from two directions — the agent notices patterns, and the user reports friction. Both need somewhere to go. Without `/foo`, observations get lost in conversation and patterns go unnoticed. With it, informal habits become named disciplines, friction becomes tracked observations, and the process improves over time.
 
 What it adds over baseline Claude: when told about a recurring failure, baseline Claude apologizes and fixes the immediate problem. The skill treats it as a process improvement opportunity — creates a tracked observation, strengthens the relevant discipline, and flags escalation to tooling if prose keeps failing. The methodology (routing, discipline creation, prose→tooling escalation) is confirmed by evals. The proactive detection — the always-on capability where the agent notices patterns without being told — is the highest-value feature and requires real-world usage to fully validate.
 
@@ -290,12 +290,12 @@ You: (later) grep REQ_7
        middleware.py:   # Implements DEC_12 to satisfy REQ_7
 ```
 
-### `/sharpen`
+### `/feedback-foo`
 
-**Setup:** Run `/sharpen` in your project. It creates SHARPEN.md (a tracker for process observations with open/resolved lifecycle) and adds a Self-Improvement directive to CLAUDE.md telling the agent to notice and surface patterns proactively.
+**Setup:** Run `/feedback-foo` (or `/foo`, `/feedback`, `/observation`) in your project. It creates FEEDBACK_FOO.md (a tracker for process observations with open/resolved lifecycle) and adds a Self-Improvement directive to CLAUDE.md telling the agent to notice and surface patterns proactively.
 
-**Ongoing:** Always-on detection — the agent notices recurring patterns, drift, and friction without being asked. When it detects something, it surfaces a lightweight proposal ("I've noticed X twice — want me to note it in NOTES.md or promote it to a CLAUDE.md discipline?"). Invoke `/sharpen` when you want to:
-- Review open observations in SHARPEN.md
+**Ongoing:** Always-on detection — the agent notices recurring patterns, drift, and friction without being asked. When it detects something, it surfaces a lightweight proposal ("I've noticed X twice — want me to note it in NOTES.md or promote it to a CLAUDE.md discipline?"). Invoke `/feedback-foo` when you want to:
+- Review open observations in FEEDBACK_FOO.md
 - Promote a confirmed pattern to a CLAUDE.md discipline
 - Create a named discipline block for a workflow you want enforced
 
@@ -311,14 +311,14 @@ You: discipline
 Agent: Added to CLAUDE.md:
        ## Post-Move Discipline
        **After moving any file, grep for stale imports and update them.**
-       Created SPI_3 in SHARPEN.md → [resolved] promoted to discipline.
+       Created FOO_3 in FEEDBACK_FOO.md → [resolved] promoted to discipline.
 
 You: (later, during a code review discussion)
      that's a great insight — every time we add a new API route we
-     forget to update the OpenAPI spec. let me add that to sharpen
+     forget to update the OpenAPI spec. add a foo for that
 
-Agent: Added SPI_4 to SHARPEN.md:
-       ### SPI_4: OpenAPI spec falls behind when adding routes [drift]
+Agent: Added FOO_4 to FEEDBACK_FOO.md:
+       ### FOO_4: OpenAPI spec falls behind when adding routes [drift]
        Observed during code review. Routes added without updating
        the OpenAPI spec. Not yet a discipline — monitoring frequency.
 ```
@@ -341,11 +341,11 @@ Agent: Added SPI_4 to SHARPEN.md:
 /stable-label    → makes cross-references greppable and permanent
                     (machine-verifiable navigation)
 
-/sharpen         → detects patterns, tracks observations, creates disciplines
-                    (process gets sharper over time)
+/feedback-foo    → detects patterns, tracks observations, creates disciplines
+                    (FOO = Feedback, Observation, Oversight)
 ```
 
-The skills are independent — install any subset. But they're designed to complement each other: `/warmup` ensures `/notes` loads every session, `/stable-label` gives `/notes` entries greppable IDs, `/fast-chat` speeds up the decisions `/notes` captures, and `/dictation` keeps voice input from garbling the whole conversation.
+The skills are independent — install any subset. But they're designed to complement each other: `/warmup` ensures `/notes` loads every session, `/stable-label` gives `/notes` entries greppable IDs, `/fast-chat` speeds up the decisions `/notes` captures, `/dictation` keeps voice input from garbling the whole conversation, and `/feedback-foo` turns recurring friction into tracked observations and named disciplines.
 
 ## Origin
 

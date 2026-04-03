@@ -1,0 +1,13 @@
+{
+  "skill_name": "feedback-foo",
+  "evals": [
+    {"id": 0, "name": "bootstrap", "prompt": "Set up foo for this project.", "files": ["test-projects/fresh-project/*"]},
+    {"id": 1, "name": "add-observation", "prompt": "I've noticed the agent keeps forgetting to run tests after making changes. Can you track that?", "files": ["test-projects/with-foo/*"]},
+    {"id": 2, "name": "routing-project-decision", "prompt": "We decided to always use UTC for timestamps.", "files": ["test-projects/with-foo/*"]},
+    {"id": 3, "name": "create-discipline", "prompt": "We always do a consistency pass after renames, then update NOTES.md, then check for stale references. Can you make that a discipline?", "files": ["test-projects/with-foo/*"]},
+    {"id": 4, "name": "promote", "prompt": "FOO_1 has been validated — promote it to a CLAUDE.md directive.", "files": ["test-projects/with-foo/*"]},
+    {"id": 5, "name": "told-about-pattern", "prompt": "You just forgot to update NOTES.md again after that decision. This is the third time this session.", "files": ["test-projects/with-foo/*"]},
+    {"id": 6, "name": "escalation-recurring", "prompt": "FOO_2 keeps coming back even after we resolved it last session. The fix didn't stick.", "files": ["test-projects/with-foo-recurring/*"]},
+    {"id": 7, "name": "show-state", "prompt": "What process observations do we have open?", "files": ["test-projects/with-foo/*"]}
+  ]
+}

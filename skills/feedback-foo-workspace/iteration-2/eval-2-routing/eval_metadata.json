@@ -1,0 +1,10 @@
+{
+  "eval_id": 2,
+  "eval_name": "routing-project-decision",
+  "prompt": "We decided to always use UTC for timestamps.",
+  "assertions": [
+    {"text": "NOTES.md is updated with UTC timestamp decision", "type": "content"},
+    {"text": "FEEDBACK_FOO.md is NOT modified (this is a project decision, not a process observation)", "type": "unchanged"},
+    {"text": "Decision includes rationale or context", "type": "content"}
+  ]
+}

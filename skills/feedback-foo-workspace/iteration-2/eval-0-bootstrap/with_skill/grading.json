@@ -1,0 +1,10 @@
+{
+  "expectations": [
+    {"text": "Creates FEEDBACK_FOO.md file", "passed": true, "evidence": "FEEDBACK_FOO.md exists in outputs/"},
+    {"text": "FEEDBACK_FOO.md contains '## Open' and '## Resolved' sections", "passed": true, "evidence": "FEEDBACK_FOO.md contains both '## Open' and '## Resolved' headings"},
+    {"text": "FEEDBACK_FOO.md contains breadcrumb '<!-- managed by /foo -->'", "passed": true, "evidence": "Line 2 of FEEDBACK_FOO.md: '<!-- managed by /foo -->'"},
+    {"text": "CLAUDE.md contains Self-Improvement section", "passed": true, "evidence": "CLAUDE.md contains '## Self-Improvement' section starting at line 12"},
+    {"text": "CLAUDE.md Self-Improvement section has breadcrumb '<!-- managed by /foo -->'", "passed": true, "evidence": "Line 13 of CLAUDE.md: '<!-- managed by /foo -->' directly under ## Self-Improvement"},
+    {"text": "Uses FOO_N prefix convention (not SPI_ or other)", "passed": true, "evidence": "FEEDBACK_FOO.md uses FOO naming convention in file name and description; no entries yet but scaffold is correct"}
+  ]
+}

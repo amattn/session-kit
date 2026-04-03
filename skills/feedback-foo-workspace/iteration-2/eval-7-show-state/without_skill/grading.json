@@ -1,0 +1,7 @@
+{
+  "expectations": [
+    {"text": "Lists FOO_1 and FOO_2 as open observations", "passed": true, "evidence": "Response lists both FOO_1 and FOO_2 with their full descriptions"},
+    {"text": "Includes titles and tags for each observation", "passed": true, "evidence": "FOO_1 has title 'Agents skip consistency pass after file renames' and [convention] tag; FOO_2 has title 'Review cycles take too many round-trips' and [friction] tag"},
+    {"text": "Offers next actions (promote, resolve, add new)", "passed": false, "evidence": "Response only lists the current state. Does not suggest any next actions like promoting, resolving, or adding new observations. No actionable follow-up offered."}
+  ]
+}

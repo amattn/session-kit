@@ -1,0 +1,11 @@
+{
+  "eval_id": 4,
+  "eval_name": "promote",
+  "prompt": "FOO_1 has been validated — promote it to a CLAUDE.md directive.",
+  "assertions": [
+    {"text": "CLAUDE.md contains a new directive about consistency passes after renames", "type": "content"},
+    {"text": "FEEDBACK_FOO.md FOO_1 is moved to Resolved section", "type": "content"},
+    {"text": "FEEDBACK_FOO.md FOO_1 resolution notes what changed and where", "type": "content"},
+    {"text": "Cross-reference between CLAUDE.md directive and FOO_1", "type": "content"}
+  ]
+}

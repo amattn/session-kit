@@ -1,0 +1,8 @@
+{
+  "expectations": [
+    {"text": "CLAUDE.md contains a new directive about consistency passes after renames", "passed": true, "evidence": "CLAUDE.md contains '## Consistency Pass After Renames' with directive text about checking all references"},
+    {"text": "FEEDBACK_FOO.md FOO_1 is moved to Resolved section", "passed": true, "evidence": "FOO_1 appears under '## Resolved' with resolution note"},
+    {"text": "FEEDBACK_FOO.md FOO_1 resolution notes what changed and where", "passed": true, "evidence": "Resolution says: 'Promoted to CLAUDE.md directive: Consistency Pass After Renames'"},
+    {"text": "Cross-reference between CLAUDE.md directive and FOO_1", "passed": false, "evidence": "CLAUDE.md directive does NOT have a '<!-- managed by /foo -->' breadcrumb or any reference to FOO_1. The cross-reference is one-directional only (FEEDBACK_FOO.md points to CLAUDE.md, but not vice versa)"}
+  ]
+}

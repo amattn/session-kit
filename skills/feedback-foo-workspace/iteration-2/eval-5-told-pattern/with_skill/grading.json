@@ -1,0 +1,8 @@
+{
+  "expectations": [
+    {"text": "Creates a new FOO entry in FEEDBACK_FOO.md about NOTES.md update failures", "passed": true, "evidence": "FOO_4 created: 'Agent skips NOTES.md update after decisions despite discipline [drift]'"},
+    {"text": "Entry references the pattern being repeated (third time)", "passed": true, "evidence": "Entry says 'Third occurrence this session' and notes the pattern is confirmed"},
+    {"text": "Proposes strengthening the existing NOTES.md Discipline in CLAUDE.md", "passed": true, "evidence": "CLAUDE.md NOTES.md Discipline expanded from single-line imperative to numbered steps (stop, write, continue) plus a catch-up rule. FOO_4 also proposes further escalation to tooling if drift continues."},
+    {"text": "Treats this as a process improvement opportunity, not just an apology", "passed": true, "evidence": "Response acknowledges the failure but focuses on structural fixes: strengthened CLAUDE.md discipline, created FOO_4 for tracking, proposed escalation path to tooling. Not just an apology."}
+  ]
+}

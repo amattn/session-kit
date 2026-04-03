@@ -1,0 +1,13 @@
+{
+  "eval_id": 0,
+  "eval_name": "bootstrap",
+  "prompt": "Set up foo for this project.",
+  "assertions": [
+    {"text": "Creates FEEDBACK_FOO.md file", "type": "file_exists"},
+    {"text": "FEEDBACK_FOO.md contains '## Open' and '## Resolved' sections", "type": "content"},
+    {"text": "FEEDBACK_FOO.md contains breadcrumb '<!-- managed by /foo -->'", "type": "content"},
+    {"text": "CLAUDE.md contains Self-Improvement section", "type": "content"},
+    {"text": "CLAUDE.md Self-Improvement section has breadcrumb '<!-- managed by /foo -->'", "type": "content"},
+    {"text": "Uses FOO_N prefix convention (not SPI_ or other)", "type": "content"}
+  ]
+}

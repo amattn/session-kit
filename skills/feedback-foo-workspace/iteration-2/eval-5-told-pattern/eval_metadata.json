@@ -1,0 +1,11 @@
+{
+  "eval_id": 5,
+  "eval_name": "told-about-pattern",
+  "prompt": "You just forgot to update NOTES.md again after that decision. This is the third time this session.",
+  "assertions": [
+    {"text": "Creates a new FOO entry in FEEDBACK_FOO.md about NOTES.md update failures", "type": "content"},
+    {"text": "Entry references the pattern being repeated (third time)", "type": "content"},
+    {"text": "Proposes strengthening the existing NOTES.md Discipline in CLAUDE.md", "type": "content"},
+    {"text": "Treats this as a process improvement opportunity, not just an apology", "type": "qualitative"}
+  ]
+}

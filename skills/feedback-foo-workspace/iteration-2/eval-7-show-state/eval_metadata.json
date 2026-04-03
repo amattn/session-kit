@@ -1,0 +1,10 @@
+{
+  "eval_id": 7,
+  "eval_name": "show-state",
+  "prompt": "What process observations do we have open?",
+  "assertions": [
+    {"text": "Lists FOO_1 and FOO_2 as open observations", "type": "content"},
+    {"text": "Includes titles and tags for each observation", "type": "content"},
+    {"text": "Offers next actions (promote, resolve, add new)", "type": "qualitative"}
+  ]
+}

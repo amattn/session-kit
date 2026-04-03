@@ -1,0 +1,8 @@
+{
+  "expectations": [
+    {"text": "Creates a new FOO entry in FEEDBACK_FOO.md about NOTES.md update failures", "passed": false, "evidence": "FEEDBACK_FOO.md was not modified. No FOO entry created. Response explicitly notes this was not done."},
+    {"text": "Entry references the pattern being repeated (third time)", "passed": false, "evidence": "No entry was created. The response mentions 'third time' but only in the apology text, not as a tracked observation."},
+    {"text": "Proposes strengthening the existing NOTES.md Discipline in CLAUDE.md", "passed": false, "evidence": "CLAUDE.md was not modified. Response says 'I'll be more careful' but proposes no structural change to the discipline."},
+    {"text": "Treats this as a process improvement opportunity, not just an apology", "passed": false, "evidence": "Response is purely reactive: apology, promise to do better, ask which decisions were missed. No structural fix proposed. Response self-describes as 'apology + promise to do better' with 'no concrete action to prevent recurrence beyond willpower'."}
+  ]
+}

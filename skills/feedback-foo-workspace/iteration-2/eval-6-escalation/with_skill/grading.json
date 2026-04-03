@@ -1,0 +1,8 @@
+{
+  "expectations": [
+    {"text": "Recognizes this is a recurring failure, not a first-time observation", "passed": true, "evidence": "Response explicitly identifies this as a resolved entry that keeps coming back: 'resolved in session 5... fix didn't hold... recurred in sessions 7 and 8. This is the escalation signal /foo watches for.'"},
+    {"text": "Proposes escalation beyond the original fix", "passed": true, "evidence": "Escalated from a soft directive (paragraph of conventions) to a named discipline with four numbered, imperative, verifiable rules. Also identifies the further escalation path (tooling) if the discipline doesn't hold."},
+    {"text": "Updates FOO_2 in FEEDBACK_FOO.md with escalation context", "passed": true, "evidence": "FOO_2 has new '[escalated]' status line: 'Simple directive didn't stick. Escalating to a named discipline with enforceable rules (session 9). See Review Interaction Discipline in CLAUDE.md.'"},
+    {"text": "Suggests concrete next steps (stronger wording, discipline, or tooling)", "passed": true, "evidence": "Created Review Interaction Discipline in CLAUDE.md with 4 concrete rules. Response also identifies tooling (prompt template) as the next escalation if discipline doesn't hold."}
+  ]
+}

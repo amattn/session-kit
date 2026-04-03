@@ -1,0 +1,11 @@
+{
+  "eval_id": 6,
+  "eval_name": "escalation-recurring",
+  "prompt": "FOO_2 keeps coming back even after we resolved it last session. The fix didn't stick.",
+  "assertions": [
+    {"text": "Recognizes this is a recurring failure, not a first-time observation", "type": "qualitative"},
+    {"text": "Proposes escalation beyond the original fix", "type": "qualitative"},
+    {"text": "Updates FOO_2 in FEEDBACK_FOO.md with escalation context", "type": "content"},
+    {"text": "Suggests concrete next steps (stronger wording, discipline, or tooling)", "type": "qualitative"}
+  ]
+}
