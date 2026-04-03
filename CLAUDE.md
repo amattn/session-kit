@@ -66,27 +66,38 @@ This is not optional. These artifacts drifted when this checklist was positioned
 
 ## Versioning
 
+**Bump versions when you change behavior, not later.** Version bumps are part of the change, not a separate task. Every commit that changes skill behavior or plugin metadata should include the version bump in the same commit.
+
 Three independent version numbers, each following semver (PATCH/MINOR/MAJOR):
 
 - **PATCH** (0.1.x): bug fixes, wording tweaks, formatting changes, internal refactors
 - **MINOR** (0.x.0): new subcommands, new sections, meaningful feature additions
 - **MAJOR** (x.0.0): breaking changes to formats, removed subcommands, anything that would surprise an existing user
 
-### Skill version (`version` in each SKILL.md frontmatter)
+### What to bump when
 
-Bump when that specific skill's behavior changes. Scoped to the individual skill — a change to `/notes` doesn't bump `/warmup`'s version.
+| Change type | What to bump |
+|-------------|-------------|
+| Single skill behavior change | That skill's SKILL.md `version` + plugin version |
+| New skill added | Plugin version (minor) + marketplace version (minor) |
+| Skill removed or renamed | Plugin version (major) + marketplace version (major) |
+| Marketplace description/keyword change only | Marketplace version (patch) |
 
-### Plugin version (`version` in `plugin.json` and `marketplace.json` plugins entry)
+### Where versions live (single source of truth)
 
-Bump when any skill changes. These two must stay in sync. The plugin version tracks the suite as a whole.
+| Version | Location |
+|---------|----------|
+| Skill version | `version` in each `skills/<name>/SKILL.md` frontmatter |
+| Plugin version | `version` in `plugin.json` AND `plugins[0].version` in `marketplace.json` — must stay in sync |
+| Marketplace version | `metadata.version` in `marketplace.json` |
 
-### Marketplace version (`metadata.version` in `marketplace.json`)
+### Distribution versions are human-directed only
 
-Bump when the marketplace listing itself changes, independent of any individual plugin:
+Plugin version (`plugin.json`, `marketplace.json plugins[0].version`) and marketplace version (`marketplace.json metadata.version`) are distribution artifacts. **Bump these ONLY when the human explicitly directs a publish or release.** Do not bump them automatically as part of skill changes — the human decides when to cut a release.
 
-- **PATCH**: description or metadata wording updates, keyword changes
-- **MINOR**: adding a new skill to the `plugins` array
-- **MAJOR**: removing a skill, restructuring the listing in a breaking way
+### Don't forget
+
+When bumping a skill version, update the SKILL.md frontmatter (1 location). When bumping the plugin version, update both `plugin.json` and `marketplace.json plugins[0].version` (2 locations — they must match). When bumping the marketplace version, update `marketplace.json metadata.version` (1 location, independent of plugin version).
 
 ## Evals
 
@@ -100,6 +111,8 @@ All eval definitions (evals.json), test projects, and subagent outputs must be s
 
 Single-line subject: `<verb> <what>: <brief description>`. Common verbs: Add, Update, Fix, Drop, Rename.
 
+**Exception:** Distribution commits use the `publish:` prefix instead of a verb: `publish: v0.8.0 — description`. This makes version bumps and releases scannable in `git log` (`git log --grep="^publish:"`). Tag releases with `git tag v<version>` as well.
+
 Body uses **themed bullet lists** — group related changes under short theme headers. Each bullet is a concise fact, not a sentence. Example:
 
 ```
@@ -112,6 +125,13 @@ Mechanics:
 Design:
 - Always-on communication style, not just a bootstrap tool
 - Version bumped to 0.2.0
+```
+
+```
+publish: v0.8.0 — /feedback-foo rename, plugin metadata update
+
+- Plugin version 0.8.0, marketplace metadata 0.4.0
+- /feedback-foo as primary, /foo + /feedback + /observation as aliases
 ```
 
 Skip the body for trivial commits (single-file wording tweaks, typo fixes). Commit eval workspaces in a separate commit from the eval findings they support.

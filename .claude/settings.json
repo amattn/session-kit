@@ -5,9 +5,12 @@
       "Bash(git branch:*)",
       "Bash(git checkout:*)",
       "Bash(git commit:*)",
+      "Bash(git mv:*)",
       "Bash(git rm:*)",
       "Bash(git stash:*)",
       "Bash(git tag:*)",
+      "Bash(grep:*)",
+      "Bash(ls:*)",
       "WebSearch"
     ]
   }

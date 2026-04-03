@@ -357,6 +357,14 @@ Added concrete tactics to the escalation ladder's "tighten wording" step (FOO_4)
 
 Reordered "Suggested Starting Sections" to put stable reference material before the growing decision log (FOO_6). New order: Project Context → Invariants → Concepts → Taxonomy → Key Design Decisions. Rationale: a new reader or agent recovering from compaction gets high-signal orientation context before hitting the detailed (and often very long) decision history. Session-kit's own NOTES.md already follows this order after a reorg.
 
+### `publish:` prefix for distribution commits (2026-04-03)
+
+Added a `publish:` prefix exception to the verb-first commit style. Distribution commits (version bumps, marketplace releases) were hard to spot in `git log` — they looked identical to routine updates. The prefix makes them scannable via `git log --grep="^publish:"`. Releases also get a `git tag v<version>`. Inspired by plet-skills' noun-prefix commit convention, but only adopted for distribution — the verb-first style stays for everything else.
+
+### Versioning section strengthened in CLAUDE.md (2026-04-03)
+
+Ported patterns from plet-skills' SemVer Discipline: timing rule ("bump when you change, not later"), "what to bump when" table, "where versions live" table, "distribution versions are human-directed only" rule, and "don't forget" multi-location checklist. The existing section had the version definitions but lacked the operational discipline that prevents drift.
+
 ### /sharpen renamed to /feedback-foo (2026-04-03)
 
 "Sharpen" was too conceptual — users naturally say "add an observation" or "add a feedback item," not "sharpen this." The monitoring note from the original naming decision proved correct: the name wasn't intuitive for the "feedback" mental model.
