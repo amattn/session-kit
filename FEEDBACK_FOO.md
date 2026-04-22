@@ -145,6 +145,20 @@ Reviewed all ~25 decision points. Revised findings:
 
 ## Resolved
 
+### FOO_7: Agents use shorthand stable-label IDs, defeating uniqueness guarantee [resolved 2026-04-22]
+
+Observed an agent using `OUT_2` instead of the full `SES_DET_OUT_2`. This strips the prefix hierarchy and destroys the core value of stable labels:
+
+1. **Breaks the one-grep guarantee.** `OUT_2` could match any prefix that ends in `OUT` — `SES_DET_OUT_2`? `API_OUT_2`? `LOG_OUT_2`? The whole point is one grep returns exactly one definition.
+2. **Breaks cross-project uniqueness.** Full prefixes are collision-resistant by design. Shorthand IDs collide trivially.
+3. **Creates ambiguity that compounds.** If an agent writes `OUT_2` in a cross-reference, a future agent or human has to guess which `OUT_2` was meant. The cost of resolving ambiguity exceeds the cost of typing the full ID.
+
+**This is strictly forbidden.** Shorthand is not a convenience — it's a corruption of the convention. The full registered prefix exists precisely so that every ID is globally unique and greppable. An agent that abbreviates IDs is actively undermining the system.
+
+**User quote:** "I saw an agent use shorthand. OUT_2 instead of SES_DET_OUT_2. THIS MUST BE STRICTLY FORBIDDEN by the skill. it defeats the purpose"
+
+**Resolution (2026-04-22):** Added explicit prohibition to `skills/stable-label/SKILL.md` under § Format — "NEVER use shorthand or abbreviated prefixes." Framed as a correctness requirement, not a style preference. Added line to NOTES.md /stable-label design decisions cross-referencing FOO_7. Skill version bumped to 0.1.2 (patch — formalizing an implicit rule, not adding new functionality).
+
 ### FOO_3: Review prompt recommendation is not a selectable option [superseded by FOO_5]
 
 During section-by-section reviews, the agent produces a form like:

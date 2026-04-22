@@ -199,6 +199,7 @@ Ran 8 eval pairs on /sharpen. **First skill where the eval confirmed the design 
 - Three-letter prefixes default (`XXX_N`), two-letter acceptable when unambiguous
 - Underscore separator — greppable + double-click selectable
 - Append-only, never renumber, never reuse
+- Full prefix required — shorthand strictly forbidden (FOO_7)
 
 **Prefix table location:** convention rules (behavioral directives) go in AGENTS.md and/or CLAUDE.md; prefix table (living reference data) goes in NOTES.md under Taxonomy / Conventions. Split because rules are directives, the table is reference data.
 

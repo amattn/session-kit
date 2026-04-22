@@ -1,6 +1,6 @@
 ---
 name: stable-label
-version: 0.1.1
+version: 0.1.2
 description: "Greppable stable references using the XXX_N convention. Append-only IDs that never renumber and always resolve to exactly one definition. Use when the user asks to 'stable-label', 'label', 'add id', 'add reference', 'define prefix', 'consistency pass', or when cross-referencing artifacts. Also trigger when you notice referenceable items without IDs, when cross-references use fragile text matching instead of stable IDs, when numbered lists would benefit from stable cross-references, when multiple documents reference each other by name or title instead of IDs, or when a project would benefit from greppable references even if the user hasn't asked for them."
 user-invocable: true
 ---
@@ -39,6 +39,7 @@ XXX_YYY_N    — sub-group for namespaced items
 - **Underscore separator** — the `_` is the delimiter. This is what makes IDs greppable: `grep REQ_3` returns exactly one definition and all references. Underscore also means a double-click selects the entire ID in most editors and terminals — no manual mouse manipulation needed to copy-paste. Dashes break word selection in most environments, making them worse for this use case.
 - **Append-only numbering** — deleted items leave gaps. Never renumber, never reuse. Gaps are expected and fine. The stability guarantee depends on this: if IDs could be renumbered, every reference in every document becomes suspect after any change. Append-only means an ID means the same thing forever.
 - **One definition per ID** — every ID resolves to exactly one definition. If grep returns multiple definition-like results, something is wrong. This is what makes IDs trustworthy as anchors — you never have to wonder "which REQ_3?"
+- **NEVER use shorthand or abbreviated prefixes.** Always use the full registered prefix. If the prefix table says `SES_DET_OUT`, then the ID is `SES_DET_OUT_2` — never `OUT_2`, never `DET_OUT_2`. Shorthand destroys the one-grep guarantee, creates ambiguous cross-references, and defeats the entire purpose of stable labels. This is not a style preference — it is a correctness requirement. An abbreviated ID is a broken ID.
 
 ### Examples
 
