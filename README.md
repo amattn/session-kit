@@ -1,8 +1,8 @@
 # session-kit
 
-A suite of Claude Code skill plugins for making AI-assisted development sessions reliable and productive across time.
+A suite of Claude Code and OpenCode skill plugins for making AI-assisted development sessions reliable and productive across time.
 
-Extracted from patterns discovered during 500+ sessions of AI-assisted development. Each skill addresses a specific friction point that compounds over time — lost context, slow decision-making, garbled input, fragile cross-references.
+Extracted from patterns discovered during 500+ sessions of AI-assisted development. Each skill addresses a specific friction point that compounds over time — lost context, slow decision-making, garbled input, fragile cross-references. Works with both Claude Code and OpenCode.
 
 ## Skills
 
@@ -29,7 +29,7 @@ Extracted from patterns discovered during 500+ sessions of AI-assisted developme
 
 ### Option 2: Global Installation
 
-Copy the skills into your Claude Code skills directory so they're available across all projects:
+Copy the skills into your Claude Code / OpenCode skills directory so they're available across all projects:
 
 ```bash
 cp -r skills/* ~/.claude/skills/
@@ -42,6 +42,55 @@ Copy the skills into your project for per-project use:
 ```bash
 mkdir -p .claude/skills
 cp -r /path/to/session-kit/skills/* .claude/skills/
+```
+
+### Option 4: OpenCode (project or global)
+
+OpenCode discovers skills from six locations — any of these work:
+
+| Location | Path |
+|----------|------|
+| Project config | `.opencode/skills/` |
+| Global config | `~/.config/opencode/skills/` |
+| Project Claude-compatible | `.claude/skills/` |
+| Global Claude-compatible | `~/.claude/skills/` |
+| Project agent-compatible | `.agents/skills/` |
+| Global agent-compatible | `~/.agents/skills/` |
+
+The `.claude/skills/` paths overlap with Claude Code — if you installed via Options 2 or 3, OpenCode already sees the skills.
+
+For OpenCode-specific directories, install like this:
+
+Global (all projects):
+
+```bash
+mkdir -p ~/.config/opencode/skills
+cp -r /path/to/session-kit/skills/* ~/.config/opencode/skills/
+```
+
+Project-level:
+
+```bash
+mkdir -p .opencode/skills
+cp -r /path/to/session-kit/skills/* .opencode/skills/
+```
+
+### Option 5: Agent-compatible directories (Codex)
+
+The `.agents/skills/` directories are unique to OpenCode.
+
+Global (all projects):
+
+```bash
+mkdir -p ~/.agents/skills
+cp -r /path/to/session-kit/skills/* ~/.agents/skills/
+```
+
+Project-level:
+
+```bash
+mkdir -p .agents/skills
+cp -r /path/to/session-kit/skills/* .agents/skills/
 ```
 
 ## The Skills

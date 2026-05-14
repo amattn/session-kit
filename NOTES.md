@@ -386,7 +386,7 @@ Ported patterns from plet-skills' SemVer Discipline: timing rule ("bump when you
 - ~~Suite name~~ → resolved: session-kit
 - ~~Skill 2 (/chatux) naming~~ → resolved: /fast-chat
 - ~~Skill 3 (/feedback) naming~~ → resolved: /feedback-foo (renamed from /sharpen → /foo → /feedback-foo as primary)
-- Opencode compatibility — skills should work with opencode as well as Claude Code. Need to investigate opencode's skill/plugin format and identify what (if anything) needs to differ.
+- ~~Opencode compatibility~~ → resolved: OpenCode auto-discovers from `.claude/skills/` (same as Claude Code), so no duplication needed. Single `skills/` directory works for both.
 - ~~Plugin subsets~~ → resolved: symlinks work. See below.
 
 ### Plugin bundle design (2026-03-14)
