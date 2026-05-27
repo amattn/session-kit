@@ -87,22 +87,18 @@ Two additions to /warmup, version 0.1.2 → 0.2.0:
 
 Cascade: README.md and HELP.md updated; NOTES.md entries with defaults, rejected alternatives, and the propose-vs-skip rationale per file.
 
+### 17. Bootstrap correctness fixes + publish v0.9.0 (folded) ✓
+
+Three corrections to bootstrap behavior applied as commit `6c66bb1` (`fix: bootstrap correctness …`), then folded into the same v0.9.0 release as items 15-16:
+
+- **/start** — sub-skills activated via the Skill tool, not `Read` as on-disk files
+- **/notes** — NOTES.md template inlined into SKILL.md under § Template content; `skills/notes/assets/notes-template.md` and the `assets/` directory removed (self-contained skill)
+- **/warmup** — `.claude/settings.json` blanket skip-if-exists → propose-multi-select when the file is missing, empty, or contains only `enabledPlugins` (the marketplace-install shape); `.gitignore` rule unchanged
+- **README** — `/session-kit:start` → `/start` in marketing copy; "one approval" softened to surface the settings.json sub-prompt; example transcript updated
+
+Publish commit force-pushes over origin's prior 0.9.0 commit (which had the un-corrected interim behavior; never tagged on origin). Distribution versions: `plugin.json` and `marketplace.json plugins[0].version` 0.8.0 → 0.9.0; `marketplace.json metadata.version` 0.4.0 → 0.5.0. Both `description` fields now lead with `/start`. Tag `v0.9.0` created locally; force-push by user.
+
 ## Next Steps
-
-### Next publish (folded with today's follow-ups)
-
-The most recent publish was reverted locally so today's follow-ups (Skill-tool delegation in /start, inline /notes template, /warmup settings propose-flow, README /start normalization) can ship as part of the *same* release as the initial skill-version work rather than as separate patch versions. Origin still has the prior published commit and tag — the new publish will force-push.
-
-Tasks for the publish commit:
-
-- **Bump distribution versions** — `plugin.json` and `marketplace.json plugins[0].version` from 0.8.0 to the new release version; `marketplace.json metadata.version` from 0.4.0 to its new release version (decide at publish time)
-- **Plugin / marketplace `description` field** — use `/start` (matches the README normalization), not `/session-kit:start`. Both `description` fields list the suite's slash commands; the leading entry becomes `/start` instead of `/session-kit:start`.
-- **Restore CHANGELOG entry** for the new release version, with three subsections describing the folded behavior:
-  - `/start` v0.1.0 — add bullet "Sub-skills activated via the Skill tool, not `Read` as files"
-  - `/notes` v0.2.0 — replace "New asset: `skills/notes/assets/notes-template.md`" with "Inline NOTES.md template in `SKILL.md` under § NOTES.md Template → § Template content (self-contained, no external asset)"
-  - `/warmup` v0.2.0 — replace the scaffolding bullet with the asymmetric rule: `.gitignore` skip-if-exists unchanged; `.claude/settings.json` propose-multi-select when missing/empty/marketplace-only; settings changes never automatic
-  - Add a **README** subsection: "`/session-kit:start` → `/start` everywhere in marketing copy; 'one approval' softened to surface the `.claude/settings.json` multi-select; example transcript updated to show the sub-prompt"
-- **Tag and force-push** — tag the new release version (force-update over the existing tag) and force-push `main` + tag
 
 ### Description optimization
 

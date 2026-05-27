@@ -1,7 +1,7 @@
 {
   "name": "session-kit",
-  "version": "0.8.0",
-  "description": "A suite of Claude Code skill plugins for making AI-assisted development sessions reliable and productive across time: /warmup, /fast-chat, /dictation, /notes, /stable-label, /feedback-foo (/foo, /feedback, /observation).",
+  "version": "0.9.0",
+  "description": "A suite of Claude Code skill plugins for making AI-assisted development sessions reliable and productive across time: /start, /warmup, /fast-chat, /dictation, /notes, /stable-label, /feedback-foo (/foo, /feedback, /observation).",
   "author": {
     "name": "amattn"
   },

@@ -2,6 +2,70 @@
 
 All notable changes to session-kit. Versions track the plugin version in `.claude-plugin/plugin.json`.
 
+## [0.9.0] — 2026-05-27
+
+### Added
+
+#### New skill: `/start` v0.1.0 — unified suite bootstrap
+
+- Single entry point that runs the per-skill bootstraps with smart defaults and one approval (plus a `.claude/settings.json` multi-select sub-prompt when /warmup hits the propose path)
+- **Tiers:**
+  - `minimal` — /warmup
+  - `standard` — /warmup + /notes + /stable-label + /fast-chat *(default)*
+  - `full` — all six skills
+- **Sub-skills activated via the Skill tool**, not `Read` as on-disk files — `/start` never opens sub-skill SKILL.md files directly; each is invoked through the proper skill-loading machinery
+- Re-runnable — picks up only what's missing
+- SKILL.md and HELP.md under `skills/start/`
+
+#### `/notes` v0.2.0 — template-driven bootstrap
+
+- **Inline NOTES.md template** lives in `skills/notes/SKILL.md` under § NOTES.md Template → § Template content (self-contained skill — no external asset file, no permission-prompted read)
+- **Pre-seeded content:**
+  - Default stable-label prefix table (`DEC`, `ICR`, `INS`, `OPN`, `MON`, `TAX`, `FOO`)
+  - Quick Reference front-matter with always-present Sections TOC
+  - Entry header format: `### PREFIX_N: YYYY-MM-DD - Title`
+- **New sections in SKILL.md:**
+  - § NOTES.md Template — describes the inline scaffold and the variable-substitution flow
+  - § Scaling: Hierarchical Prefixes for Large Projects (`NOTES_DES_1` pattern)
+
+#### `/warmup` v0.2.0 — project scaffolding + combined canary
+
+- **Project scaffolding bootstrap** — new § Project Scaffolding Files with **asymmetric rules** per file:
+  - `.gitignore` — **skip-if-exists.** Creates with `.DS_Store` only when missing; never touches an existing file.
+  - `.claude/settings.json` — **propose, never automatic.** /warmup proposes additions via a /fast-chat multi-select (A: `permissions.allow`, B: `includeCoAuthoredBy: false`, C: `env.CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, D: `enabledPlugins: session-kit@session-kit-marketplace`) when the file is missing, empty, or contains only `enabledPlugins` (the marketplace-install shape). For any other content, leaves the file alone. User approves all, some, or none; writes are additive and never overwrite existing values.
+- **Combined canary (recommended default)** — folds acknowledgment + git status into one line at session start; existing acknowledgment / behavioral / content canaries preserved as alternatives
+
+#### README
+
+- `/session-kit:start` → `/start` everywhere in marketing copy (table, section headers, prose, ASCII diagram)
+- "One approval" softened to surface the `.claude/settings.json` sub-prompt when /warmup hits the propose path — settings changes are never automatic
+- Example transcript updated to show the multi-select sub-prompt and the second `O` approval
+
+#### Cross-platform discovery
+
+- OpenCode discovery options in README — `.opencode/`, `~/.config/opencode/`, and agent-compatible `.agents/skills/` paths
+
+### Changed
+
+#### `/stable-label` v0.1.3 — section labels vs IDs disambiguation
+
+- **New § Section labels vs IDs** — distinguishes bare-prefix section labels (`## Invariants (ICR)`) from IDs (`ICR_1`); section labels are not subject to the one-grep rule
+- **Bootstrap split into two branches:**
+  - Branch A — prefix table already pre-seeded by /notes (the common case under /start)
+  - Branch B — no table exists, propose one
+- Convention block reinforced with the no-shorthand rule — always use the full registered prefix
+
+#### Plugin and marketplace `description` field
+
+- Both descriptions now lead with `/start` instead of `/session-kit:start`, consistent with the README normalization
+
+#### Project conventions
+
+- **Commit style** switched from verb-first (`Add /foo: …`) to prefix-first (`feature: …`)
+  - Lowercase whole-word prefixes (`feature`, `fix`, `chore`, `refactor`, `docs`, `performance`, etc.) — never `feat` or `perf`
+  - Body layout: optional prose summary → themed bullet lists → optional trailing prose
+  - Commits before 2026-05-27 use the older style
+
 ## [0.8.0] — 2026-04-03
 
 ### Changed
