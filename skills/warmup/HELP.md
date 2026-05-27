@@ -1,6 +1,6 @@
 # /warmup — Quick Reference
 
-**Setup:** Run `/warmup` in your project. It audits your CLAUDE.md (or creates one), then sets up Required Reading, a post-compaction rule, loading canaries, and auto-memory entries. All managed sections are marked with `<!-- managed by /warmup -->` breadcrumbs.
+**Setup:** Run `/warmup` in your project. It audits your CLAUDE.md (or creates one), then sets up Required Reading, a post-compaction rule, loading canaries, and auto-memory entries. It also bootstraps `.gitignore` (with `.DS_Store`) and `.claude/settings.json` (with a low-friction permissions allowlist, privacy defaults, and session-kit plugin enablement) — only when those files don't already exist. All managed sections in CLAUDE.md/AGENTS.md are marked with `<!-- managed by /warmup -->` breadcrumbs.
 
 **Ongoing:** You rarely invoke `/warmup` directly after setup. Its infrastructure works in the background — canaries verify files loaded, the post-compaction rule triggers re-reads after context compression. Invoke it again when:
 - A rule or file isn't loading reliably (it walks an escalation ladder: tighten wording → improve positioning → add redundancy → promote to auto-memory)

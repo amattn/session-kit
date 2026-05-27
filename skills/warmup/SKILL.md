@@ -1,6 +1,6 @@
 ---
 name: warmup
-version: 0.1.2
+version: 0.2.0
 description: "Session bootstrap and compaction recovery. Ensures skills, disciplines, and key files load reliably at session start and survive context compaction. Sets up canaries to verify loading and keep the user informed. Use when the user asks to 'warmup', 'bootstrap', 'start session', 'reload context', 'set up required reading', or when the user says 'I lost context', 'reload after compaction', 'this keeps getting forgotten', 'make sure X loads reliably'. Also trigger when a skill needs reliable loading or when AGENTS.md and/or CLAUDE.md needs compaction-resistant structure. Do NOT proactively bootstrap warmup when the user is asking about something unrelated — only trigger when the user's request is about loading, context, compaction, or session reliability."
 user-invocable: true
 ---
@@ -101,7 +101,7 @@ Verification mechanisms that prove files were actually consumed, not just refere
 
 Types of canaries:
 
-- **Acknowledgment canary** — a rule in AGENTS.md and/or CLAUDE.md requiring the agent to explicitly acknowledge what it loaded. If the acknowledgment is missing, the files weren't read. Example:
+- **Acknowledgment canary** — a rule in AGENTS.md and/or CLAUDE.md requiring the agent to explicitly acknowledge what it loaded. If the acknowledgment is missing, the files weren't read. Minimal form:
   ```
   ## Session Start
   <!-- managed by /warmup -->
@@ -119,12 +119,80 @@ Types of canaries:
   - A convention defined only in NOTES.md (e.g., "we call the deployment target 'nimbus'"). If the agent doesn't know the term, NOTES.md wasn't loaded.
   - "Summarize the most important and critical directives as you understand them from AGENTS.md and/or CLAUDE.md." If the summary is vague or generic, the file wasn't consumed.
 
+- **Combined canary (recommended default)** — fold acknowledgment + behavioral into one line that fires once at session start. One canary, two verifications, zero overhead. Example:
+  ```
+  ## Session Start
+  <!-- managed by /warmup -->
+
+  At the start of every session and after any context compaction, before responding to
+  the user's first request:
+
+  1. Read every file in § Required Reading.
+  2. Run `git status --short` and `git log --oneline -1` (or note "no commits yet").
+  3. Emit a single acknowledgment line in this exact format:
+
+     ```
+     Loaded: <comma-separated file list, or "none yet">. Git: <one-line status>. Ready.
+     ```
+
+  This acknowledgment is a canary — its presence proves AGENTS.md was consumed. Skipping
+  it means the file wasn't loaded.
+  ```
+  Use the combined form unless you have a specific reason to keep them separate (e.g., the behavioral half is computationally expensive and shouldn't fire every turn).
+
 When setting up canaries:
-- Prefer behavioral canaries — they're self-verifying without requiring the user to check
+- **Prefer the combined canary** — single line, two verifications, no ambiguity about which to use
 - Keep canaries lightweight — they should verify loading, not add overhead
 - Place canary rules in AGENTS.md and/or CLAUDE.md near the Required Reading section
 
-### 4. Reliability Guidance
+### 4. Project Scaffolding Files
+
+Two project-level files that aren't loading mechanisms themselves but materially affect how reliably session-kit operates across the project's lifetime: `.gitignore` and `.claude/settings.json`. /warmup creates them with sensible defaults when they don't exist, and leaves them alone when they do.
+
+#### `.gitignore`
+
+If missing at the project root, create with a single entry — `.DS_Store`. Anything beyond that (e.g., `.claude/settings.local.json`, `CLAUDE.local.md`) is the user's call; /warmup does not add it automatically. **If `.gitignore` already exists, skip it entirely — do not read, modify, or offer to edit it.**
+
+#### `.claude/settings.json`
+
+If missing, create with a starter that combines a low-friction permissions allowlist, privacy/quiet defaults, and the session-kit plugin enablement:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(grep:*)",
+      "Bash(git status:*)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git show:*)",
+      "Bash(git blame:*)"
+    ]
+  },
+  "includeCoAuthoredBy": false,
+  "env": {
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+  },
+  "enabledPlugins": {
+    "session-kit@session-kit-marketplace": true
+  }
+}
+```
+
+What each piece does:
+- **`permissions.allow`** — pre-approves read-file Bash commands (`cat`, `head`, `tail`), read-only git (`status`, `log`, `diff`, `show`, `blame`), and `grep`. These are the high-frequency, low-risk operations every session uses; pre-approving them removes prompt friction without granting any write or destructive capability.
+- **`includeCoAuthoredBy: false`** — keep AI co-author trailers out of commit messages by default.
+- **`env.CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`** — suppress non-essential telemetry/network calls from the harness.
+- **`enabledPlugins`** — ensure session-kit is enabled for anyone who clones the repo and uses Claude Code, so /warmup, /notes, /stable-label, etc. are available without per-user setup.
+
+**If `.claude/settings.json` already exists, skip it entirely — do not read, modify, or offer to edit it.** Existing settings files are the user's domain; /warmup only acts when the file is absent.
+
+---
+
+### 5. Reliability Guidance
 
 Sometimes system prompts, context limits, or agent behavior fight against AGENTS.md and/or CLAUDE.md directives. /warmup includes guidance for these situations:
 
@@ -143,12 +211,13 @@ Sometimes system prompts, context limits, or agent behavior fight against AGENTS
 When invoked on a project for the first time:
 
 1. **Audit AGENTS.md and/or CLAUDE.md** — detect which exists. If neither exists, create AGENTS.md for cross-compatibility, plus a minimal CLAUDE.md that points to it. Read the current state. Identify what's already set up (discipline blocks, key file references, etc.) and what's missing.
-2. **Set up auto-memory** — create memory entries for non-negotiable behaviors (deepest layer first).
-3. **Add Required Reading section** — list files that must be loaded every session. Include any files already referenced as "key files."
-4. **Add Post-Compaction Rule** — explicit re-read instruction.
-5. **Set up canaries** — add at least one acknowledgment canary. Suggest behavioral canaries if appropriate.
-6. **Add breadcrumbs** — mark /warmup-managed sections with `<!-- managed by /warmup -->` comments so users know what the skill created.
-7. **Inform the user** — explain what was set up, how canaries work, and how to invoke /warmup to add more. Mention that /warmup takes feedback: if any rule seems inconsistently loaded or applied, the user can invoke /warmup to strengthen wording or escalate tactics to increase efficacy.
+2. **Bootstrap project scaffolding files** — create `.gitignore` (with `.DS_Store`) and `.claude/settings.json` (with the starter shown in § Project Scaffolding Files) only when they don't already exist. If either file is already present, skip it entirely — do not read, modify, or offer to edit it.
+3. **Set up auto-memory** — create memory entries for non-negotiable behaviors (deepest layer first).
+4. **Add Required Reading section** — list files that must be loaded every session. Include any files already referenced as "key files."
+5. **Add Post-Compaction Rule** — explicit re-read instruction.
+6. **Set up canaries** — add the **combined canary** (acknowledgment + git status in one line) as the default. Use a separate acknowledgment or behavioral canary only if the combined form doesn't fit (e.g., the project doesn't use git, or a different behavioral signal is more useful).
+7. **Add breadcrumbs** — mark /warmup-managed sections with `<!-- managed by /warmup -->` comments so users know what the skill created.
+8. **Inform the user** — explain what was set up (note any scaffolding files created; existing files were skipped), how canaries work, and how to invoke /warmup to add more. Mention that /warmup takes feedback: if any rule seems inconsistently loaded or applied, the user can invoke /warmup to strengthen wording or escalate tactics to increase efficacy.
 
 ---
 

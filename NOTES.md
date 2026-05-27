@@ -366,6 +366,22 @@ Added a `publish:` prefix exception to the verb-first commit style. Distribution
 
 Ported patterns from plet-skills' SemVer Discipline: timing rule ("bump when you change, not later"), "what to bump when" table, "where versions live" table, "distribution versions are human-directed only" rule, and "don't forget" multi-location checklist. The existing section had the version definitions but lacked the operational discipline that prevents drift.
 
+### /warmup bootstraps project scaffolding files (2026-05-27)
+
+/warmup now creates `.gitignore` and `.claude/settings.json` when they don't already exist. The framing: these aren't loading mechanisms themselves but materially affect how reliably session-kit operates across the project's lifetime — `enabledPlugins` ensures session-kit loads for any collaborator, the permissions allowlist reduces prompt friction so sessions actually flow, and the privacy/quiet defaults match how most session-kit users want Claude Code to behave.
+
+**Defaults chosen:**
+- `.gitignore` — single entry `.DS_Store`. Other common ignores (`settings.local.json`, `CLAUDE.local.md`) are intentionally not added; that's the user's call.
+- `.claude/settings.json` — `permissions.allow` covers read-file Bash (`cat`/`head`/`tail`), read-only git (`status`/`log`/`diff`/`show`/`blame`), and `grep`. Plus `includeCoAuthoredBy: false`, `env.CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1"`, and `enabledPlugins: { "session-kit@session-kit-marketplace": true }`.
+
+**Never touches existing files.** If `.gitignore` or `.claude/settings.json` already exists, /warmup skips it entirely — no read, no offer to merge, no surfacing missing keys. Existing files are the user's domain; /warmup only acts when the file is absent. Avoiding the offer-to-edit path keeps the bootstrap predictable and prevents /warmup from sprawling into a general settings.json maintenance tool.
+
+**Rejected alternatives:**
+- Mirror this repo's full `.gitignore` (`settings.local.json`, `CLAUDE.local.md`) — too opinionated for a starter; users vary
+- Mirror this repo's settings.json (broad git write permissions like `git add`/`git commit`/`git checkout`) — write permissions deserve explicit user thought, not silent grants
+
+**Version bump:** /warmup 0.1.2 → 0.2.0 (new bootstrap step + new Tactics subsection = MINOR).
+
 ### /sharpen renamed to /feedback-foo (2026-04-03)
 
 "Sharpen" was too conceptual — users naturally say "add an observation" or "add a feedback item," not "sharpen this." The monitoring note from the original naming decision proved correct: the name wasn't intuitive for the "feedback" mental model.

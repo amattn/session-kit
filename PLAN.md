@@ -76,8 +76,17 @@ Added a unified bootstrap entry point and the supporting infrastructure the per-
 
 Versioning, CHANGELOG, and a publish will happen as a follow-up before the next release. /warmup combined-canary changes were unstaged for a separate commit.
 
+### 16. /warmup project scaffolding + combined canary ✓
+
+Two additions to /warmup, version 0.1.2 → 0.2.0:
+
+- **Project scaffolding bootstrap** — new § Project Scaffolding Files in Tactics + new step 2 in Bootstrap. Creates `.gitignore` (with `.DS_Store`) and `.claude/settings.json` (read-file/read-git/grep allowlist, `includeCoAuthoredBy: false`, `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`, `enabledPlugins: session-kit@session-kit-marketplace`) only when missing. If either file exists, skipped entirely — no read, no merge, no offer-to-edit.
+- **Combined canary** — new recommended-default canary that folds acknowledgment + git status into one line. Existing acknowledgment/behavioral/content canaries preserved as alternatives. Bootstrap step 6 now defaults to the combined form.
+
+Cascade: README.md and HELP.md updated; NOTES.md entry with defaults, rejected alternatives, and skip-if-exists rationale.
+
 ## Next Steps
 
-### 16. Description optimization
+### Description optimization
 
 Run the skill-creator trigger optimization loop on each skill's description to improve triggering accuracy.
