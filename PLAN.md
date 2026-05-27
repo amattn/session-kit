@@ -69,8 +69,8 @@ Renamed skill from `/sharpen` to `/foo` (FOO = Feedback, Observation, Oversight)
 
 Added a unified bootstrap entry point and the supporting infrastructure the per-skill bootstraps lean on:
 
-- **New `/session-kit:start` skill** (`skills/start/SKILL.md`, `HELP.md`) — minimal/standard/full tiers, single-approval flow replacing 10+ per-skill questions, re-runnable to pick up missing pieces
-- **/notes template-driven bootstrap** — new `skills/notes/assets/notes-template.md` ships as the canonical NOTES.md scaffold (default prefix table, Quick Reference front-matter with TOC, `PREFIX_N: YYYY-MM-DD - Title` header format). New § Scaling: Hierarchical Prefixes for Large Projects.
+- **New `/session-kit:start` skill** (`skills/start/SKILL.md`, `HELP.md`) — minimal/standard/full tiers, single-approval flow for the plan (plus a `.claude/settings.json` sub-prompt when /warmup hits the propose path), re-runnable to pick up missing pieces. Sub-skills are activated via the Skill tool — /start never `Read`s sub-skill SKILL.md files as on-disk assets.
+- **/notes template-driven bootstrap** — canonical NOTES.md scaffold lives inline in `skills/notes/SKILL.md` under § NOTES.md Template → § Template content (no external asset file, no permission-prompted read). Default prefix table, Quick Reference front-matter with TOC, `PREFIX_N: YYYY-MM-DD - Title` header format. New § Scaling: Hierarchical Prefixes for Large Projects.
 - **/stable-label section labels vs IDs** — new § disambiguates bare-prefix section labels from IDs, bootstrap split into Branch A (table pre-seeded by /notes) and Branch B (no table), no-shorthand rule reinforced in the convention block
 - **Commit style updated in CLAUDE.md** — switched from verb-first (`Add /foo: …`) to prefix-first (`feature: …`); commits before 2026-05-27 use the older style
 
@@ -80,12 +80,29 @@ Versioning, CHANGELOG, and a publish will happen as a follow-up before the next 
 
 Two additions to /warmup, version 0.1.2 → 0.2.0:
 
-- **Project scaffolding bootstrap** — new § Project Scaffolding Files in Tactics + new step 2 in Bootstrap. Creates `.gitignore` (with `.DS_Store`) and `.claude/settings.json` (read-file/read-git/grep allowlist, `includeCoAuthoredBy: false`, `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`, `enabledPlugins: session-kit@session-kit-marketplace`) only when missing. If either file exists, skipped entirely — no read, no merge, no offer-to-edit.
+- **Project scaffolding bootstrap** — new § Project Scaffolding Files in Tactics + new step 2 in Bootstrap. Asymmetric rules per file:
+  - `.gitignore` — skip-if-exists. Creates with `.DS_Store` only when the file is missing; never touches an existing file.
+  - `.claude/settings.json` — **propose, never automatic.** /warmup proposes additions via a /fast-chat multi-select (A: `permissions.allow`, B: `includeCoAuthoredBy: false`, C: `env.CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`, D: `enabledPlugins: session-kit@session-kit-marketplace`) when the file is missing, empty, or contains only `enabledPlugins` (the marketplace-install shape). For any other content, leaves it alone. User approves all, some, or none; writes are additive — never overwrite existing values.
 - **Combined canary** — new recommended-default canary that folds acknowledgment + git status into one line. Existing acknowledgment/behavioral/content canaries preserved as alternatives. Bootstrap step 6 now defaults to the combined form.
 
-Cascade: README.md and HELP.md updated; NOTES.md entry with defaults, rejected alternatives, and skip-if-exists rationale.
+Cascade: README.md and HELP.md updated; NOTES.md entries with defaults, rejected alternatives, and the propose-vs-skip rationale per file.
 
 ## Next Steps
+
+### Next publish (folded with today's follow-ups)
+
+The most recent publish was reverted locally so today's follow-ups (Skill-tool delegation in /start, inline /notes template, /warmup settings propose-flow, README /start normalization) can ship as part of the *same* release as the initial skill-version work rather than as separate patch versions. Origin still has the prior published commit and tag — the new publish will force-push.
+
+Tasks for the publish commit:
+
+- **Bump distribution versions** — `plugin.json` and `marketplace.json plugins[0].version` from 0.8.0 to the new release version; `marketplace.json metadata.version` from 0.4.0 to its new release version (decide at publish time)
+- **Plugin / marketplace `description` field** — use `/start` (matches the README normalization), not `/session-kit:start`. Both `description` fields list the suite's slash commands; the leading entry becomes `/start` instead of `/session-kit:start`.
+- **Restore CHANGELOG entry** for the new release version, with three subsections describing the folded behavior:
+  - `/start` v0.1.0 — add bullet "Sub-skills activated via the Skill tool, not `Read` as files"
+  - `/notes` v0.2.0 — replace "New asset: `skills/notes/assets/notes-template.md`" with "Inline NOTES.md template in `SKILL.md` under § NOTES.md Template → § Template content (self-contained, no external asset)"
+  - `/warmup` v0.2.0 — replace the scaffolding bullet with the asymmetric rule: `.gitignore` skip-if-exists unchanged; `.claude/settings.json` propose-multi-select when missing/empty/marketplace-only; settings changes never automatic
+  - Add a **README** subsection: "`/session-kit:start` → `/start` everywhere in marketing copy; 'one approval' softened to surface the `.claude/settings.json` multi-select; example transcript updated to show the sub-prompt"
+- **Tag and force-push** — tag the new release version (force-update over the existing tag) and force-push `main` + tag
 
 ### Description optimization
 

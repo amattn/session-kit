@@ -93,10 +93,10 @@ O. Ok, approve
 
 ## Bootstrap Order
 
-The unified bootstrap runs sub-skills in this order, regardless of tier:
+The unified bootstrap invokes sub-skills via the Skill tool (see § Invoking Sub-Skills via the Skill Tool) in this order, regardless of tier:
 
 1. **/warmup** — establishes AGENTS.md scaffolding (Required Reading, Post-Compaction Rule, combined Session Start canary), CLAUDE.md pointer, auto-memory directory
-2. **/notes** — copies `assets/notes-template.md` (from /notes) to project root as `NOTES.md`, substitutes variables, adds NOTES.md to Required Reading, adds NOTES.md Discipline block to AGENTS.md
+2. **/notes** — writes `NOTES.md` to project root from /notes' inline template (substitutes `{{PROJECT_NAME}}`, `{{DATE}}`, `{{PROJECT_DESCRIPTION}}`), adds NOTES.md to Required Reading, adds NOTES.md Discipline block to AGENTS.md
 3. **/stable-label** — detects the pre-seeded prefix table from /notes (Branch A of /stable-label's bootstrap), adds Stable Label Convention rules to AGENTS.md. *No prefix table re-proposal* — defaults come from /notes' template.
 4. **/fast-chat** — adds Interaction Conventions block to AGENTS.md
 5. **/dictation** *(full tier only)* — scans project for jargon, proposes correction table, writes to AGENTS.md
@@ -145,17 +145,21 @@ If the project already has session-kit (detected by `<!-- managed by /warmup -->
 
 ---
 
-## Delegation to Sub-Skill SKILL.md Files
+## Invoking Sub-Skills via the Skill Tool
 
-/session-kit:start does **not** duplicate the bootstrap logic of each sub-skill. Instead, it reads the sub-skills' SKILL.md files and follows their bootstrap sections. This avoids drift: sub-skills remain the single source of truth for their own behavior, and /session-kit:start is the orchestrator that sequences them and applies smart defaults.
+/session-kit:start does **not** duplicate, inline, or `Read` the bootstrap logic of each sub-skill. Instead, it activates each sub-skill by calling the **Skill tool** — e.g. `Skill(skill: "warmup")`, `Skill(skill: "notes")`, `Skill(skill: "stable-label")`, `Skill(skill: "fast-chat")`, `Skill(skill: "dictation")`, `Skill(skill: "feedback-foo")`. The exact invocation name comes from the available-skills list at runtime (plain `name` for personal skills, `plugin:name` for plugin-namespaced ones — session-kit ships as a plugin, so `session-kit:warmup` etc. is the typical form). Each call loads that skill's SKILL.md into context the proper way — as a system reminder — and the sub-skill's own Bootstrap section then drives its setup.
 
-If a sub-skill changes its bootstrap (e.g., /notes adds a new default section), /session-kit:start picks up the change automatically the next time it runs.
+**Do not use the Read tool on `skills/<name>/SKILL.md` to look up sub-skill behavior.** Sub-skills are activated, not read. Reading SKILL.md as a regular file bypasses the skill-loading machinery and pulls in content that wasn't meant to be consumed that way.
+
+This avoids drift: each sub-skill remains the single source of truth for its own behavior, and /session-kit:start is the orchestrator that sequences the Skill-tool calls, applies smart defaults, and signals "unified mode" so e.g. /stable-label takes Branch A (table already seeded by /notes) and doesn't re-propose the prefix table.
+
+If a sub-skill changes its bootstrap (e.g., /notes adds a new default section), /session-kit:start picks up the change automatically the next time it invokes that skill.
 
 ---
 
 ## What Does NOT Go in /session-kit:start
 
-- **Sub-skill bootstrap logic** — that lives in each sub-skill's SKILL.md. /session-kit:start orchestrates; it does not redefine.
+- **Sub-skill bootstrap logic** — that lives in each sub-skill, loaded via the Skill tool. /session-kit:start orchestrates the calls; it does not redefine or inline the sub-skills' bootstraps.
 - **Project-specific content** — the smart defaults are opinionated starter values, not project content. Users edit NOTES.md, AGENTS.md, etc. after bootstrap to put real content in.
 - **Ongoing operations** — once bootstrap is done, /session-kit:start steps out. Use the individual skills (`/notes`, `/stable-label`, etc.) for ongoing work.
 - **Skill installation** — /session-kit:start assumes the session-kit plugin is already installed. It doesn't install plugins.

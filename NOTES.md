@@ -382,6 +382,75 @@ Ported patterns from plet-skills' SemVer Discipline: timing rule ("bump when you
 
 **Version bump:** /warmup 0.1.2 → 0.2.0 (new bootstrap step + new Tactics subsection = MINOR).
 
+### /session-kit:start invokes sub-skills via the Skill tool, not Read (2026-05-27)
+
+The initial `/session-kit:start` SKILL.md (v0.1.0) had a § "Delegation to Sub-Skill SKILL.md Files" section that said /start "reads the sub-skills' SKILL.md files and follows their bootstrap sections." That's the wrong mechanism — it bypasses Claude Code's skill-loading machinery, fires a Read-tool permission prompt, and pulls SKILL.md in as a regular file read instead of a system reminder.
+
+**Fix:** section renamed to § "Invoking Sub-Skills via the Skill Tool." /start now activates each sub-skill via `Skill(skill: "warmup")`, `Skill(skill: "notes")`, etc. — that's the proper mechanism. The exact invocation name comes from the runtime available-skills list (plain `name` for personal skills, `plugin:name` for plugin-namespaced ones — for session-kit users, typically `session-kit:warmup` etc.).
+
+**Why:** the Skill tool is what makes sub-skills usable. It loads SKILL.md as a system reminder, threads it into the conversation correctly, and doesn't require an out-of-band permission prompt. Reading SKILL.md as a regular file is a category error.
+
+**Reinforced wording:** "Do not use the Read tool on `skills/<name>/SKILL.md` to look up sub-skill behavior. Sub-skills are activated, not read." The bold negative directive is intentional — agents have already shown the wrong instinct here.
+
+**Cascade:** Bootstrap Order intro now points to § Invoking Sub-Skills via the Skill Tool; § What Does NOT Go entry updated to reference Skill-tool activation; Bootstrap Order step 2 updated (after the template inlining decision below).
+
+**Version:** No bump needed — folded into the same release as the initial /start v0.1.0 work. The Skill-tool delegation rule supersedes the prior Read-the-SKILL.md framing *before* the next publish, so there is no separate patch number to assign.
+
+---
+
+### /notes template inlined into SKILL.md; assets/ folder removed (2026-05-27)
+
+User: *"I want to move the template into the skill and remove it from the assets folder. I don't like that it needs to ask permission. the skills should be as self contained as possible."*
+
+Removed `skills/notes/assets/notes-template.md` and inlined the full template into `skills/notes/SKILL.md` under a new § NOTES.md Template → § Template content sub-section. The template content sits inside a fenced markdown block; the bootstrap writes NOTES.md by substituting `{{PROJECT_NAME}}`, `{{DATE}}`, and `{{PROJECT_DESCRIPTION}}` as it writes, never reading an external file.
+
+**Why:** when /notes ran as part of /session-kit:start, reading the assets file fired a Read-tool permission prompt mid-bootstrap. With the template inlined, the Skill-tool invocation already brings it into context — no extra read, no permission prompt, no risk of the file being missing. The principle is broader than this one skill: **skills should be self-contained** so loading the skill loads everything the skill needs to do its job.
+
+**Tradeoff acknowledged:** SKILL.md grows by ~140 lines. Acceptable — the template is consumed every time /notes bootstraps, so in-context is the natural place for it. Self-containment > marginal context savings.
+
+**Cascade:**
+- /notes Bootstrap step 1 rewritten to write inline content rather than copy a file
+- § "Default Template" renamed to § "NOTES.md Template"; new § "Template content" sub-section holds the literal template inside a four-backtick fence (preserving inner triple-backtick fence safety)
+- /start SKILL.md Bootstrap Order step 2 reworded — drops `assets/notes-template.md` reference, says "writes NOTES.md … from /notes' inline template"
+- `skills/notes/assets/` directory removed entirely
+- CHANGELOG entry for the next release will describe the inline template (the asset-file line was reverted locally; PLAN.md → Next publish lists the wording to use)
+
+**Rejected alternative:** keep the asset file but suppress the permission prompt via `allowed-tools` in SKILL.md frontmatter. Rejected because the user's framing is principled — self-containment is the goal, not just permission-prompt suppression. An inline template also can't go missing or get out of sync with the SKILL.md that references it.
+
+**Version:** No bump needed — folded into the same release as the initial /notes v0.2.0 template-driven bootstrap work. The inline template supersedes the asset-file approach *before* the next publish, so /notes v0.2.0 ships with the template inlined from the start (no intermediate v0.2.1).
+
+---
+
+### /warmup settings.json: propose, never automatic; eligible when near-empty (2026-05-27)
+
+The original /warmup 0.2.0 rule was blanket skip-if-exists for `.claude/settings.json`. That broke the marketplace-install flow: when a user enables session-kit through Claude Code's plugin UI, the harness writes `.claude/settings.json` with just an `enabledPlugins` entry. The file *exists*, so /warmup's blanket skip never adds the permissions allowlist, privacy defaults, or env entries — the very things /warmup is supposed to set up. The "user's domain" framing was right in spirit but missed this real-world chicken-and-egg.
+
+User: *"clause settings changes should not be automatic. if the settings is empty or only contains the enabledPlugins, then warmup should propose the additions. user can approve all or some."*
+
+**New rule** — applies *only* to `.claude/settings.json`; `.gitignore` keeps its blanket skip-if-exists (marketplace install doesn't auto-create one, so the failure mode doesn't apply):
+
+- **Eligible for proposal** — file missing, empty (`{}` or zero-byte), OR contains only `enabledPlugins`. The last case is the marketplace-install shape — *the file exists but isn't user-curated.*
+- **Not eligible — leave alone** — file has any other content. Treat it as the user's domain.
+- **Proposal is multi-select.** /warmup uses /fast-chat NL form with four options (A: permissions.allow, B: includeCoAuthoredBy, C: env, D: enabledPlugins). User picks all / some / none. Apply additively — never overwrite any value the user already has.
+- **Never automatic.** Even when the file is missing, /warmup proposes rather than auto-creating. This was the user's stated headline rule: "settings changes should not be automatic."
+
+**Why not just detect the marketplace-install shape via a flag/marker?** No reliable marker exists (the harness doesn't tag its writes). The shape heuristic (only `enabledPlugins`) is fragile but observable; the user accepts the brittleness in exchange for keeping settings.json writes out of the silent-automatic path.
+
+**Cascade:**
+- /warmup SKILL.md § Project Scaffolding Files: intro rewritten to call out the asymmetry (`.gitignore` skip vs. `.claude/settings.json` propose); § `.claude/settings.json` subsection completely rewritten with eligibility states, proposal format, additive-merge semantics
+- /warmup SKILL.md Bootstrap step 2: summary updated to point at the new rule
+- /warmup HELP.md Setup section: rewritten to reflect propose-multi-select for settings.json
+- /start SKILL.md: no change — /start invokes /warmup via the Skill tool, so it picks up the new behavior automatically. The "one approval" model now has a sub-proposal when settings.json is eligible; this is the right tradeoff (settings choices deserve explicit consent, not a silent rollup).
+
+**Rejected alternatives:**
+- *Additive merge, automatic* — rejected because it violates the user's "never automatic" rule for settings.
+- *Additive merge with one yes/no confirm* — rejected because the user explicitly wanted "approve all or some," i.e., per-option granularity rather than a single accept/reject.
+- *Special-case only the marketplace shape; keep blanket skip otherwise* — too narrow (breaks the moment a user adds one other key) and doesn't match the user's broader "settings should not be automatic" principle. The propose-when-eligible rule covers both cases under one principle.
+
+**Version:** No bump needed — folded into the same release as the initial /warmup v0.2.0 scaffolding work. The propose-multi-select rule supersedes the skip-if-exists rule for `.claude/settings.json` *before* the next publish, so /warmup v0.2.0 ships with the corrected semantics from the start (no intermediate v0.2.1).
+
+---
+
 ### /sharpen renamed to /feedback-foo (2026-04-03)
 
 "Sharpen" was too conceptual — users naturally say "add an observation" or "add a feedback item," not "sharpen this." The monitoring note from the original naming decision proved correct: the name wasn't intuitive for the "feedback" mental model.
@@ -466,6 +535,7 @@ Bundles are unnecessary because no skill does anything without an explicit setup
 - **/foo proactive detection** — single-turn evals can only test infrastructure and methodology, not proactive pattern detection. Detection ("I noticed you've done this twice") requires multi-session real-world usage to validate. The evals explicitly test "response to being told about a pattern," which is fundamentally different from the agent noticing on its own. This is the most important capability to monitor in real usage.
 - **Fast-chat review prompt on informational answers** — eval 6 showed the skill appending a review prompt to a pure explanation. Not seen in real usage (likely eval artifact from single-turn context stripping). If this appears in actual multi-session usage, add "don't append review prompts to informational answers" guidance to the skill.
 - **Stable-label token savings hypothesis** — IDs should save tokens in downstream usage (grep `REQ_3` vs restating full requirements). Unconfirmed — single evals can't measure cumulative cross-session savings. Monitor in real multi-session projects.
+- **/notes SKILL.md size after template inlining** — inlining the NOTES.md template (2026-05-27) grew /notes SKILL.md by ~140 lines. Every /notes invocation now pays that token cost, even for ongoing operations (the common case — bootstrap is rare). Watch for /notes feeling heavier in long sessions or showing up in context-budget pressure. Mitigations if the cost becomes visible: (1) load the template only when bootstrap is detected (agent self-elides on ongoing-ops invocations), (2) extract to a sibling file the agent reads *only* when bootstrapping (re-introduces the asset model, but scoped behind a bootstrap gate), (3) accept the cost as the price of self-containment. Default disposition: **accept** — self-containment > marginal token savings — but revisit if real-world usage contradicts.
 - ~~**/sharpen adoption of the name**~~ → resolved by renaming to /foo (2026-04-03). The monitoring proved correct — "sharpen" wasn't intuitive for the "feedback" mental model.
 
 ---

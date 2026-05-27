@@ -147,7 +147,10 @@ When setting up canaries:
 
 ### 4. Project Scaffolding Files
 
-Two project-level files that aren't loading mechanisms themselves but materially affect how reliably session-kit operates across the project's lifetime: `.gitignore` and `.claude/settings.json`. /warmup creates them with sensible defaults when they don't exist, and leaves them alone when they do.
+Two project-level files that aren't loading mechanisms themselves but materially affect how reliably session-kit operates across the project's lifetime: `.gitignore` and `.claude/settings.json`. The two have different rules:
+
+- **`.gitignore`** — skip-if-exists. /warmup creates it with a single default entry only when missing; never touches an existing file.
+- **`.claude/settings.json`** — **proposal-based, never automatic.** /warmup proposes additions only when the file is in a "near-empty" shape (missing, empty, or contains only `enabledPlugins` from a marketplace install). For anything richer, leave it alone.
 
 #### `.gitignore`
 
@@ -155,7 +158,36 @@ If missing at the project root, create with a single entry — `.DS_Store`. Anyt
 
 #### `.claude/settings.json`
 
-If missing, create with a starter that combines a low-friction permissions allowlist, privacy/quiet defaults, and the session-kit plugin enablement:
+**Settings changes are never automatic.** /warmup *proposes* additions and writes only what the user approves. This is the load-bearing rule for this file — do not bypass it.
+
+**Eligible for proposal** — one of:
+
+- File is missing
+- File exists but is empty (`{}` or zero-byte)
+- File exists and contains **only** an `enabledPlugins` entry (no other top-level keys)
+
+The third case is the *marketplace-install shape*: when a user enables a plugin via Claude Code's plugin UI, the harness writes `.claude/settings.json` with just `enabledPlugins`. The file *exists*, but it isn't user-curated — it's harness-generated scaffolding. /warmup treats it as near-empty so the legitimate starter contents (permissions allowlist, privacy defaults) don't get blocked by an effectively-empty file.
+
+**Not eligible — leave alone** — file contains any other content (additional keys, or different values for the ones below). Don't read further, don't propose changes, don't surface "missing" keys. The user has invested in the file; treat it as their domain.
+
+When eligible, propose the four pieces using a /fast-chat multi-select. The user picks any combination — all, some, or none. Apply only what's approved, merging additively into the existing file (never overwriting any value the user already has):
+
+```
+.claude/settings.json is <missing | empty | enabledPlugins-only>. Propose adding:
+
+A. `permissions.allow` — read-file Bash (cat, head, tail), read-only git (status, log, diff, show, blame), grep
+B. `includeCoAuthoredBy: false` — keep AI co-author trailers out of commit messages
+C. `env.CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1"` — suppress non-essential telemetry/network calls
+D. `enabledPlugins: { "session-kit@session-kit-marketplace": true }` — auto-enable session-kit for collaborators (omit this option if the entry is already present)
+
+Pick any combination (e.g., "A,B,C", "all", "none"). Free-form edits welcome.
+R. Show me recommendations
+O. Ok, all
+```
+
+If the user approves nothing (or replies "none" / "skip"), do not write the file. If the user approves a subset, write only those keys.
+
+**Starter content** (the union of A-D, used as the reference for what each option writes):
 
 ```json
 {
@@ -188,7 +220,7 @@ What each piece does:
 - **`env.CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`** — suppress non-essential telemetry/network calls from the harness.
 - **`enabledPlugins`** — ensure session-kit is enabled for anyone who clones the repo and uses Claude Code, so /warmup, /notes, /stable-label, etc. are available without per-user setup.
 
-**If `.claude/settings.json` already exists, skip it entirely — do not read, modify, or offer to edit it.** Existing settings files are the user's domain; /warmup only acts when the file is absent.
+**Merge semantics for the additive write:** when the file already has `enabledPlugins`, leave it as-is and only add the keys the user approved (A, B, C). If the user approves D and the file already has a different `enabledPlugins` mapping, leave the existing mapping alone — never overwrite. If `permissions.allow` somehow already exists with entries (which only happens if you mis-classified the file as eligible — re-check), union with what's there; never remove an existing entry.
 
 ---
 
@@ -211,7 +243,7 @@ Sometimes system prompts, context limits, or agent behavior fight against AGENTS
 When invoked on a project for the first time:
 
 1. **Audit AGENTS.md and/or CLAUDE.md** — detect which exists. If neither exists, create AGENTS.md for cross-compatibility, plus a minimal CLAUDE.md that points to it. Read the current state. Identify what's already set up (discipline blocks, key file references, etc.) and what's missing.
-2. **Bootstrap project scaffolding files** — create `.gitignore` (with `.DS_Store`) and `.claude/settings.json` (with the starter shown in § Project Scaffolding Files) only when they don't already exist. If either file is already present, skip it entirely — do not read, modify, or offer to edit it.
+2. **Bootstrap project scaffolding files** — see § Project Scaffolding Files for full rules. Summary: for `.gitignore`, create with `.DS_Store` only if missing; otherwise skip entirely. For `.claude/settings.json`, propose the starter additions via /fast-chat multi-select when the file is missing, empty, or contains only `enabledPlugins`; for any other content, leave it alone. Never write settings.json changes automatically — apply only what the user explicitly approves.
 3. **Set up auto-memory** — create memory entries for non-negotiable behaviors (deepest layer first).
 4. **Add Required Reading section** — list files that must be loaded every session. Include any files already referenced as "key files."
 5. **Add Post-Compaction Rule** — explicit re-read instruction.

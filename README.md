@@ -8,7 +8,7 @@ Extracted from patterns discovered during 500+ sessions of AI-assisted developme
 
 | Skill | What it does |
 |-------|-------------|
-| `/session-kit:start` | Unified bootstrap for the suite. Runs the per-skill setups with smart defaults and one approval. Tiers: `minimal` (/warmup), `standard` (default), `full`. Re-runnable — picks up only what's missing. |
+| `/start` | Unified bootstrap for the suite. One approval covers the plan, plus a quick multi-select for `.claude/settings.json` when that file is missing or marketplace-only. Tiers: `minimal` (/warmup), `standard` (default), `full`. Re-runnable — picks up only what's missing. |
 | `/warmup` | Session bootstrap and compaction recovery. Ensures skills, disciplines, and key files load reliably and survive context compaction. |
 | `/fast-chat` | Structured interaction patterns. Numbered questions, lettered options, batch answer codes (`1A, 2B, 3 let's discuss pros/cons`), and a review prompt with R/O stable tail. Always-on communication style that makes decisions faster. |
 | `/dictation` | Project-specific correction table. Originally designed for voice-to-text errors, but also useful for recurring typos and emergent shorthand — any systematic input pattern where the user means something other than what they literally typed. |
@@ -96,11 +96,11 @@ cp -r /path/to/session-kit/skills/* .agents/skills/
 
 ## The Skills
 
-### `/session-kit:start` — Unified Suite Bootstrap
+### `/start` — Unified Suite Bootstrap
 
-The recommended on-ramp for new projects. Bootstraps the whole suite (or any tier you pick) in one pass instead of running each skill individually. Smart defaults plus a single approval replace 10+ questions across the per-skill setups.
+The recommended on-ramp for new projects. Bootstraps the whole suite (or any tier you pick) in one pass instead of running each skill individually. Smart defaults plus a single bootstrap approval replace the 10+ questions across the per-skill setups. The one sub-prompt: `/warmup` surfaces a quick multi-select for `.claude/settings.json` when that file is missing or contains only the marketplace-installed `enabledPlugins` entry — settings changes are never automatic.
 
-Why it matters: per-skill bootstraps are great for incremental adoption, but a fresh project benefits from coordinated setup. `/notes` pre-seeds the prefix table that `/stable-label` expects; `/warmup` adds NOTES.md to Required Reading; `/fast-chat`'s conventions land alongside the Notes Discipline. `/session-kit:start` does that coordination automatically.
+Why it matters: per-skill bootstraps are great for incremental adoption, but a fresh project benefits from coordinated setup. `/notes` pre-seeds the prefix table that `/stable-label` expects; `/warmup` adds NOTES.md to Required Reading; `/fast-chat`'s conventions land alongside the Notes Discipline. `/start` does that coordination automatically.
 
 Tiers:
 - `minimal` — just `/warmup`
@@ -175,11 +175,11 @@ Best for: long-running projects with evolving workflows, teams noticing the same
 
 Each skill has a one-time **setup** (first invocation creates project files) and an **ongoing** usage pattern.
 
-For new projects, run `/session-kit:start` first to bootstrap everything at once. The per-skill setups below are still available — `/session-kit:start` just runs them for you with smart defaults.
+For new projects, run `/start` first to bootstrap everything at once. The per-skill setups below are still available — `/start` just runs them for you with smart defaults.
 
-### `/session-kit:start`
+### `/start`
 
-**Setup:** Run `/session-kit:start` (default standard tier), or `/session-kit:start minimal` / `/session-kit:start full` to pick a tier. It detects what's already in place, proposes a plan, and bootstraps the per-skill artifacts in one pass. You approve once instead of 10+ times. Existing files are never overwritten — re-running picks up only what's missing.
+**Setup:** Run `/start` (default standard tier), or `/start minimal` / `/start full` to pick a tier. It detects what's already in place, proposes a plan, and bootstraps the per-skill artifacts in one pass. You approve the plan once (plus a quick multi-select for `.claude/settings.json` if that file is missing or marketplace-only) instead of the 10+ separate questions you'd get from the per-skill bootstraps. Existing files are never overwritten — re-running picks up only what's missing.
 
 **Ongoing:** Rarely. The skill is bootstrap-oriented — once the suite is in place, the per-skill commands take over. Invoke it again when you want to:
 - Add a tier you skipped (run with a different tier flag)
@@ -187,7 +187,7 @@ For new projects, run `/session-kit:start` first to bootstrap everything at once
 
 **Example:**
 ```
-You: /session-kit:start
+You: /start
 Agent: About to bootstrap session-kit (standard tier) for `my-project`:
 
        Files to create:
@@ -198,8 +198,8 @@ Agent: About to bootstrap session-kit (standard tier) for `my-project`:
        - NOTES.md      (from /notes template, with default prefix table
                         pre-seeded: DEC, ICR, INS, OPN, MON, TAX, FOO)
        - .gitignore    (.DS_Store) — only if missing
-       - .claude/settings.json (read-only Bash allowlist, plugin enablement,
-                        privacy defaults) — only if missing
+       - .claude/settings.json — sub-prompt for additions when missing,
+                        empty, or marketplace-only; otherwise skipped
 
        Auto-memory entries:
        - project-my-project.md
@@ -211,6 +211,18 @@ Agent: About to bootstrap session-kit (standard tier) for `my-project`:
 
        R. Show me recommendations
        O. Ok, approve
+
+You: O
+Agent: .claude/settings.json is missing. Propose adding:
+
+       A. permissions.allow — read-file Bash + read-only git + grep
+       B. includeCoAuthoredBy: false
+       C. env.CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1"
+       D. enabledPlugins: session-kit@session-kit-marketplace
+
+       Pick any combination (e.g., "A,B,C", "all", "none").
+       R. Show me recommendations
+       O. Ok, all
 
 You: O
 Agent: Bootstrapped. Loaded: AGENTS.md, NOTES.md. Git: working tree clean. Ready.
@@ -363,7 +375,7 @@ Agent: (adds to Important Concepts & Insights, under "From the user")
 ### `/stable-label`
 
 **Setup:** Run `/stable-label` in your project. It branches on what's already there:
-- **Branch A** — if `/notes` was already bootstrapped (the common case under `/session-kit:start`), it detects the pre-seeded prefix table in NOTES.md and just adds the convention rules to CLAUDE.md, then offers to customize the seeded prefixes.
+- **Branch A** — if `/notes` was already bootstrapped (the common case under `/start`), it detects the pre-seeded prefix table in NOTES.md and just adds the convention rules to CLAUDE.md, then offers to customize the seeded prefixes.
 - **Branch B** — if no prefix table exists, it scans existing artifacts, proposes a prefix table (e.g., `DEC` for decisions, `REQ` for requirements), adds convention rules to CLAUDE.md, and writes the table to NOTES.md under Taxonomy / Conventions.
 
 **Ongoing:** IDs are assigned automatically when you create or commit to something — a new requirement, a design decision, a feature. The agent won't assign IDs to exploratory output (brainstorms, summaries, option lists). Invoke `/stable-label` when you want to:
@@ -434,7 +446,7 @@ Agent: Added FOO_4 to FEEDBACK_FOO.md:
 ## How They Fit Together
 
 ```
-/session-kit:start → bootstraps the whole suite (or any tier) in one pass
+/start → bootstraps the whole suite (or any tier) in one pass
                       (the on-ramp — use this for a new project)
 
 /warmup           → ensures everything loads reliably
@@ -456,7 +468,7 @@ Agent: Added FOO_4 to FEEDBACK_FOO.md:
                      (FOO = Feedback, Observation, Oversight)
 ```
 
-The skills are independent — install any subset, or use `/session-kit:start` to bootstrap a coordinated set in one pass. They're designed to complement each other: `/warmup` ensures `/notes` loads every session, `/stable-label` gives `/notes` entries greppable IDs, `/fast-chat` speeds up the decisions `/notes` captures, `/dictation` keeps voice input from garbling the whole conversation, and `/feedback-foo` turns recurring friction into tracked observations and named disciplines.
+The skills are independent — install any subset, or use `/start` to bootstrap a coordinated set in one pass. They're designed to complement each other: `/warmup` ensures `/notes` loads every session, `/stable-label` gives `/notes` entries greppable IDs, `/fast-chat` speeds up the decisions `/notes` captures, `/dictation` keeps voice input from garbling the whole conversation, and `/feedback-foo` turns recurring friction into tracked observations and named disciplines.
 
 ## Origin
 
