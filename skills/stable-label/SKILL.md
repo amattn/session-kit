@@ -41,6 +41,26 @@ XXX_YYY_N    — sub-group for namespaced items
 - **One definition per ID** — every ID resolves to exactly one definition. If grep returns multiple definition-like results, something is wrong. This is what makes IDs trustworthy as anchors — you never have to wonder "which REQ_3?"
 - **NEVER use shorthand or abbreviated prefixes.** Always use the full registered prefix. If the prefix table says `SES_DET_OUT`, then the ID is `SES_DET_OUT_2` — never `OUT_2`, never `DET_OUT_2`. Shorthand destroys the one-grep guarantee, creates ambiguous cross-references, and defeats the entire purpose of stable labels. This is not a style preference — it is a correctness requirement. An abbreviated ID is a broken ID.
 
+### Section labels vs IDs — the bare-prefix pattern
+
+A bare prefix appearing in a section heading (commonly in parentheses, but the parens are optional) is **not** an ID. It's a section label — a visual breadcrumb telling the reader (and the agent) "items in this section get the `PREFIX_N` prefix." Example:
+
+```
+## Invariants & Critical Requirements (ICR)
+- ICR_1: All times stored in UTC
+- ICR_2: User passwords never logged
+```
+
+In this example:
+- `(ICR)` in the header is a **section label** — not an ID, has no `_N`, and is not subject to the one-grep rule.
+- `ICR_1` and `ICR_2` are **IDs** — each resolves to exactly one definition via grep.
+
+**An ID always has the form `XXX_N` or `XXX_YYY_N`** (prefix + optional sub-group + underscore + number). If you see a bare prefix without an `_N`, it is either:
+1. A section label (in a heading or section marker), OR
+2. A reference to the prefix concept itself (e.g., "the DEC prefix covers design decisions")
+
+Neither case is an ID and neither violates the convention. The disambiguator is the underscore — IDs always have it, bare-prefix uses never do. To grep them apart regardless of surrounding syntax (parens, colon, slash, prose): `grep -E '\bICR[^_]'` (or `'\bICR\b'`) finds bare-prefix uses; `grep 'ICR_'` finds all ICR IDs.
+
 ### Examples
 
 ```
@@ -66,13 +86,26 @@ A project's prefix table belongs in NOTES.md under Taxonomy / Conventions — it
 
 ## Bootstrap
 
-When invoked on a project for the first time:
+When invoked on a project for the first time, first detect whether a prefix table already exists in `NOTES.md § Taxonomy / Conventions` (the /notes skill ships a default table in its scaffolding template). Then branch:
+
+### Branch A — NOTES.md already has a prefix table (pre-seeded by /notes)
+
+This is the common case when /notes was bootstrapped first (or via /session-kit:start). The table is already in place — don't re-propose.
+
+1. **Read the existing prefix table** from NOTES.md § Taxonomy / Conventions
+2. **Add convention rules to AGENTS.md and/or CLAUDE.md** (the block in step 3 of Branch B below) — pointing at the existing table
+3. **Validate and offer to customize** — show the user the pre-seeded prefixes and ask if any should be renamed, dropped, or added before IDs start being assigned. Common ones from the /notes default: `DEC`, `ICR`, `INS`, `OPN`, `MON`, `TAX`, `FOO`
+4. **Inform the user** — explain the convention is now active; existing items in NOTES.md may need retro-labeling (typically minimal, e.g., the seeded `OPN_N` entries)
+
+### Branch B — no prefix table exists (NOTES.md missing or doesn't have the table)
 
 1. **Scan the project** — look at existing artifacts (NOTES.md, README, PRDs, specs, etc.) and suggest prefixes based on what's found. Also scan for informal `XX_N` or `XXX_N` style IDs already in use — if found, propose formalizing them with their current prefixes rather than inventing new ones. Examples of suggested prefixes:
    - NOTES.md decisions → `DEC_N`
    - Requirements → `REQ_N`
    - Feedback/observations → `OBS_N`
    - Features → `FEA_N`
+
+   _If session-kit's /notes is also being installed, recommend bootstrapping /notes first — its template ships with a sensible default 7-prefix table (`DEC`, `ICR`, `INS`, `OPN`, `MON`, `TAX`, `FOO`) and the right NOTES.md section structure._
 
 2. **Propose a prefix table** — present suggestions to the user for approval. The user may add, remove, or rename prefixes.
 
@@ -84,6 +117,7 @@ When invoked on a project for the first time:
 
    Every referenceable item gets a greppable ID using the XXX_N format.
    Append-only — never renumber, never reuse. Gaps are expected.
+   Always use the full registered prefix — never shorthand.
    See the prefix table in NOTES.md § Taxonomy / Conventions.
    ```
 

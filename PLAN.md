@@ -65,8 +65,19 @@ Applied three process observations from FEEDBACK_FOO.md:
 
 Renamed skill from `/sharpen` to `/foo` (FOO = Feedback, Observation, Oversight). `/feedback` and `/feedback-foo` as aliases. Artifact `SHARPEN.md` → `FEEDBACK_FOO.md`, prefix `SPI_N` → `FOO_N`, directory `skills/sharpen/` → `skills/feedback-foo/`. Plugin version bumped to 0.8.0.
 
+### 15. /session-kit:start skill + supporting infrastructure ✓
+
+Added a unified bootstrap entry point and the supporting infrastructure the per-skill bootstraps lean on:
+
+- **New `/session-kit:start` skill** (`skills/start/SKILL.md`, `HELP.md`) — minimal/standard/full tiers, single-approval flow replacing 10+ per-skill questions, re-runnable to pick up missing pieces
+- **/notes template-driven bootstrap** — new `skills/notes/assets/notes-template.md` ships as the canonical NOTES.md scaffold (default prefix table, Quick Reference front-matter with TOC, `PREFIX_N: YYYY-MM-DD - Title` header format). New § Scaling: Hierarchical Prefixes for Large Projects.
+- **/stable-label section labels vs IDs** — new § disambiguates bare-prefix section labels from IDs, bootstrap split into Branch A (table pre-seeded by /notes) and Branch B (no table), no-shorthand rule reinforced in the convention block
+- **Commit style updated in CLAUDE.md** — switched from verb-first (`Add /foo: …`) to prefix-first (`feature: …`); commits before 2026-05-27 use the older style
+
+Versioning, CHANGELOG, and a publish will happen as a follow-up before the next release. /warmup combined-canary changes were unstaged for a separate commit.
+
 ## Next Steps
 
-### 15. Description optimization
+### 16. Description optimization
 
 Run the skill-creator trigger optimization loop on each skill's description to improve triggering accuracy.

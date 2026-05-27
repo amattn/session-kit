@@ -28,11 +28,50 @@ Maintain institutional memory across multi-session AI-assisted development. NOTE
 
 When invoked on a project with no NOTES.md:
 
-1. **Create NOTES.md** with a Project Context section filled in from available context (CLAUDE.md, README, repo structure, git history)
-2. **Add suggested section headers** as scaffolding (see § Suggested Starting Sections) — empty sections are fine
-3. **Reference from CLAUDE.md** — add NOTES.md as a key file so every session loads it
-4. **Add Notes Discipline to CLAUDE.md** — add the discipline block so it's enforced every session (see § Notes Discipline for CLAUDE.md). This is the most important step — without it, the note-taking behavior doesn't survive to the next session.
-5. **Inform the user** — explain what was created and how the Notes Discipline works. Offer to seed Open Questions by scanning the project for obvious unresolved topics (from README, existing issues, conversation context). An empty Open Questions section is a missed opportunity — even a few seeded questions give the user something to react to. But let the user decide whether to do this now or later.
+1. **Copy the template** at `assets/notes-template.md` to the project root as `NOTES.md`. The template ships with all suggested section headers and the default Stable Label Prefixes table already populated — see § Default Template below.
+2. **Substitute variables** in the copied file:
+   - `{{PROJECT_NAME}}` — the project name (directory name is a reasonable default; ask if ambiguous)
+   - `{{DATE}}` — today's date in YYYY-MM-DD
+   - `{{PROJECT_DESCRIPTION}}` — one-sentence description from available context (README, CLAUDE.md, repo structure, conversation); if unknown, leave the `_(Replace this paragraph…)_` placeholder for the user to fill in
+3. **Reference from AGENTS.md and/or CLAUDE.md** — add NOTES.md as a key file so every session loads it. If /warmup is also installed, add it to § Required Reading.
+4. **Add the Notes Discipline block to AGENTS.md and/or CLAUDE.md** — see § Notes Discipline for AGENTS.md/CLAUDE.md below. Without this, the note-taking behavior doesn't survive to the next session.
+5. **Inform the user** — explain what was created, that the template ships with default stable-label prefixes (the user can rename or customize in § Taxonomy / Conventions), and how the Notes Discipline works. Offer to seed Open Questions (`OPN_N`) by scanning the project for obvious unresolved topics — an empty Open Questions section is a missed opportunity, but let the user decide whether to seed now or later.
+
+---
+
+## Default Template
+
+`assets/notes-template.md` is the canonical NOTES.md scaffold. It ships with:
+
+- **Always-on `## Quick Reference` front-matter section** (between the H1 intro and the first content section). Combines two purposes that share the "orient before content" job:
+  - **Convention pointer** as the body — a brief in-file orientation block that primes the reader/agent before they encounter any IDs. States the ID format, append-only rule, section-label-vs-ID distinction, and the entry header format. Points to AGENTS.md § Stable Label Convention for the full rules.
+  - **`### Sections` sub-H3 as the TOC** — always present, even for a fresh empty NOTES.md. Users add H3 entries (`DEC_1`, `INS_2`, etc.) to the TOC as they create them. A stale TOC is worse than no TOC.
+- All 8 suggested sections (see § Suggested Starting Sections) as headers with placeholder italics describing what belongs in each
+- A pre-populated **Stable Label Prefixes** table under § Taxonomy / Conventions — the 7-prefix defaults that pair with /stable-label: `DEC`, `ICR`, `INS`, `OPN`, `MON`, `TAX`, `FOO`. Each section header in the template references which prefix it uses.
+- The `TAX_N`-as-enumeration-unit semantic note (e.g., `TAX_1` = "8 phases" as a whole, not one phase)
+- A pointer to AGENTS.md § Stable Label Convention for the append-only rules
+
+### Entry header format
+
+Every entry that gets a stable-label ID uses this format in its header:
+
+```
+### PREFIX_N: YYYY-MM-DD - Title
+```
+
+The colon after the ID marks where structured metadata ends. The date follows. Then a ` - ` separator and the free-form title. Titles can contain dashes (or anything else) — the format is unambiguous because the structured fields are positionally fixed before the title starts.
+
+Bulleted sections (Open Questions, Things to Monitor, Invariants) use the same format inside the bullet:
+
+```
+- **OPN_1: YYYY-MM-DD - Title** — body text
+```
+
+This format choice trades one colon for parse stability: titles can be any prose without breaking grep-and-extract scripts.
+
+**Why this lives in /notes (not /stable-label):** the template is the NOTES.md scaffold, and /notes owns NOTES.md. /stable-label owns the convention *rules* (append-only, no renumber) which live in AGENTS.md. The two skills cooperate: if /stable-label is also installed, it adapts to the pre-seeded table; if /stable-label is *not* installed, the table is harmless scaffolding text and the user can ignore or delete it.
+
+**Customizing the defaults:** the prefix table in the template is opinionated but not load-bearing. Users may rename prefixes, drop unused ones, or add project-specific ones at bootstrap time. After IDs are in the wild, the append-only rules from /stable-label take over — prefixes can be added but not renamed without breakage.
 
 ---
 
@@ -136,6 +175,44 @@ Periodically suggest a reorganization when signs of drift appear:
 4. **Execute** — move entries to their new homes, extract graduated content, update any TOC, verify nothing was lost
 
 Reorganization is not cleanup for its own sake — it keeps the file's structure aligned with how the project actually thinks.
+
+---
+
+## Scaling: Hierarchical Prefixes for Large Projects
+
+The default prefix style — `DEC_1`, `ICR_3`, `OPN_7` — works for small to mid-size projects (up to ~50 entries per section). As NOTES.md grows past that, two pressures emerge:
+
+1. **Section headers become the navigation surface** — readers skim H2/H3 to find the right neighborhood before drilling in
+2. **Cross-references want section-level anchors** — "see § Architecture decisions" beats grepping 200 `DEC_N` entries
+
+The **hierarchical prefix** style addresses both by making each section header itself a stable-label ID. The pattern composes a *scope prefix* (typically the file or directory name — `NOTES`, `SPEC`, `GUIDE`) with a *section prefix* (the section's role — `DEC`, `INV`, `TAX`, `PLN`):
+
+```
+## NOTES_DES: Key Design Decisions
+### NOTES_DES_1: Architecture & Routing
+#### Squash architecture redesign (2026-03-22)
+#### Worktree + shared artifacts merge strategy (2026-03-26)
+
+### NOTES_DES_2: State & Data
+#### State file design (2026-03-22)
+```
+
+In this pattern:
+- `NOTES_DES` is the **section ID** — greppable as a unit; cross-references like "see NOTES_DES" jump to the section
+- `NOTES_DES_1`, `NOTES_DES_2` are **sub-category IDs** — clusters within the section
+- Individual H4 entries stay greppable by their dated titles
+
+When multiple NOTES.md files exist (see § Multiple NOTES.md Files), each gets its own *scope* prefix so cross-references stay unambiguous: `NOTES_DES_3` (root NOTES.md) vs `SPEC_DES_3` (`specs/NOTES.md`). The scope prefix replaces the plain `DEC` — within a hierarchical project, `DEC_3` alone is ambiguous; `NOTES_DES_3` is not.
+
+**When to graduate from plain to hierarchical:**
+
+- Any single section exceeds ~50 entries and starts feeling unwieldy
+- Multiple NOTES.md files exist and bare prefixes (`DEC_N`) would collide across files
+- Natural sub-clusters are emerging in a large section (e.g., DEC entries split cleanly into architecture / data / execution / verification)
+
+**Migration is additive, not destructive.** Append-only rules apply: existing `DEC_N` IDs stay valid. New entries adopt the hierarchical scheme; old entries are not retro-renamed. Both forms coexist during the transition and grep continues to work for both. Update the prefix table in § Taxonomy / Conventions to register the new scope prefixes.
+
+**Don't graduate prematurely.** The plain style is easier to write, easier to read, and sufficient for the vast majority of projects. The hierarchical style pays off only when the section/sub-category structure is doing real navigation work — until then, it's overhead.
 
 ---
 

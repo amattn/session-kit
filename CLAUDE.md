@@ -109,14 +109,24 @@ All eval definitions (evals.json), test projects, and subagent outputs must be s
 
 ## Commit Style
 
-Single-line subject: `<verb> <what>: <brief description>`. Common verbs: Add, Update, Fix, Drop, Rename.
+_Adopted 2026-05-27. Commits before this date use an older verb-based style (`Add /foo: …`) and do not conform to the rules below._
 
-**Exception:** Distribution commits use the `publish:` prefix instead of a verb: `publish: v0.8.0 — description`. This makes version bumps and releases scannable in `git log` (`git log --grep="^publish:"`). Tag releases with `git tag v<version>` as well.
+Single-line subject: `<prefix>: <description>`. The prefix is **lowercase**, names the **purpose** of the commit (not a verb, not a noun), and is always a **whole word** — never a shorthand. Use `feature`, not `feat`; `performance`, not `perf`. Common prefixes: `fix`, `chore`, `refactor`, `docs`, `feature`, `test`, `performance`, `style`, `build`.
 
-Body uses **themed bullet lists** — group related changes under short theme headers. Each bullet is a concise fact, not a sentence. Example:
+**Exception:** Distribution commits use the `publish:` prefix: `publish: v0.8.0 — description`. This makes version bumps and releases scannable in `git log` (`git log --grep="^publish:"`). Tag releases with `git tag v<version>` as well.
+
+Body layout (each part optional except the bullets when there's substantive change):
+
+1. **Optional prose summary** — one short paragraph framing the change before the bullets.
+2. **Themed bullet lists** — group related changes under short theme headers. Each bullet is a concise fact, not a sentence.
+3. **Optional trailing prose** — additional context, motivation, or follow-up notes.
+
+Examples:
 
 ```
-Add /fast-chat skill: structured interaction patterns for efficient communication
+feature: /fast-chat skill — structured interaction patterns
+
+Adds the always-on communication layer used by every other skill's review and decision prompts.
 
 Mechanics:
 - NL/NLR shorthands with recommendation formats
