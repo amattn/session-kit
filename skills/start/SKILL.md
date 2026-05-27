@@ -66,6 +66,8 @@ Files to create:
 - AGENTS.md         (Required Reading, Post-Compaction Rule, Session Start canary, NOTES.md Discipline, Stable Label Convention, /fast-chat Interaction Conventions, Self-Improvement)
 - CLAUDE.md         (pointer to AGENTS.md)
 - NOTES.md          (from /notes template, with Stable Label Prefixes table pre-seeded: DEC, ICR, INS, OPN, MON, TAX, FOO)
+- .gitignore        (.DS_Store) — only if missing
+- .claude/settings.json (read-file Bash + read-only git + grep allowlist, includeCoAuthoredBy=false, CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1, enabledPlugins) — only if missing
 
 Auto-memory entries:
 - project-<name>.md     (project description, TBD flags)

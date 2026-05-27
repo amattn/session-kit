@@ -1,6 +1,6 @@
 ---
 name: stable-label
-version: 0.1.2
+version: 0.1.3
 description: "Greppable stable references using the XXX_N convention. Append-only IDs that never renumber and always resolve to exactly one definition. Use when the user asks to 'stable-label', 'label', 'add id', 'add reference', 'define prefix', 'consistency pass', or when cross-referencing artifacts. Also trigger when you notice referenceable items without IDs, when cross-references use fragile text matching instead of stable IDs, when numbered lists would benefit from stable cross-references, when multiple documents reference each other by name or title instead of IDs, or when a project would benefit from greppable references even if the user hasn't asked for them."
 user-invocable: true
 ---

@@ -8,6 +8,7 @@ Extracted from patterns discovered during 500+ sessions of AI-assisted developme
 
 | Skill | What it does |
 |-------|-------------|
+| `/session-kit:start` | Unified bootstrap for the suite. Runs the per-skill setups with smart defaults and one approval. Tiers: `minimal` (/warmup), `standard` (default), `full`. Re-runnable — picks up only what's missing. |
 | `/warmup` | Session bootstrap and compaction recovery. Ensures skills, disciplines, and key files load reliably and survive context compaction. |
 | `/fast-chat` | Structured interaction patterns. Numbered questions, lettered options, batch answer codes (`1A, 2B, 3 let's discuss pros/cons`), and a review prompt with R/O stable tail. Always-on communication style that makes decisions faster. |
 | `/dictation` | Project-specific correction table. Originally designed for voice-to-text errors, but also useful for recurring typos and emergent shorthand — any systematic input pattern where the user means something other than what they literally typed. |
@@ -95,6 +96,21 @@ cp -r /path/to/session-kit/skills/* .agents/skills/
 
 ## The Skills
 
+### `/session-kit:start` — Unified Suite Bootstrap
+
+The recommended on-ramp for new projects. Bootstraps the whole suite (or any tier you pick) in one pass instead of running each skill individually. Smart defaults plus a single approval replace 10+ questions across the per-skill setups.
+
+Why it matters: per-skill bootstraps are great for incremental adoption, but a fresh project benefits from coordinated setup. `/notes` pre-seeds the prefix table that `/stable-label` expects; `/warmup` adds NOTES.md to Required Reading; `/fast-chat`'s conventions land alongside the Notes Discipline. `/session-kit:start` does that coordination automatically.
+
+Tiers:
+- `minimal` — just `/warmup`
+- `standard` *(default)* — `/warmup` + `/notes` + `/stable-label` + `/fast-chat`
+- `full` — all six skills
+
+Re-runnable — picks up only what's missing; existing files are never overwritten.
+
+Best for: new projects starting from scratch, existing projects missing one or more session-kit pieces, anyone who'd rather "just get me set up" than walk through per-skill bootstraps.
+
 ### `/warmup` — Session Bootstrap & Compaction Recovery
 
 AI agents don't reliably read project files at session start, and context compaction mid-session can silently drop critical instructions. `/warmup` is the reliability layer — it uses every available tactic (auto-memory, Required Reading sections, discipline blocks, loading canaries) to ensure that what matters gets loaded and stays loaded.
@@ -158,6 +174,47 @@ Best for: long-running projects with evolving workflows, teams noticing the same
 ## How to Use
 
 Each skill has a one-time **setup** (first invocation creates project files) and an **ongoing** usage pattern.
+
+For new projects, run `/session-kit:start` first to bootstrap everything at once. The per-skill setups below are still available — `/session-kit:start` just runs them for you with smart defaults.
+
+### `/session-kit:start`
+
+**Setup:** Run `/session-kit:start` (default standard tier), or `/session-kit:start minimal` / `/session-kit:start full` to pick a tier. It detects what's already in place, proposes a plan, and bootstraps the per-skill artifacts in one pass. You approve once instead of 10+ times. Existing files are never overwritten — re-running picks up only what's missing.
+
+**Ongoing:** Rarely. The skill is bootstrap-oriented — once the suite is in place, the per-skill commands take over. Invoke it again when you want to:
+- Add a tier you skipped (run with a different tier flag)
+- Set up session-kit on another project quickly
+
+**Example:**
+```
+You: /session-kit:start
+Agent: About to bootstrap session-kit (standard tier) for `my-project`:
+
+       Files to create:
+       - AGENTS.md     (Required Reading, Post-Compaction Rule, Session Start
+                        canary, NOTES.md Discipline, Stable Label Convention,
+                        /fast-chat Interaction Conventions)
+       - CLAUDE.md     (pointer to AGENTS.md)
+       - NOTES.md      (from /notes template, with default prefix table
+                        pre-seeded: DEC, ICR, INS, OPN, MON, TAX, FOO)
+       - .gitignore    (.DS_Store) — only if missing
+       - .claude/settings.json (read-only Bash allowlist, plugin enablement,
+                        privacy defaults) — only if missing
+
+       Auto-memory entries:
+       - project-my-project.md
+       - warmup-session-canary.md
+
+       A. Approve — write everything as planned
+       B. Switch tier (minimal | full)
+       C. Customize interactively — walk through each sub-skill's bootstrap
+
+       R. Show me recommendations
+       O. Ok, approve
+
+You: O
+Agent: Bootstrapped. Loaded: AGENTS.md, NOTES.md. Git: working tree clean. Ready.
+```
 
 ### `/warmup`
 
@@ -272,7 +329,7 @@ Agent: Got it. Want me to add "pleet → plet" to the correction table?
 
 ### `/notes`
 
-**Setup:** Run `/notes` on a project without NOTES.md. It creates NOTES.md with suggested sections (Project Context, Invariants, Important Concepts, Taxonomy, Key Design Decisions, Open Questions), references it from CLAUDE.md, and adds a Notes Discipline block that enforces note-taking in every future session.
+**Setup:** Run `/notes` on a project without NOTES.md. It copies the canonical NOTES.md template — suggested sections (Project Context, Invariants, Important Concepts, Taxonomy, Key Design Decisions, Open Questions, Things to Monitor), Quick Reference front-matter, and a default stable-label prefix table pre-seeded under § Taxonomy / Conventions — then references it from CLAUDE.md and adds a Notes Discipline block that enforces note-taking in every future session.
 
 **Ongoing:** Mostly automatic — the discipline block tells the agent to update NOTES.md after every decision before moving on. You don't need to invoke `/notes` for routine note-taking. Invoke it when you want to:
 - Reorganize sections that have grown unwieldy
@@ -305,7 +362,9 @@ Agent: (adds to Important Concepts & Insights, under "From the user")
 
 ### `/stable-label`
 
-**Setup:** Run `/stable-label` in your project. It scans existing artifacts, proposes a prefix table (e.g., `DEC` for decisions, `REQ` for requirements), adds convention rules to CLAUDE.md, and writes the prefix table to NOTES.md under Taxonomy / Conventions.
+**Setup:** Run `/stable-label` in your project. It branches on what's already there:
+- **Branch A** — if `/notes` was already bootstrapped (the common case under `/session-kit:start`), it detects the pre-seeded prefix table in NOTES.md and just adds the convention rules to CLAUDE.md, then offers to customize the seeded prefixes.
+- **Branch B** — if no prefix table exists, it scans existing artifacts, proposes a prefix table (e.g., `DEC` for decisions, `REQ` for requirements), adds convention rules to CLAUDE.md, and writes the table to NOTES.md under Taxonomy / Conventions.
 
 **Ongoing:** IDs are assigned automatically when you create or commit to something — a new requirement, a design decision, a feature. The agent won't assign IDs to exploratory output (brainstorms, summaries, option lists). Invoke `/stable-label` when you want to:
 - Add a new prefix to the table
@@ -375,26 +434,29 @@ Agent: Added FOO_4 to FEEDBACK_FOO.md:
 ## How They Fit Together
 
 ```
-/warmup          → ensures everything loads reliably
-                    (the foundation — without it, nothing else is guaranteed)
+/session-kit:start → bootstraps the whole suite (or any tier) in one pass
+                      (the on-ramp — use this for a new project)
 
-/fast-chat       → makes every interaction faster
-                    (structured codes replace prose)
+/warmup           → ensures everything loads reliably
+                     (the foundation — without it, nothing else is guaranteed)
 
-/dictation       → removes input friction
-                    (correction table for voice, typos, shorthand)
+/fast-chat        → makes every interaction faster
+                     (structured codes replace prose)
 
-/notes           → captures what was decided and why
-                    (institutional memory across sessions)
+/dictation        → removes input friction
+                     (correction table for voice, typos, shorthand)
 
-/stable-label    → makes cross-references greppable and permanent
-                    (machine-verifiable navigation)
+/notes            → captures what was decided and why
+                     (institutional memory across sessions)
 
-/feedback-foo    → detects patterns, tracks observations, creates disciplines
-                    (FOO = Feedback, Observation, Oversight)
+/stable-label     → makes cross-references greppable and permanent
+                     (machine-verifiable navigation)
+
+/feedback-foo     → detects patterns, tracks observations, creates disciplines
+                     (FOO = Feedback, Observation, Oversight)
 ```
 
-The skills are independent — install any subset. But they're designed to complement each other: `/warmup` ensures `/notes` loads every session, `/stable-label` gives `/notes` entries greppable IDs, `/fast-chat` speeds up the decisions `/notes` captures, `/dictation` keeps voice input from garbling the whole conversation, and `/feedback-foo` turns recurring friction into tracked observations and named disciplines.
+The skills are independent — install any subset, or use `/session-kit:start` to bootstrap a coordinated set in one pass. They're designed to complement each other: `/warmup` ensures `/notes` loads every session, `/stable-label` gives `/notes` entries greppable IDs, `/fast-chat` speeds up the decisions `/notes` captures, `/dictation` keeps voice input from garbling the whole conversation, and `/feedback-foo` turns recurring friction into tracked observations and named disciplines.
 
 ## Origin
 
