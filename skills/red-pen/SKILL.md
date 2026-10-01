@@ -3,6 +3,7 @@ name: red-pen
 version: 0.1.0
 description: "Writing directives for every output type — spec/plan, code comments, code and diffs, chat. Makes AI-generated text less painful to read by substituting explicit constraints (word budgets, a named reader, mandatory prioritization, a cut pass) for the editing cost that generated text never pays. Use when the user asks to 'red-pen', 'red pen this', 'tighten this', 'cut this down', 'too long', 'too wordy', 'less fluff', 'stop narrating', 'this reads like AI', 'edit this', 'set up writing conventions', or 'writing directives'. Also apply these rules always-on, without invocation, before writing any spec, plan, design note, code comment, diff, commit message, or chat reply — decide the output type first, then write to its rules. Also trigger the bootstrap flow when setting up a project's AGENTS.md and/or CLAUDE.md if no writing conventions are defined yet."
 user-invocable: true
+allowed-tools: Bash(${CLAUDE_SKILL_DIR}/scripts/*)
 ---
 
 # /red-pen — Writing Directives
@@ -39,6 +40,7 @@ Unedited generated text has a shape. Use this list as the cut-pass checklist —
 - **No stance.** Balanced enumeration of options leaves nothing to agree or disagree with.
 - **Fluent rather than checkable.** Errors hide in good sentences. The reader wanted to find where this is wrong, and prose makes that hardest.
 - **Session narration.** Text that records the process of producing it ("as requested", "I've now updated", "this function takes X") rather than anything the reader needs.
+- **A rule stated in more than one place.** The same rule in two sections, so the reader has to check whether the second is a variant. A table and the prose that teaches its rows are not this: they are one rule in two registers, and both stay.
 
 The same defaults do different damage in different places: a bloated spec wastes a decision-maker's attention, a narrating comment misleads a debugger years later, an over-defensive diff burdens a reviewer, a padded chat reply slows a conversation. So the rules are split by output type.
 
@@ -47,11 +49,11 @@ The same defaults do different damage in different places: a bloated spec wastes
 ## Shared Core (applies everywhere)
 
 - **Know the readers.** Name them before writing. For each: what they already know, what they decide, where they stop reading. Default reader for code, comments, and chat: an insider who knows this codebase and this thread. Specs and anything with more than one reader name theirs explicitly.
-- **Layers are stopping points.** One layer per distinct stop. Each layer is complete for the reader who stops there and assumes everything above it. Readers who stop at the same depth share a layer. A document may stack layers top-down by audience, or repeat them per section with a summary first; the preamble says which. One reader means one layer: answer first.
+- **Layers are stopping points.** One layer per distinct stop. Each layer is complete for the reader who stops there and assumes everything above it. Readers who stop at the same depth share a layer. A document may stack layers top-down by audience, repeat them per section with a summary first, or split a layer out as a derived artifact (a summary document that points at its full source); the preamble says which. One reader means one layer: answer first.
 - **Readers who differ in what they know get separate artifacts**, linked, not one artifact that serves neither.
 - **Omit what the reader already knows.** Restating the prompt, the diff, or the previous message is a bug.
 - **Pace by uncertainty.** Settled things get one line. Judgment calls get the words.
-- **No scaffolding that carries no information.** No headers on short sections, no bold on every lead, no closing summary that repeats the body, no "it's worth noting", "in summary", "let me explain".
+- **No scaffolding that carries no information.** No headers on short sections, no bold on every lead, no closing summary that repeats the body, no "it's worth noting", "in summary", "let me explain". Structure that isolates one fact per line is not scaffolding; do not fold a standalone bullet into a paragraph to save a line.
 - **Prefer checkable to fluent.** Lists of assumptions, "X breaks if Y", "chose A over B because C" beat paragraphs.
 - **Numbers over adjectives.** "~40ms" not "fast"; "3 call sites" not "several".
 
@@ -71,7 +73,7 @@ Doubt between tell and ask goes to tell: a misplaced item can still be found, an
 
 ## Mode 1: Spec / Plan / Design Note
 
-Purpose: let a human make or ratify decisions, then verify the result. It is not a record of your reasoning — keep that elsewhere or discard it.
+Purpose: let a human make or ratify decisions, then verify the result. It is not a record of your reasoning — keep that elsewhere or discard it. Write it for the decision-maker with four minutes before the meeting.
 
 Shape:
 - **Preamble.** Two to five sentences of prose under the title, no heading. Who the document is for and what each audience comes for, then how it is organized so they can stop early. Describe the convention the reader can use, not a section-by-section routing. With one reader it is a sentence that says so: "This document is for the engineers implementing the queue migration; it assumes familiarity with the current consumer code."
@@ -160,7 +162,7 @@ A PR description longer than a screen opens with one sentence of preamble: which
 
 ## Mode 4: Chat
 
-Purpose: a turn in a conversation. The reader is present, impatient, and can ask follow-ups. Optimize for their next action, not for completeness.
+Purpose: a turn in a conversation. The reader is present, impatient, and can ask follow-ups. Optimize for their next action, not for completeness. Write it for the colleague at the next desk who asked over their shoulder.
 
 - **Answer first.** The first sentence is the answer, the decision, or the result. Method, caveats, and context come after, if at all.
 - **Match length to the question.** A yes/no question gets a sentence. A "how should I think about X" gets a few paragraphs. Never the same length regardless.
@@ -192,8 +194,9 @@ When unsure, use Mode 4. It is the mode with the least surface area for bloat.
 
 ## The Cut Pass
 
-Run it before delivering anything longer than a sentence.
+Run it before delivering anything longer than a sentence. Read the draft as the copy desk chief who has to cut a third without losing a rule, then run the checks; the frame sets the stance, the checks catch what the stance misses.
 
+0. Anything over its mode's budget is a draft, not a deliverable. Write it, run `${CLAUDE_SKILL_DIR}/scripts/symptoms.py` on it (or the checklist below when there is no shell), cut, then deliver. The symptoms are easier to see in a draft than to avoid while writing.
 1. Re-read as the named reader. What do they already know? Cut it.
 2. Check the draft against § The Recognizable Shape. Any match is a cut, not a rewrite.
 3. If a preamble sentence could be deleted without a reader losing a way to stop early, delete it.
@@ -259,8 +262,8 @@ Readers (default for code, comments, chat: an insider who knows this codebase an
 When the user points /red-pen at something ("red-pen this", `/red-pen docs/design.md`, "this is too long"):
 
 1. Identify the mode and the readers from the target, not from the conversation. A design doc is Mode 1 even if the request arrived in chat. If the target names no readers, take them from the roster or ask once.
-2. Apply the mode's rules and the cut pass. Cut first; rewrite only what the cut leaves broken.
-3. Return the edited text. Then one line: what was cut and why ("cut 180 words: two paragraphs of background the reader owns, a closing summary that restated the body").
+2. Apply the mode's rules and the cut pass. Cut first; rewrite only what the cut leaves broken. Cut history, argument, and cross-section restatement; do not cut enumeration the reader scans. Where the document's house style and these rules conflict, house style wins.
+3. Return the edited text. Then report by symptom, with counts: which rules were met more than once and where, what was stale, what was history sitting on a rule, what was argument in front of a rule. `${CLAUDE_SKILL_DIR}/scripts/symptoms.py --compare before.md after.md` produces the counts; add what the script cannot see: stale claims, cross-section restatement, argument in front of a rule, and paraphrased restatement (the script matches literal repeats; a fact told ten times in ten wordings is yours to count). Word count is what you can measure, not what the reader feels; give it last, if at all. Show one before/after paragraph so the reader can judge, not just count. `references/worked_example.md` shows the shape.
 4. Do not add anything the original lacked unless the mode requires it (a Mode 1 doc with no preamble gets one; it does not get an Overview).
 
 ### When the user says "too long" or "too wordy"
@@ -277,6 +280,8 @@ That is a cut-pass failure, not a style preference. Re-run the cut pass on the l
 
 Projects may legitimately override defaults: a public library wants fuller doc comments than Mode 2's default; a team may set a 500-word spec budget. Record overrides inside the Writing Conventions block so they load every session. The shared core does not get overridden.
 
+When a reader rejects a cut, record the category as an override the same way ("keep row-by-row teaching bullets under tables", "keep one-fact sub-bullets", "spec budget 500"), so the next pass starts calibrated instead of relearning it. One line per rejection; the reason is the reader's, not yours.
+
 ---
 
 ## What Does NOT Go in /red-pen
@@ -286,6 +291,7 @@ Projects may legitimately override defaults: a public library wants fuller doc c
 - **Code formatting and lint rules** — tabs, line length, import order belong to the project's formatter. Mode 3 is about diff readability, not whitespace.
 - **Selecting which outputs deserve attention** — /red-pen decides what within an output gets the reader's attention (§ Surface by Stakes) and orders it by who stops where. It does not decide which outputs a human should read at all. That is a selection problem above the writing layer.
 - **Input correction** — garbled or shorthand input is /dictation.
+- **A global persona** — "you are a professional editor" buys tone and fluency, which is the failure the skill exists to catch. Reader frames are per step and always paired with a check.
 
 ---
 
@@ -300,6 +306,9 @@ AGENTS.md and/or CLAUDE.md  → Writing Conventions block (shared core + mode ta
 
 /red-pen <target>           → editing pass on an existing file or section
                                (cut first, rewrite only what the cut breaks)
+
+scripts/symptoms.py         → counts the recognizable shape before and after
+                               (restated phrases, openers, bold leads, dated markers)
 
 Mode 1 Spec                 → the shape every plan, spec, and design note takes
                                (preamble, decisions, assumptions, risks, scope out)

@@ -14,6 +14,10 @@ All notable changes to session-kit. Versions track the plugin version in `.claud
   - Surface by Stakes: every item is sorted into record, tell, or ask by ownership, reversibility, blast radius, whether a reason can be cited, the record, and deviation from the request
   - README: skill table row, The Skills entry, How to Use entry, How They Fit Together line
   - README § Origin: attribution to Ayman Nadeem's "Plan Mode Is Dead"
+  - `scripts/symptoms.py`: counts restated phrases, sentence openers, bold leads, sentence-length headers, dated markers, forward references, hedges; `--compare` for before/after
+  - Self-edit loop: any output over its mode's budget is drafted, measured, cut, then delivered
+  - `references/worked_example.md`: a before/after pair with its symptom table
+  - Rejected cuts are recorded as project overrides; reader frames per step, no global persona
 
 ## [0.9.0] — 2026-05-27
 

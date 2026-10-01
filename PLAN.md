@@ -106,7 +106,9 @@ Incorporated `WRITING_DIRECTIVES.md` as a new always-on skill, `/red-pen` v0.1.0
 
 ### 19. Eval: /red-pen
 
-Create `skills/red-pen-workspace/evals/evals.json` with skill-creator guidance, run with-skill vs baseline, apply findings. Candidates: a spec request (does it open with the hinge and stay under budget?), a "too long" follow-up, a `/red-pen <file>` editing pass, a code change (does it narrate in comments?), a bootstrap on a project that already has a commit style.
+Prerequisite done: `scripts/symptoms.py` gives the eval a mechanical before/after measure; `references/worked_example.md` is the reference pair.
+
+Create `skills/red-pen-workspace/evals/evals.json` with skill-creator guidance, run with-skill vs baseline, apply findings. Inputs must be unedited generated text, not mature specs (see NOTES: premise test). Judge by preference on paired before/after paragraphs, reported by symptom counts, never by word count. Candidates: a fresh spec request for a product reader (does it open with a preamble, state each fact once, pace by stakes?), a `/red-pen <file>` editing pass on `test-projects/edit-target/grid_section.md`, a "too long" follow-up, a code change (does it narrate in comments?), a bootstrap on a project that already has a commit style. The open question the eval must answer: do the always-on rules prevent the symptoms at generation time, or only let the editing pass remove them afterward?
 
 ### Description optimization
 

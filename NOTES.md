@@ -505,6 +505,37 @@ Resolves the attention-triage question: how does a long generated artifact tell 
 - **Fractal pyramid allowed.** The user's "executive summary at the H3 level for each H2" is a per-section stop rather than one global pyramid by audience; the layering rule now allows either, and the preamble states which.
 - **"Open with the hinge" retired** as a rule — satisfied structurally by open items.
 
+### /red-pen dogfood on vog_specs: calibration (2026-10-01)
+
+Three editing passes on vog_specs sections (VTS_SMV, VCI_PIP, VLS_ZON), parked in the session scratchpad, not applied. Findings that changed the skill:
+
+- **Enumeration is not duplication.** User, on the calling-matrix bullets I collapsed into one sentence: "the sentence is better, but as an addendum to the 5 bullet points, not a replacement." And on a sub-bullet folded into a paragraph: "Mirrors as its own bullet point is better to me." A table and the prose that teaches its rows are one rule in two registers (the vog writing guide's own "same rule in both registers" pattern). Dedup applies across sections, not across registers. Structure that isolates one fact per line is scannable, not scaffolding.
+- **Report by symptom, not word count.** User: "the dogfooding mentions word reduction, but I don't yet know how that translated to 'making AI generated content less painful.'" Word count is what the agent can measure; the symptom list is what the reader feels. The editing-pass report now counts rules met more than once, stale statements, history on top of rules, and argument in front of rules.
+- **House style wins on conflict.** The vog repo forbids em-dashes, prefers prose over bullets, bans DEC citations from canonicals, soft-wraps. Red-pen's "prefer checkable lists" would have violated the first; its instinct to offload rationale to the decision log violated the third. Now stated in the editing-pass rule.
+- **Layers can be derived artifacts.** User: "VLS and C4_VLS are kind of their own pyramid." The C4 rung is the stopping point for orientation and its "read VLS_X before..." line is a preamble. Layering rule extended.
+- **Cuts that held:** cross-section restatement (the admission rule six times in VCI_PIP, the error rule four times in VTS_SMV), stale prose contradicting the record (host language still framed as open), dated session markers, decision-record argument in a teaching register.
+
+### /red-pen premise test on unedited AI text (2026-10-01)
+
+User asked the real question: "are the items in the 'Why this file exists' solvable? does red-pen make AI generated content less painful?" The vog_specs passes could not answer it - those documents were human-edited over months and showed none of the listed symptoms; the pain there was history and drift. So the next pass ran on unedited AI-drafted requirements text, the kind the premise is about.
+
+- **The symptoms were present on unedited text.** In one section of about 1,800 words (the shape of the edit-target eval input): one fact ("edge ranking was deliberately replaced") stated 10 times, 197 words under its own header on a topic the section calls "explicitly not a priority," 9 sentences opening "This is / That is," three sentence-length H4s under one H3, 18 bold leads. Defensive restatement - the author anxious the reader would think deprecated code was unfinished.
+- **The cut was judged good.** User, on the before/after of one H4 block (4 paragraphs to 1): "this is an objectively good improvement for that H4 example you showed me." First unqualified yes of the dogfood.
+- **Contrast with the vog passes:** there, two of three shown cuts were rejected (enumeration collapsed, sub-bullet folded). The difference is the input: compression rules pay off on unedited generated text and over-cut on edited text. Red-pen's value is highest exactly where the premise says it is.
+- **Report by symptom worked.** The table of counts (restatements 10 to 2, non-priority words 197 to 2 sentences, openers 9 to 0) plus one before/after paragraph is the reporting shape that let the user judge.
+- **Eval implication (PLAN #16):** run the with/without comparison on unedited generated text, judged by preference on paired paragraphs, not on word count and not on mature specs.
+- **Still unanswered:** whether the always-on rules prevent the symptoms at generation time, as opposed to the editing pass removing them afterward. An editing pass tests the editor; the eval must test the author.
+
+### /red-pen improvements after the premise test (2026-10-01)
+
+User: "how else can we improve the skill? can we give the skill personas? like 'as a professional editor'." Five changes, in the order built:
+
+- **Symptom script** (`scripts/symptoms.py`): the prose-to-tooling escalation from the 2026-03-14 decision, first use in session-kit. Counts what the judged-convincing table counted: restated phrases (5-word shingles recurring across sentences), "This is / That is" openers, bold leads, sentence-length headers, dated status markers, forward references, hedges, em-dash density, section-length spread. `--compare` prints the delta. Path-based `allowed-tools` per the portability decision. Known blind spots, stated in the skill: stale claims, cross-section restatement, argument in front of a rule.
+- **Self-edit loop**: anything over its mode's budget is a draft; measure, cut, deliver. This is the only in-skill answer to the open question (prevent vs. remove); the eval still has to test it.
+- **Worked example** (`references/worked_example.md`): a before/after pair with its symptom table and the two rejected vog cuts as the counter-example.
+- **Calibration overrides**: a rejected cut is recorded in the Writing Conventions block as a one-line override.
+- **Personas, qualified.** Chose per-step reader frames (copy desk chief for the cut pass, decision-maker with four minutes for Mode 1, colleague at the next desk for Mode 4, the 2am maintainer already in Mode 2) over a global "you are a professional editor." Rejected the global persona: role prompts move tone and fluency, not accuracy, and fluency is the failure the skill exists to catch. Today's evidence: what the user accepted was checkable counts; what they rejected was judgment. Recorded in What Does NOT Go.
+
 ### /red-pen Surface by Stakes (2026-10-01)
 
 The agent-side heuristic for what deserves a reader's attention — the "selection problem above the writing layer" the source file left out. User: "**Surface by stakes.** is a very very good heuristic."
