@@ -2,7 +2,7 @@
 
 ## Project Context
 
-session-kit is a suite of Claude Code skill plugins for making AI-assisted development sessions reliable and productive across time. Extracted from patterns discovered during hundreds of sessions of plet-skills development. 6 skills total: `/notes`, `/warmup`, `/stable-label`, `/fast-chat`, `/dictation`, `/foo`.
+session-kit is a suite of Claude Code skill plugins for making AI-assisted development sessions reliable and productive across time. Extracted from patterns discovered during hundreds of sessions of plet-skills development. 7 skills total: `/notes`, `/warmup`, `/stable-label`, `/fast-chat`, `/dictation`, `/foo`, `/red-pen`.
 
 **Origin:** Extracted from patterns discovered during plet-skills development (`../plet-skills/`).
 
@@ -22,6 +22,7 @@ session-kit is a suite of Claude Code skill plugins for making AI-assisted devel
 - "label is more than the labels. it's stable references." — drove the /stable-label rename
 - "i love that b rhymes, makes it memorable but maybe too cute?" → decided it's a feature, not a bug
 - "i'm not worried about long. the claude code ui is awesome at autocomplete" — length of slash commands is not a concern; clarity and descriptiveness win
+- "feedback foo is the least useful of the session kit tools in practice. the most useful are stable label, fast chat, and then small gap and then notes. and then a big gap and the rest." (2026-10-01) — ranking after months of real use. Pattern: the top three each produce a concrete artifact or format (IDs, codes, NOTES.md entries); the bottom tier is process/meta skills whose value is invisible when they work.
 - Fenced code blocks in README should be one command per block — GUI clients allow easy copy-paste of a whole fenced area, so combining unrelated commands in one block forces users to manually select
 
 ---
@@ -40,6 +41,8 @@ session-kit is a suite of Claude Code skill plugins for making AI-assisted devel
 | 6 | ~~/patterns~~ | Merged into /foo (was /sharpen) | EX_4 |
 | 7 | ~~/discipline~~ | Folded into /warmup + /foo | EX_6 |
 | 8 | /stable-label | **Implemented** | EX_7 |
+| 9 | /red-pen | **Implemented** | WRITING_DIRECTIVES.md |
+| 10 | /planner (name TBD) | Planned | plet-style planning |
 
 ---
 
@@ -466,12 +469,79 @@ User: *"clause settings changes should not be automatic. if the settings is empt
 
 ---
 
+### Writing directives skill: new skill, not a fold (2026-10-01)
+
+Source: `WRITING_DIRECTIVES.md` (user's standalone file). Inspiration: Ayman Nadeem, "Plan Mode Is Dead" — https://www.aymannadeem.com/artificial/intelligence,/developer/tools/2026/09/24/plan-mode-is-dead.html. Attributed in README § Origin, alongside the Ralph attribution for /fast-chat. Thesis: AI text is painful because it is unedited — nothing filters it. The file substitutes explicit constraints (word budgets, named reader, mandatory prioritization, cut pass) for the missing cost. Four output modes: §1 spec/plan, §2 code comments, §3 code, §4 chat, plus a shared core and a mode-selection table.
+
+- **Chose new always-on skill over folding into /fast-chat** — /fast-chat is interaction mechanics (codes, review tail); only §4 Chat overlaps. §1/§2/§3 have no home in any existing skill, and folding would bloat /fast-chat. Rejected /warmup (explicitly excludes content). Revisit if the skill ends up only ever used for chat.
+- **Bootstrap shape:** concise CLAUDE.md block (shared core + mode table, ~150 words) with the full per-mode rules in SKILL.md — same tradeoff /fast-chat makes. Rejected copying the full file into the project + Required Reading (heavier, duplicates the skill).
+- **"Why this file exists" preamble:** compressed into SKILL.md as the "recognizable shape" checklist (the diagnosis list is operational — it's what to avoid); long-form rationale goes to README per "value-add context belongs in README."
+- **Integration point:** §1 Spec is the natural bridge to the planned planner skill (plet-style planning) — the planner produces the artifact, §1 says how it should read.
+- **Commit messages (Mode 3):** a project's own commit style wins; when none is specified, session-kit's own style is the default (`<verb> <what>: <brief description>`, themed bullet body only for non-obvious decisions, no body for trivial commits). User: "defers to a project's own commit style, but use session-kit's commit style as the default when not specified." Rejected: the source file's bare rule ("first line is what changed and why, under 72 chars") — too thin to produce consistent subjects.
+- **Name:** `/red-pen` — see next entry.
+
+### /red-pen reader axis and layering rule (2026-10-01)
+
+The source file collapsed the reader into one default (an insider who knows the codebase and the thread). User: "A spec may have different readers. exec team, product team, eng team, design team, end users of different flavors, etc. any writing actually may have different readers."
+
+- **Reader is a second axis.** Mode = output type, sets the shape. Reader = who, sets what to omit, vocabulary, depth. The insider default stays for code, comments, chat.
+- **Layers are stopping points.** User: "for a spec, the pyramid is clear, exec summary, biz logic, design and tech implementation. roughly. I think a general editor/reader triage would need to identify the primary readers (execs, managers, ICs, etc.) to define how many layers the pyramid should have." Refinement: layer count = number of distinct stops among the readers, not number of reader types — readers who stop at the same depth share a layer. One reader → one layer → answer first, which unifies Mode 1's hinge and Mode 4's answer-first.
+- **Readers who differ in what they know get separate linked artifacts.** This is the conventional position (Diátaxis splits by reader need); layering by audience is the extension, and it only works when readers share vocabulary and differ in depth.
+- **Reader roster** in the Writing Conventions block: knows / decides / stops at, one row per reader type. Seeded at bootstrap with one question. Rejected: a per-artifact reader interview — ceremony, and the human won't enumerate what they know anyway.
+- **Rejected for now:** Mode 5 for outsider-facing docs (README, user guide, release notes). Their shape is sequential, not pyramidal, so the rule set differs; hold until there is a real one to design against.
+- **Attention triage:** resolved by the preamble + open items entry below. Calibration must not route through /feedback-foo.
+
+### /red-pen preamble and open items (2026-10-01)
+
+Resolves the attention-triage question: how does a long generated artifact tell a human what deserves their attention?
+
+- **Chose a preamble + open items section over per-item triage tags** (decide / overrule / fyi). Tags scale badly — thirty tagged items is tag soup. A short block at the top scales to any length.
+- **Preamble is prose, guidance only.** User: "The preamble should be more like 'This document is written for 3 primary audiences...' and describe them and maybe give guidance on structure." Two to five sentences: who it is for, what each audience comes for, how it is organized so they can stop early. No heading. Rejected: a per-reader routing line ("Exec: §1. Product: §1-2. Design: §3.") — user: "this is too prescriptive of structure."
+- **Named "preamble."** User: "it's both for the benefit of authors, editors and readers." Rejected: "author's guidance" (names only one party), "reading guide," and no name at all.
+- **Never omitted.** User: "a preamble saying this is only for X is useful." One reader → one sentence saying so.
+- **Asks live in open items, not the preamble.** User: "I don't like mixing the job to be done (needs a decision) in the preamble, which should be author/reader guidance. if there is discrete action to be taken, doesn't a dedicated open items section make more sense?" Open items: one line each — owner, item, where it lives, author's lean. Everything not listed is settled. Numbered if /fast-chat, IDs if /stable-label — this is the fast-chat × red-pen intersection the question started from.
+- **Preamble rule says nothing about section order.** User cut "Open items follows, then Decisions, Assumptions, Risks, Scope out" from the rule: "too much structure and scope for general writing guides."
+- **Open items is conditional and unprescribed.** User: "open items is a conditional section. it should be in documents where it is needed, but that is a case by case. and I don't want to be prescriptive in this document about what those lines or structure looks like." Red-pen keeps only the writing rule — asks never go in the preamble; a dedicated section carries them when the document needs one — and says nothing about the section's form. The numbered/ID'd open-items format (the fast-chat × stable-label integration) is a candidate for the planner's spec template, not a writing rule.
+- **Fractal pyramid allowed.** The user's "executive summary at the H3 level for each H2" is a per-section stop rather than one global pyramid by audience; the layering rule now allows either, and the preamble states which.
+- **"Open with the hinge" retired** as a rule — satisfied structurally by open items.
+
+### /red-pen Surface by Stakes (2026-10-01)
+
+The agent-side heuristic for what deserves a reader's attention — the "selection problem above the writing layer" the source file left out. User: "**Surface by stakes.** is a very very good heuristic."
+
+- **Three bins, ascending stakes:** record (no real alternative, or settled by the record), tell (picked between alternatives for a citable reason, one line), ask (a reader owns it / hard to reverse / large blast radius / no citable reason / contradicts the record / deviates from the request). Asks go at the start of their owner's layer, with the agent's lean.
+- **Position, not deletion.** User: "one thing about the pyramid is that you don't necessarily have to worry about losing data. it may just be 'mis-layered'." The heuristic's output is a placement; the record is the bottom layer. Rejected: an omit bin.
+- **Doubt goes to tell**, except doubt about reversibility goes to ask — a misplaced item can still be found, an unneeded ask costs the reader a judgment.
+- **Too many asks = underdetermined plan.** Ask the one question that settles the most of them first (fast-chat's "one question back," applied to a document).
+- **Blast radius is a separate signal from reversibility.** A rename across 40 call sites is easy to reverse and still worth asking about. Added at the user's request.
+- **Rewrite history:** first draft used top/middle/bottom, which collided with the pyramid's reader layers (user: "what is top/middle? of the pyramid?"). Second draft described bins by position before criteria. Third named the bins and put criteria first, which exposed a hole: "absent from the record" sent nearly everything to ask, and "guess" defined as not-following-a-pattern left tell empty. Fixed by making the axis "were there alternatives, and did you have a reason to pick."
+- **Calibration:** overruled tells mean under-asking, waved-through asks mean over-asking. Adjusted within the session; persists via the reader roster and NOTES.md, not /feedback-foo.
+- **Lives as its own section** after the shared core, not a bullet — too long for one.
+
+### /red-pen naming (2026-10-01)
+
+The feeling to convey: "makes AI writing less painful." User: "red-pen is short memorable and clever."
+
+- **Chosen:** `/red-pen` — says an editor now exists, which is the file's one-line thesis (generated text is painful because nothing filters it). Memorable without bragging. Covers §3 Code and diffs, which "prose" names exclude.
+- **Rejected:** `/tight-prose` — the anchor; idiomatic and matches the [value]-[domain] shape of /fast-chat and /stable-label, but "prose" excludes the code and diff rules
+- **Rejected:** `/crisp-prose` — names the result, not the cut; same "prose" problem
+- **Rejected:** `/high-signal` — the user's own vocabulary, but no domain word
+- **Rejected:** `/second-draft`, `/easy-reading` — evocative but conceptual (the /sharpen lesson)
+- **Rejected:** `/no-fluff` — reads like a marketing tagline (the /steady-session objection)
+- **Rejected:** `/word-budget` — names the lever, not the value (the /options objection)
+
+---
+
 ## Open Questions
 
 - ~~Suite name~~ → resolved: session-kit
 - ~~Skill 2 (/chatux) naming~~ → resolved: /fast-chat
 - ~~Skill 3 (/feedback) naming~~ → resolved: /feedback-foo (renamed from /sharpen → /foo → /feedback-foo as primary)
 - ~~Opencode compatibility~~ → resolved: OpenCode auto-discovers from `.claude/skills/` (same as Claude Code), so no duplication needed. Single `skills/` directory works for both.
+- ~~Writing directives skill name~~ → resolved: /red-pen
+- ~~/red-pen attention triage tags~~ → resolved: preamble + open items section instead of tags
+- /red-pen Mode 5 for outsider-facing docs — held until a real example exists
+- Planner skill (plet-style planning) — name TBD, deferred until /red-pen evals are done. The /red-pen inspiration article ("Plan Mode Is Dead") is also relevant reading for this one.
 - ~~Plugin subsets~~ → resolved: symlinks work. See below.
 
 ### Plugin bundle design (2026-03-14)
@@ -532,6 +602,7 @@ Bundles are unnecessary because no skill does anything without an explicit setup
 
 ## Things to Monitor
 
+- **/feedback-foo is the least useful skill in practice** (user ranking, 2026-10-01: /stable-label > /fast-chat > small gap > /notes > big gap > the rest, with /feedback-foo last). Consistent with the earlier monitor note that proactive detection is untestable in evals, and with FOO_1 (extracted skills lose integration context). Don't build new mechanisms that depend on /feedback-foo for calibration. Candidate for a rethink or merge into /notes if the ranking holds.
 - **/foo proactive detection** — single-turn evals can only test infrastructure and methodology, not proactive pattern detection. Detection ("I noticed you've done this twice") requires multi-session real-world usage to validate. The evals explicitly test "response to being told about a pattern," which is fundamentally different from the agent noticing on its own. This is the most important capability to monitor in real usage.
 - **Fast-chat review prompt on informational answers** — eval 6 showed the skill appending a review prompt to a pure explanation. Not seen in real usage (likely eval artifact from single-turn context stripping). If this appears in actual multi-session usage, add "don't append review prompts to informational answers" guidance to the skill.
 - **Stable-label token savings hypothesis** — IDs should save tokens in downstream usage (grep `REQ_3` vs restating full requirements). Unconfirmed — single evals can't measure cumulative cross-session savings. Monitor in real multi-session projects.

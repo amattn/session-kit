@@ -2,7 +2,7 @@
 
 A suite of Claude Code and OpenCode skill plugins for making AI-assisted development sessions reliable and productive across time.
 
-Extracted from patterns discovered during 500+ sessions of AI-assisted development. Each skill addresses a specific friction point that compounds over time — lost context, slow decision-making, garbled input, fragile cross-references. Works with both Claude Code and OpenCode.
+Extracted from patterns discovered during 500+ sessions of AI-assisted development. Each skill addresses a specific friction point that compounds over time — lost context, slow decision-making, garbled input, unedited output, fragile cross-references. Works with both Claude Code and OpenCode.
 
 ## Skills
 
@@ -12,6 +12,7 @@ Extracted from patterns discovered during 500+ sessions of AI-assisted developme
 | `/warmup` | Session bootstrap and compaction recovery. Ensures skills, disciplines, and key files load reliably and survive context compaction. |
 | `/fast-chat` | Structured interaction patterns. Numbered questions, lettered options, batch answer codes (`1A, 2B, 3 let's discuss pros/cons`), and a review prompt with R/O stable tail. Always-on communication style that makes decisions faster. |
 | `/dictation` | Project-specific correction table. Originally designed for voice-to-text errors, but also useful for recurring typos and emergent shorthand — any systematic input pattern where the user means something other than what they literally typed. |
+| `/red-pen` | Writing directives. Makes AI-generated text less painful to read by substituting explicit constraints (word budgets, a named reader, a mandatory cut pass) for the editing cost generated text never pays. Separate rules for specs, code comments, code, and chat. |
 | `/notes` | Institutional memory. Captures decisions, rationale, and conventions in NOTES.md so future sessions don't re-litigate settled questions. |
 | `/stable-label` | Greppable stable references. Gives every referenceable thing an append-only ID (`REQ_3`, `DEC_14`) that never renumbers and always resolves to exactly one definition. |
 | `/feedback-foo` | Process improvement — pattern detection, observation tracking, and discipline creation. FOO = Feedback, Observation, Oversight. Proactively notices recurring patterns, tracks process observations with a resolution lifecycle, and helps formalize workflows as named disciplines. (Also invocable as `/foo`, `/feedback`, or `/observation`. Renamed from `/sharpen`.) |
@@ -140,6 +141,16 @@ Why it matters: each uncorrected error costs a correction cycle — the user say
 What it adds over baseline Claude: the setup puts the correction table in CLAUDE.md (loaded every session) rather than an ad-hoc file. When input is garbled beyond the table, the skill presents structured disambiguation options instead of guessing. And the "What Does NOT Go" boundaries prevent table bloat — one-off typos and standard abbreviations (k8s, img) stay out.
 
 Best for: voice-input users, projects with unusual jargon or internal tool names, anyone who finds themselves repeatedly correcting the same misinterpretation.
+
+### `/red-pen` — Writing Directives
+
+AI-generated text is painful to read — not because it's wrong, but because it's unedited. A human writer pays for every sentence, and that cost filters out what isn't worth the reader's attention. Generated text pays nothing, so nothing filters it: uniform length, uniform pacing, headers that encode no priority, completeness instead of compression, no stance, session narration. `/red-pen` is the editor. It substitutes explicit constraints for the missing cost — word budgets, a named reader, mandatory prioritization, a required cut pass — with separate rules for the four places the damage differs: specs and plans, code comments, code and diffs, chat.
+
+Why it matters: a bloated spec wastes a decision-maker's attention. A narrating comment misleads a debugger years later. An over-defensive diff burdens a reviewer. A padded chat reply slows a conversation. Each is cheap to produce and expensive to read, and the cost lands on the human every time.
+
+What it adds over baseline Claude: the rules are not novel — Claude knows "answer first" and "don't restate the code." The skill makes them the default instead of something the user has to ask for each time, and it adds the pieces baseline skips: deciding the output type before writing, a 300-word spec budget, the `chose A over B because C; revisit if D` decision shape, and a cut pass against a checklist of the recognizable symptoms. `/red-pen <target>` also turns the rules into an editing pass you can point at any file.
+
+Best for: anyone who reads more AI output than they write, spec-heavy projects where a human ratifies decisions, codebases that have started accumulating narrating comments and defensive noise.
 
 ### `/notes` — Institutional Memory
 
@@ -339,6 +350,47 @@ You: A
 Agent: Got it. Want me to add "pleet → plet" to the correction table?
 ```
 
+### `/red-pen`
+
+**Setup:** Run `/red-pen` in your project. It adds a Writing Conventions section to CLAUDE.md: the shared core (know the reader, omit what they know, pace by uncertainty, checkable over fluent) a one-line rule of thumb per output type — spec/plan, code comment, code/diff/commit, chat — and a reader roster (who reads this project's output, what they know, what they decide, where they stop reading).
+
+**Ongoing:** Always-on — no invocation needed. Before writing anything, the agent decides which output type it is producing, writes to that type's rules, and runs a cut pass before delivering. Your side:
+- Say `red-pen this` or `/red-pen <file>` to edit a file or section against the rules — you get the edited text plus one line on what was cut
+- Say `too long` or `too wordy` — the agent re-runs the cut pass on its last output and resends, no explanation
+- Ask for a plan, spec, or design note — it opens with a preamble saying who it's for and how to read it, then what it needs from you, not an overview
+- Override a default for the project (a bigger spec budget, a different reader) — it's recorded in the Writing Conventions block
+
+**Example — editing a target:**
+```
+You: /red-pen docs/caching-design.md
+Agent: [returns the edited doc]
+
+       Cut 210 of 480 words: an Overview section narrating the codebase,
+       two paragraphs of alternatives already rejected in NOTES.md, and a
+       Next Steps list that restated the spec. Added the missing preamble —
+       the doc never said who it was for or what you need to decide.
+```
+
+**Example — always-on, a plan request:**
+```
+You: write up a plan for the rate limiter
+Agent: This plan is for you as the one approving the limiter design;
+       it assumes the context in issue #41.
+
+       One decision is yours: per-user token bucket or global sliding
+       window. I lean per-user, because the noisy-neighbor complaint is
+       why this exists; revisit if we add tenant-level quotas.
+
+       Assumptions:
+       - [ ] Redis is already in the deploy (it is, per docker-compose)
+       - [ ] 429 with Retry-After is acceptable to the mobile client
+
+       Risks:
+       - Bucket state could drift if Redis fails over mid-refill.
+
+       Scope out: no admin UI for limits, no per-endpoint overrides.
+```
+
 ### `/notes`
 
 **Setup:** Run `/notes` on a project without NOTES.md. It copies the canonical NOTES.md template — suggested sections (Project Context, Invariants, Important Concepts, Taxonomy, Key Design Decisions, Open Questions, Things to Monitor), Quick Reference front-matter, and a default stable-label prefix table pre-seeded under § Taxonomy / Conventions — then references it from CLAUDE.md and adds a Notes Discipline block that enforces note-taking in every future session.
@@ -458,6 +510,9 @@ Agent: Added FOO_4 to FEEDBACK_FOO.md:
 /dictation        → removes input friction
                      (correction table for voice, typos, shorthand)
 
+/red-pen          → makes every output cheaper to read
+                     (mode-specific rules and a cut pass)
+
 /notes            → captures what was decided and why
                      (institutional memory across sessions)
 
@@ -468,13 +523,15 @@ Agent: Added FOO_4 to FEEDBACK_FOO.md:
                      (FOO = Feedback, Observation, Oversight)
 ```
 
-The skills are independent — install any subset, or use `/start` to bootstrap a coordinated set in one pass. They're designed to complement each other: `/warmup` ensures `/notes` loads every session, `/stable-label` gives `/notes` entries greppable IDs, `/fast-chat` speeds up the decisions `/notes` captures, `/dictation` keeps voice input from garbling the whole conversation, and `/feedback-foo` turns recurring friction into tracked observations and named disciplines.
+The skills are independent — install any subset, or use `/start` to bootstrap a coordinated set in one pass. They're designed to complement each other: `/warmup` ensures `/notes` loads every session, `/stable-label` gives `/notes` entries greppable IDs, `/fast-chat` speeds up the decisions `/notes` captures, `/dictation` keeps voice input from garbling the whole conversation, `/red-pen` keeps the prose that remains worth reading, and `/feedback-foo` turns recurring friction into tracked observations and named disciplines.
 
 ## Origin
 
 Developed and battle-tested during [plet-skills](https://github.com/amattn/plet-skills) development (8+ parts, hundreds of sessions). Extracted as a standalone suite for use in any Claude Code project.
 
 `/fast-chat` was strongly inspired by [snarktank's Ralph skills](https://github.com/snarktank/ralph).
+
+`/red-pen` was inspired by Ayman Nadeem's [Plan Mode Is Dead](https://www.aymannadeem.com/artificial/intelligence,/developer/tools/2026/09/24/plan-mode-is-dead.html).
 
 ## License
 

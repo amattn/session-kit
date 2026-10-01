@@ -2,6 +2,19 @@
 
 All notable changes to session-kit. Versions track the plugin version in `.claude-plugin/plugin.json`.
 
+## [Unreleased]
+
+### Added
+- `/red-pen` v0.1.0: writing directives for every output type, incorporated from `WRITING_DIRECTIVES.md`
+  - Always-on: decide the output type (spec/plan, code comment, code/diff, chat), write to its rules, run a cut pass
+  - `/red-pen <target>` edits a file or section against the rules and reports what was cut
+  - Bootstrap adds a concise Writing Conventions block (shared core + mode table + reader roster) to CLAUDE.md; full per-mode rules stay in SKILL.md
+  - Reader axis: name the readers, one layer per distinct stopping point, separate artifacts for readers who differ in what they know
+  - Mode 1 opens with a prose preamble (who it is for, how to read it); asks go in a dedicated section when the document needs one, form unprescribed
+  - Surface by Stakes: every item is sorted into record, tell, or ask by ownership, reversibility, blast radius, whether a reason can be cited, the record, and deviation from the request
+  - README: skill table row, The Skills entry, How to Use entry, How They Fit Together line
+  - README § Origin: attribution to Ayman Nadeem's "Plan Mode Is Dead"
+
 ## [0.9.0] — 2026-05-27
 
 ### Added

@@ -2,7 +2,7 @@
 
 ## Current Status
 
-All 6 skills implemented and eval'd. Findings applied to 5 of 6 (/foo, formerly /sharpen, needed none).
+7 skills implemented. 6 eval'd (findings applied to 5; /foo needed none). /red-pen v0.1.0 built, evals pending.
 
 ## Completed
 
@@ -98,8 +98,20 @@ Three corrections to bootstrap behavior applied as commit `6c66bb1` (`fix: boots
 
 Publish commit force-pushes over origin's prior 0.9.0 commit (which had the un-corrected interim behavior; never tagged on origin). Distribution versions: `plugin.json` and `marketplace.json plugins[0].version` 0.8.0 → 0.9.0; `marketplace.json metadata.version` 0.4.0 → 0.5.0. Both `description` fields now lead with `/start`. Tag `v0.9.0` created locally; force-push by user.
 
+### 18. /red-pen skill ✓
+
+Incorporated `WRITING_DIRECTIVES.md` as a new always-on skill, `/red-pen` v0.1.0. SKILL.md (four modes, shared core, mode selection, cut pass, bootstrap block), HELP.md, README entries, CHANGELOG. Plugin/marketplace versions not bumped — distribution bump is human-directed.
+
 ## Next Steps
+
+### 19. Eval: /red-pen
+
+Create `skills/red-pen-workspace/evals/evals.json` with skill-creator guidance, run with-skill vs baseline, apply findings. Candidates: a spec request (does it open with the hinge and stay under budget?), a "too long" follow-up, a `/red-pen <file>` editing pass, a code change (does it narrate in comments?), a bootstrap on a project that already has a commit style.
 
 ### Description optimization
 
 Run the skill-creator trigger optimization loop on each skill's description to improve triggering accuracy.
+
+### 18. Planner skill
+
+New skill for plet-style planning. Name TBD. Candidate for its spec template: a numbered open-items section (owner, item, lean) that readers answer with /fast-chat codes and /stable-label IDs — deliberately kept out of /red-pen. Deferred until /red-pen evals (#16) are done.
