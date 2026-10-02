@@ -1,0 +1,104 @@
+{
+  "expectations": [
+    {
+      "text": "CLAUDE.md gains a Writing Conventions section marked with a `<!-- managed by /red-pen -->` breadcrumb",
+      "passed": true,
+      "evidence": "outputs/project/CLAUDE.md has '## Writing Conventions' followed directly by '<!-- managed by /red-pen -->'; facts.json redpen_breadcrumb: true."
+    },
+    {
+      "text": "The section covers all four output types (spec/plan, code comment, code/diff/commit, chat) with a one-line rule each",
+      "passed": true,
+      "evidence": "Table has four rows: 'Spec / plan / design note', 'Code comment', 'Code / diff / commit', 'Chat', each with a single-row rule of thumb (e.g. Chat: 'Answer first. Length matches the question...')."
+    },
+    {
+      "text": "The section states the reader default or a reader roster",
+      "passed": true,
+      "evidence": "Last line of the section: 'Readers (default for code, comments, chat: an insider who knows this codebase and this thread).' The default is stated; no roster table was written."
+    },
+    {
+      "text": "The agent asks exactly one question about who reads the project's output, or proposes a roster and asks to confirm it",
+      "passed": true,
+      "evidence": "response.md contains one question, 'One question: who reads what tidewatch produces?', and proposes a one-row roster (Slack channel readers) 'unless you correct it'. No other question appears."
+    },
+    {
+      "text": "The section is at most 280 words excluding any roster table, and nothing is offloaded to a second file",
+      "passed": true,
+      "evidence": "Section is 268 words by wc -w including heading, breadcrumb and mode table (260 without heading and breadcrumb), under 280. outputs/project/ contains only CLAUDE.md; no second file."
+    },
+    {
+      "text": "No project policy is invented that the repository cannot support (no Slack templates, terminology tables, or log formats conjured from a 6-line CLAUDE.md)",
+      "passed": true,
+      "evidence": "The section contains no Slack template, glossary, or log format; no tidewatch-specific rule at all. The Slack reader appears only as a proposal in the reply, flagged as a guess. Caveat: the block does carry generic skill defaults (commit subject format, 300-word spec budget) not derived from the repo."
+    },
+    {
+      "text": "The existing Project and Key Files sections of CLAUDE.md survive unchanged",
+      "passed": true,
+      "evidence": "diff against the original CLAUDE.md shows only an append after line 10 ('10a11,32'); Project and Key Files lines are byte-identical."
+    },
+    {
+      "text": "The chat reply is at most 150 words with at most one bold lead",
+      "passed": true,
+      "evidence": "facts.json: response words 141, bold_leads 0. The reply does include a 4-column markdown table, which the assertion does not restrict."
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 0,
+    "total": 8,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Bash": 4
+    },
+    "total_tool_calls": 4,
+    "total_steps": 4,
+    "errors_encountered": 0,
+    "output_chars": 3693,
+    "transcript_chars": 1097
+  },
+  "claims": [
+    {
+      "claim": "CLAUDE.md had no existing style rules, so nothing was replaced or overridden",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Original CLAUDE.md is 34 words with only Project and Key Files sections; diff is append-only."
+    },
+    {
+      "claim": "Checked the word count of the block with wc -w",
+      "type": "process",
+      "verified": false,
+      "evidence": "Transcript states it but records no number; independent count is 268, which is consistent with being under budget."
+    },
+    {
+      "claim": "Block is the skill's reference card, so symptoms.py was not run",
+      "type": "process",
+      "verified": false,
+      "evidence": "Cannot be verified from the outputs; the skill's reference card was not part of the graded material."
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The section states the reader default or a reader roster",
+        "reason": "Weakly discriminating: the baseline passes on the phrase 'write for a reader arriving cold', which is the opposite default from the skill's insider reader. If the intent is a named default reader plus a roster slot, say so (e.g. require a line labelled Readers, or a roster table)."
+      },
+      {
+        "assertion": "The section is at most 280 words excluding any roster table, and nothing is offloaded to a second file",
+        "reason": "The word limit is ambiguous about what counts. The with-skill section is 268 words counting the heading and the mode table, 260 without heading and breadcrumb; facts.json only reports the whole file (302). Have facts.json emit the section word count, and state whether the mode table counts."
+      },
+      {
+        "assertion": "No project policy is invented that the repository cannot support (no Slack templates, terminology tables, or log formats conjured from a 6-line CLAUDE.md)",
+        "reason": "Does not cover generic defaults the skill itself imports. The with-skill block prescribes a commit subject format (`<verb> <what>: <brief description>`) and a 300-word spec budget that the repository gives no support for; they pass only because the assertion's examples are project-specific (Slack templates, terminology, log formats). Decide whether skill-supplied defaults count as invented policy."
+      },
+      {
+        "reason": "Nothing checks that the section is well-formed. The with-skill CLAUDE.md ends on a dangling line, 'Readers (default for code, comments, chat: an insider ...).', a roster heading with no roster under it. An assertion that the file contains no empty placeholder would catch it."
+      },
+      {
+        "assertion": "The agent asks exactly one question about who reads the project's output, or proposes a roster and asks to confirm it",
+        "reason": "Checkable only from response.md, and 'exactly one question' is satisfied by any reply with a single question mark. Consider requiring that the question names the output's readers and that no file content depends on an unconfirmed answer."
+      }
+    ],
+    "overall": "All eight pass and the assertions separate the two runs well (8/8 against 1/8). The gaps are a loose reader assertion, an underspecified word count, and no check for the dangling Readers line."
+  }
+}

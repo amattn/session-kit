@@ -1,0 +1,103 @@
+{
+  "expectations": [
+    {
+      "text": "docs/rate_limiting.md is created",
+      "passed": true,
+      "evidence": "outputs/project/docs/rate_limiting.md exists (8288 bytes, 1390 words per facts.json)."
+    },
+    {
+      "text": "The document opens with a prose preamble (no heading) that names product and engineering readers and says how each should read it",
+      "passed": false,
+      "evidence": "The only text before the first heading is 'Status: proposed, 2026-10-02. Two decisions and one number need sign-off before enforcement starts (see \"Decisions needed\").' It names neither product nor engineering and gives no reading guidance for either."
+    },
+    {
+      "text": "The Redis, 429 + Retry-After, and per-API-key decisions from NOTES.md are treated as settled, not re-raised as open choices",
+      "passed": true,
+      "evidence": "'## Decisions already made ... recorded in NOTES.md and this plan follows them', with a table covering per API key, Redis, and 429 with Retry-After and their recorded reasons. None is reopened under 'Decisions needed'."
+    },
+    {
+      "text": "Per-tenant quotas and the mobile-app limit each appear as an open item or as an explicit decision with a revisit trigger, never inside the preamble",
+      "passed": true,
+      "evidence": "Both sit under '## Decisions needed': '1. Does the mobile app get limited in the first release?' and '2. Do different partners get different limits? ... If the observation week shows one partner with a legitimate need well above the others, we revisit then.' Neither is in the heading-less opening line. Passes on the letter only: the Summary section states both as if decided ('The limit is the same for every partner, and it applies to partner keys only at first')."
+    },
+    {
+      "text": "At least one decision is written in 'chose A over B because C' form with a revisit trigger",
+      "passed": false,
+      "evidence": "No decision combines the chosen option, the rejected option, the reason and a revisit trigger. The author's own decisions lack a trigger or an alternative: token bucket names no rejected option; fail-open ('The alternative is to reject every partner request ...') has no revisit trigger; the settled-decisions table has none. The only revisit triggers are attached to recommendations awaiting sign-off, which are not decisions and are not written in that form."
+    },
+    {
+      "text": "Assumptions appear as a tick-list",
+      "passed": false,
+      "evidence": "There is no assumptions section and no checkbox list anywhere in the file. Assumptions are embedded in prose, e.g. 'I could not confirm how mobile requests are identified'."
+    },
+    {
+      "text": "At least one risk is written as a conditional ('X breaks if Y')",
+      "passed": true,
+      "evidence": "'Limiting mobile adds risk without addressing the incident: if the mobile app's requests all arrive under one shared key, a per-key limit would throttle all 40k daily users as a single client.' One conditional risk exists, though there is no risks section and it is buried in a recommendation."
+    },
+    {
+      "text": "No Overview, Introduction, Background, or Next steps section under any name (a 'Why' section that is background counts)",
+      "passed": false,
+      "evidence": "The first section is '## Summary' (flagged as a scaffold header in facts.json). It is an overview that opens with background: 'Last month one partner sent about 2,000 requests per second and the mobile app slowed down for everyone.'"
+    },
+    {
+      "text": "The whole file is at most 300 words excluding the title, or the document's first line says it exceeded the budget and why",
+      "passed": false,
+      "evidence": "1390 words per facts.json. The first line is 'Status: proposed, 2026-10-02 ...' and says nothing about length."
+    },
+    {
+      "text": "Every rate, limit, duration, and estimate in the document traces to NOTES.md or CLAUDE.md or is labelled as a proposed default (HTTP status codes are exempt)",
+      "passed": false,
+      "evidence": "50 rps / burst 100 is labelled 'Proposed ... a starting point, not a measured one', and 40x and 300 rps are arithmetic on recorded numbers. But several figures are neither on record nor labelled: 'Observe for one week', 'requests succeed again within a second or two', 'Keys expire after a few seconds of inactivity', Retry-After 'minimum of 1', 'continuously rejected for more than a few minutes'."
+    },
+    {
+      "text": "The chat reply is at most 120 words, names what needs the user's call, and does not enumerate the document's decisions",
+      "passed": false,
+      "evidence": "203 words per facts.json, over the 120 limit. It does name the three sign-offs, but also lists the plan's choices ('a token bucket algorithm, and allowing requests through if Redis is down')."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 7,
+    "total": 11,
+    "pass_rate": 0.36
+  },
+  "execution_metrics": {
+    "total_tool_calls": 4,
+    "output_chars": 9539,
+    "errors_encountered": 0,
+    "total_steps": 0,
+    "transcript_chars": 0
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The whole file is at most 300 words excluding the title, or the document's first line says it exceeded the budget and why",
+        "reason": "The escape hatch is nearly free: a one-clause first line ('Over the 300-word budget: three decisions are still open') licenses any length. The with-skill doc is 415 words, and its open items take only about 110 of them, so the stated reason does not account for the overrun. Consider a hard ceiling (e.g. 450) or requiring the overrun to be attributable to the named cause."
+      },
+      {
+        "assertion": "Per-tenant quotas and the mobile-app limit each appear as an open item or as an explicit decision with a revisit trigger, never inside the preamble",
+        "reason": "Only a heading-less preamble is protected. The baseline states both open questions as settled facts in its Summary section ('The limit is the same for every partner, and it applies to partner keys only at first') and still passes because they reappear under 'Decisions needed'. Consider: 'not stated as decided anywhere before the open-items section'."
+      },
+      {
+        "assertion": "At least one risk is written as a conditional ('X breaks if Y')",
+        "reason": "Satisfied by any incidental if-sentence about something going wrong; the baseline passes on a sentence buried in a recommendation, with no risks section at all. Consider requiring a risks list in which each item is conditional."
+      },
+      {
+        "assertion": "The chat reply is at most 120 words, names what needs the user's call, and does not enumerate the document's decisions",
+        "reason": "Bundles three independent conditions (length, names the ask, no enumeration). The with-skill reply fails two of them and the baseline one, but the grade cannot show that. Split into three assertions."
+      },
+      {
+        "assertion": "Every rate, limit, duration, and estimate in the document traces to NOTES.md or CLAUDE.md or is labelled as a proposed default (HTTP status codes are exempt)",
+        "reason": "'Labelled as a proposed default' needs a rule for vague quantities ('a period', 'a few seconds', 'a few minutes') and for arithmetic derived from recorded numbers (40x, 300 rps). I treated derived arithmetic as traceable and concrete unlabelled durations ('one week', 'a second or two') as failures."
+      },
+      {
+        "reason": "Nothing checks the 30-second balance-freshness invariant from NOTES.md. The baseline addresses it explicitly; the with-skill doc never mentions it. Nothing checks that the contradiction in docs/design.md (per-IP in-process counter) is surfaced either; both runs did surface it."
+      },
+      {
+        "reason": "Nothing checks provenance overclaiming. The baseline's 'Decisions already made' table lists 'one fixed default rather than configuration options' as recorded in NOTES.md; it is a user quote there, not a dated design decision."
+      }
+    ],
+    "overall": "The structural assertions discriminate well (10/11 vs 4/11), but the word-budget escape hatch and the conditional-risk check are too easy to satisfy, and the chat-reply assertion hides which of its three conditions failed. The only with-skill failure is the chat reply, which is over length and enumerates the document's decisions."
+  }
+}

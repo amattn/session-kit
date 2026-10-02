@@ -1,0 +1,104 @@
+{
+  "expectations": [
+    {
+      "text": "CLAUDE.md gains a Writing Conventions section marked with a `<!-- managed by /red-pen -->` breadcrumb",
+      "passed": false,
+      "evidence": "outputs/project/CLAUDE.md gains '## Writing', not 'Writing Conventions', and has no breadcrumb; facts.json redpen_breadcrumb: false for both project files."
+    },
+    {
+      "text": "The section covers all four output types (spec/plan, code comment, code/diff/commit, chat) with a one-line rule each",
+      "passed": false,
+      "evidence": "The '## Writing' section has five general bullets with no per-output-type rules. docs/writing-conventions.md covers comments and commits but has no spec/plan rule and no chat rule."
+    },
+    {
+      "text": "The section states the reader default or a reader roster",
+      "passed": true,
+      "evidence": "The '## Writing' section states a default reader: 'Lead with the point; write for a reader arriving cold.' No roster. Passes on the literal wording of the assertion only; see eval_feedback."
+    },
+    {
+      "text": "The agent asks exactly one question about who reads the project's output, or proposes a roster and asks to confirm it",
+      "passed": false,
+      "evidence": "response.md contains no question. It asks the user to check four guesses (units and datum, glossary terms, commit format, file location); none concerns who reads the output."
+    },
+    {
+      "text": "The section is at most 280 words excluding any roster table, and nothing is offloaded to a second file",
+      "passed": false,
+      "evidence": "The CLAUDE.md section is 70 words, but the conventions are offloaded to docs/writing-conventions.md (883 words per facts.json), which the section tells the reader to follow."
+    },
+    {
+      "text": "No project policy is invented that the repository cannot support (no Slack templates, terminology tables, or log formats conjured from a 6-line CLAUDE.md)",
+      "passed": false,
+      "evidence": "docs/writing-conventions.md invents a Slack summaries section ('The first line stands alone: date, station, and the day's headline figures'), a four-row glossary with banned synonyms, a log format ('Fetch failed for station 9447130 (HTTP 503); retrying in 30 s'), and an MLLW datum rule. The reply admits these are guesses."
+    },
+    {
+      "text": "The existing Project and Key Files sections of CLAUDE.md survive unchanged",
+      "passed": false,
+      "evidence": "Project is unchanged, but Key Files gained a third bullet: '- `docs/writing-conventions.md` \u2014 writing conventions for docs, comments, commits, and Slack summaries' (diff '10a11')."
+    },
+    {
+      "text": "The chat reply is at most 150 words with at most one bold lead",
+      "passed": false,
+      "evidence": "facts.json: response words 228 (limit 150), bold_leads 9 (limit 1)."
+    }
+  ],
+  "summary": {
+    "passed": 1,
+    "failed": 7,
+    "total": 8,
+    "pass_rate": 0.12
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Bash": 4
+    },
+    "total_tool_calls": 4,
+    "total_steps": 5,
+    "errors_encountered": 0,
+    "output_chars": 8427,
+    "transcript_chars": 1153
+  },
+  "claims": [
+    {
+      "claim": "These are proposed defaults rather than a record of how you already write",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The original project has no prose beyond a 34-word CLAUDE.md; the guide says the same in its second paragraph."
+    },
+    {
+      "claim": "Glossary terms were picked from the project description",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Only 'summary' and 'polls' appear in the original CLAUDE.md; 'station', 'reading', and all the rejected synonyms are not in the repository."
+    },
+    {
+      "claim": "src/poller.py and src/summary.py are not present",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The original project directory contains only CLAUDE.md."
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The section states the reader default or a reader roster",
+        "reason": "Weakly discriminating: the baseline passes on the phrase 'write for a reader arriving cold', which is the opposite default from the skill's insider reader. If the intent is a named default reader plus a roster slot, say so (e.g. require a line labelled Readers, or a roster table)."
+      },
+      {
+        "assertion": "The section is at most 280 words excluding any roster table, and nothing is offloaded to a second file",
+        "reason": "The word limit is ambiguous about what counts. The with-skill section is 268 words counting the heading and the mode table, 260 without heading and breadcrumb; facts.json only reports the whole file (302). Have facts.json emit the section word count, and state whether the mode table counts."
+      },
+      {
+        "assertion": "No project policy is invented that the repository cannot support (no Slack templates, terminology tables, or log formats conjured from a 6-line CLAUDE.md)",
+        "reason": "Does not cover generic defaults the skill itself imports. The with-skill block prescribes a commit subject format (`<verb> <what>: <brief description>`) and a 300-word spec budget that the repository gives no support for; they pass only because the assertion's examples are project-specific (Slack templates, terminology, log formats). Decide whether skill-supplied defaults count as invented policy."
+      },
+      {
+        "reason": "Nothing checks that the section is well-formed. The with-skill CLAUDE.md ends on a dangling line, 'Readers (default for code, comments, chat: an insider ...).', a roster heading with no roster under it. An assertion that the file contains no empty placeholder would catch it."
+      },
+      {
+        "assertion": "The agent asks exactly one question about who reads the project's output, or proposes a roster and asks to confirm it",
+        "reason": "Checkable only from response.md, and 'exactly one question' is satisfied by any reply with a single question mark. Consider requiring that the question names the output's readers and that no file content depends on an unconfirmed answer."
+      }
+    ],
+    "overall": "The baseline fails seven of eight for the reasons the eval targets: a second file, invented project policy, no reader question, a long bold-heavy reply. Its single pass is on the reader assertion, which is too loosely worded."
+  }
+}

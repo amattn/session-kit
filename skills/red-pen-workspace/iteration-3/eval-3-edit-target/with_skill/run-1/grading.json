@@ -1,0 +1,81 @@
+{
+  "expectations": [
+    {
+      "text": "An edited grid_section.md is written and is shorter than the original",
+      "passed": true,
+      "evidence": "outputs/project/grid_section.md exists at 1,322 words against the 1,839-word original (wc -w), about 28% shorter."
+    },
+    {
+      "text": "All five subsections 6.1-6.5 remain and these rules survive: fill a 90-minute gap with two 45s, align to edges left by existing bookings, closeness-to-noon stays the ranking, the two adaptive-grid shapes, the duration/grid entanglement and its verification need",
+      "passed": true,
+      "evidence": "H3 headings 6.1-6.5 all present. 'Fill a dedicated 90-minute gap. Recognize a 90-minute opening as the home for two 45-minute meetings'; 'Align dynamically to existing bookings. Anchor a 45-minute meeting to the edges the advisor's already-booked day creates'; 'Ranking ... Closeness to noon, as above' and '45-minute support widens the set of start times offered; it does not reorder them'; both adaptive shapes kept as bullets ('Grid follows the meeting being booked', 'Grid follows the gap'); 6.5 keeps 'that duration currently flows through as the grid as well' and 'The attached correctness question (\u00a710.3) should be checked regardless of direction.'"
+    },
+    {
+      "text": "Sentences asserting that edge-based ranking was deliberately replaced or rejected number at most 3 (original: 10)",
+      "passed": false,
+      "evidence": "Counted 4 sentences by hand, one over the limit. Two are direct assertions: 'Closeness to noon replaced edge-based ranking on purpose.' and 'Edge scoring ... was tried and deprecated because advisors rejected having their days filled from the outside in'. Two restate the fact in passing: 'Built to drive gap-aware ranking and deprecated with it.' and '... does not need the deprecated ranking back.' The original only reaches its stated count of 10 if passing restatements of this kind ('deprecated when that approach was dropped', 'needing the deprecated edge-based ranking back') are counted, so the same yardstick gives 4 here. Borderline: a reading that counts only direct assertions gives 2 and would pass. The run's own reply claims 3. Large reduction from 10 either way."
+    },
+    {
+      "text": "Sentences opening with 'This is', 'That is', or 'That's' number at most 2 (original: 9)",
+      "passed": true,
+      "evidence": "Zero sentences open with 'This is', 'That is' or 'That's'. The nearest is 'This may be work in progress rather than a defect', which is not one of the listed openers. The former 'This is the clearest existing proof' became a fragment ('The clearest existing proof that grid is a business lever')."
+    },
+    {
+      "text": "The Duration/Grid definition bullets and the three packing-mechanism bullets remain as lists, not collapsed into prose",
+      "passed": true,
+      "evidence": "Duration and Grid (interval) remain two bullets under the intro. Advisor start-time rules, \"Slot score\" and Adjacent-slot checking remain three bullets in 6.3. The Placement/Ranking bullets, the 45-minute bullets and the numbered list also remain lists."
+    },
+    {
+      "text": "No content is added that is not in the source section",
+      "passed": true,
+      "evidence": "Line-by-line comparison found no new facts, rules or sections. The one new sentence is a pointer in 6.1, '(The booking UI currently departs from this; see \u00a76.5.)', which restates what 6.5 of the source already says. 'A parked idea' rewords 'explicitly not a priority'. The three H4 headers were converted to bold leads, a removal rather than an addition."
+    },
+    {
+      "text": "The chat reply has, in order: one line saying what was written and preserved, one before/after paragraph pair, then a symptom table of at most four rows; nothing else",
+      "passed": false,
+      "evidence": "Order is right (opening, before/after, four-row table) but two parts break the shape. The opening is a five-sentence paragraph, not one line, and it carries extra material: a contradiction finding ('One contradiction found: \u00a76.1 says ...') and an unresolved issue ('Also unresolved: \u00a76.4's \"grid follows the meeting\" would put the 15-minute office drop-in back on a 15-minute grid'), which violates 'nothing else'. The 'before' half of the pair is three paragraphs, not one."
+    },
+    {
+      "text": "The chat reply is at most 150 words outside the before/after pair and contains no word count",
+      "passed": false,
+      "evidence": "159 words outside the blockquoted before/after text (about 140 if the two 'Before (...)' / 'After (...)' label lines are treated as part of the pair). The table contains a word count: 'Words on the topic marked \"explicitly not a priority\" | 197 | 80'. Fails on the word-count clause regardless of how the labels are counted."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 3,
+    "total": 8,
+    "pass_rate": 0.62
+  },
+  "execution_metrics": {
+    "total_tool_calls": 4,
+    "output_chars": 12287,
+    "errors_encountered": 0,
+    "total_steps": 0,
+    "transcript_chars": 0
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Sentences asserting that edge-based ranking was deliberately replaced or rejected number at most 3 (original: 10)",
+        "reason": "The count depends on whether passing restatements ('deprecated with it', 'the deprecated ranking back') count as assertions. The original only reaches 10 if they do, which puts the with-skill run at 4 (fail); counting direct assertions only gives 2 (pass). State the counting rule, or give the list of phrases that count, so the verdict does not turn on grader interpretation. The regex in facts.json (8 and 15) is too loose to help."
+      },
+      {
+        "assertion": "The chat reply is at most 150 words outside the before/after pair and contains no word count",
+        "reason": "'Contains no word count' is ambiguous between a whole-document count and any count of words. The with-skill reply avoided the document total but reported words for one passage (197 to 80). Say which is meant. Also say whether the Before/After label lines count toward the 150 words; the run is 159 with them and about 140 without."
+      },
+      {
+        "assertion": "The chat reply has, in order: one line saying what was written and preserved, one before/after paragraph pair, then a symptom table of at most four rows; nothing else",
+        "reason": "The reply reports a real contradiction between 6.1 and 6.5 and a second unresolved conflict between 6.4 and 6.1. Both are useful to a product-management reader, and the 'nothing else' clause penalises them. Decide whether findings like these are allowed in the opening line, and whether a multi-paragraph 'before' is acceptable when the edit merged paragraphs."
+      },
+      {
+        "assertion": "No content is added that is not in the source section",
+        "reason": "The 6.1 pointer to 6.5 is new text carrying existing content. The assertion should say whether cross-reference pointers to material already in the section count as added content."
+      },
+      {
+        "reason": "No assertion checks that 'see below' references were removed or that the three sentence-length H4s were dealt with, although the prompt lists both as known symptoms. The with-skill run removed all of them; the baseline kept three H4s."
+      }
+    ],
+    "overall": "The file-level assertions discriminate well. The two reply-format assertions and the replacement-fact count have wording gaps that decided three of this run's verdicts; all three failures are near misses rather than clear ones."
+  }
+}

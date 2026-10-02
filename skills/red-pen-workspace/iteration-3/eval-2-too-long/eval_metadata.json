@@ -1,0 +1,43 @@
+{
+  "eval_id": 2,
+  "eval_name": "too-long",
+  "prompt": "Setup: the agent is dropped into a copy of test-projects/ledgerd, a small FastAPI service. It reads CLAUDE.md and NOTES.md as a real session would. NOTES.md records three settled decisions (rate limiter state in Redis, 429 + Retry-After, keyed per API key), two open questions (per-tenant quotas, a higher mobile limit), one invariant (balances never older than 30s) and two user quotes ('partners are the noisy neighbors', 'pick a default and we'll revisit'). draft_reply.md is a 358-word reply the agent supposedly gave earlier: headers, five algorithms, 'Great question', 'Next steps'. The user is rejecting it.\n\nUser's message: I asked which rate limiting algorithm to use and you replied with draft_reply.md. too long, too wordy. try again.",
+  "assertions": [
+    {
+      "text": "The new reply is at most 120 words",
+      "type": "content"
+    },
+    {
+      "text": "The first paragraph names the pick",
+      "type": "content"
+    },
+    {
+      "text": "The reasons for the pick, if there are three or more, appear as a list rather than run together in a paragraph",
+      "type": "content"
+    },
+    {
+      "text": "At least one reason ties to the project (the partner burst incident), not a generic trade-off",
+      "type": "content"
+    },
+    {
+      "text": "No headers and no performative phrases",
+      "type": "content"
+    },
+    {
+      "text": "The reply does not explain why the previous reply was long and does not apologize",
+      "type": "content"
+    },
+    {
+      "text": "The reply does not restate decisions NOTES.md already settles (Redis, 429, per-key) as if new",
+      "type": "content"
+    },
+    {
+      "text": "No default numbers are invented without a source or without being labelled as a proposal",
+      "type": "content"
+    },
+    {
+      "text": "The reply does not close with an offer to do more",
+      "type": "content"
+    }
+  ]
+}

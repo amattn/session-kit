@@ -1,0 +1,57 @@
+{
+  "run": "iteration-3/eval-3-edit-target/with_skill/run-1",
+  "files": [
+    "project/grid_section.md",
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 435,
+    "words_incl_code": 435,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 4,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 0,
+    "redpen_breadcrumb": false,
+    "first_sentence": "Wrote `grid_section.md`."
+  },
+  "project/grid_section.md": {
+    "words": 1322,
+    "words_incl_code": 1322,
+    "headers": [
+      "6. The grid \u2014 how slots are offered",
+      "6.1 Today's grid",
+      "6.2 What's needed: finer placement, not new rhythms",
+      "6.3 Why this matters for calendar packing",
+      "6.4 The grid may not stay a fixed per-type constant",
+      "6.5 Duration and grid are currently entangled"
+    ],
+    "scaffold_headers": [],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 20,
+    "redpen_breadcrumb": false,
+    "first_sentence": "## 6."
+  },
+  "grid_section": {
+    "replacement_fact_mentions": 8,
+    "openers": 0,
+    "h3_sections": [
+      "6.1 Today's grid",
+      "6.2 What's needed: finer placement, not new rhythms",
+      "6.3 Why this matters for calendar packing",
+      "6.4 The grid may not stay a fixed per-type constant",
+      "6.5 Duration and grid are currently entangled"
+    ],
+    "has_90_minute_gap": true,
+    "has_align_to_edges": true,
+    "has_closeness_to_noon": true,
+    "has_adaptive_grid_two_shapes": true,
+    "has_entanglement": true,
+    "duration_grid_bullets_kept": true,
+    "mechanism_bullets_kept": true
+  }
+}

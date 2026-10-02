@@ -1,0 +1,34 @@
+{
+  "eval-0-bootstrap": {
+    "left": "without_skill",
+    "right": "with_skill"
+  },
+  "eval-1-fresh-spec": {
+    "left": "with_skill",
+    "right": "without_skill"
+  },
+  "eval-2-too-long": {
+    "left": "without_skill",
+    "right": "with_skill"
+  },
+  "eval-3-edit-target": {
+    "left": "with_skill",
+    "right": "without_skill"
+  },
+  "eval-4-code-comments": {
+    "left": "without_skill",
+    "right": "with_skill"
+  },
+  "eval-5-chat-answer": {
+    "left": "without_skill",
+    "right": "with_skill"
+  },
+  "eval-6-stale-draft": {
+    "left": "without_skill",
+    "right": "with_skill"
+  },
+  "eval-7-pr-description": {
+    "left": "without_skill",
+    "right": "with_skill"
+  }
+}

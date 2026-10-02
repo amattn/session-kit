@@ -1,0 +1,45 @@
+{
+  "reviews": [
+    {
+      "case": "eval-0-bootstrap",
+      "prefer": "Right",
+      "feedback": ""
+    },
+    {
+      "case": "eval-1-fresh-spec",
+      "prefer": "Left",
+      "feedback": ""
+    },
+    {
+      "case": "eval-2-too-long",
+      "prefer": "Both fine",
+      "feedback": ""
+    },
+    {
+      "case": "eval-3-edit-target",
+      "prefer": "Left",
+      "feedback": "\"Before (§6.3, \"Where edge-awareness still has a claim\", three paragraphs under their own header):\"\n\nthat line has no context.  there should be a \"here is an example of the auduince-focused style change applied:\" or similar\n\nbut right is still waaaay to wordy."
+    },
+    {
+      "case": "eval-4-code-comments",
+      "prefer": "Right",
+      "feedback": ""
+    },
+    {
+      "case": "eval-5-chat-answer",
+      "prefer": "Left",
+      "feedback": "the \"cost\" is buried in the bullets.  easy to miss.  the left bold formatting is helpful as well."
+    },
+    {
+      "case": "eval-6-stale-draft",
+      "prefer": "Right",
+      "feedback": ""
+    },
+    {
+      "case": "eval-7-pr-description",
+      "prefer": "Right",
+      "feedback": ""
+    }
+  ],
+  "status": "complete"
+}

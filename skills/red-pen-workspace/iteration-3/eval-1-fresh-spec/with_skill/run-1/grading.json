@@ -1,0 +1,103 @@
+{
+  "expectations": [
+    {
+      "text": "docs/rate_limiting.md is created",
+      "passed": true,
+      "evidence": "outputs/project/docs/rate_limiting.md exists (2424 bytes, 415 words per facts.json)."
+    },
+    {
+      "text": "The document opens with a prose preamble (no heading) that names product and engineering readers and says how each should read it",
+      "passed": true,
+      "evidence": "After the title and a one-line budget note, prose with no heading: 'This plan is for product, who own the limits and what partners experience, and for the engineers who will build it. Product can stop after \"Open items\"; the rest is implementation.'"
+    },
+    {
+      "text": "The Redis, 429 + Retry-After, and per-API-key decisions from NOTES.md are treated as settled, not re-raised as open choices",
+      "passed": true,
+      "evidence": "Preamble: 'Already settled in NOTES.md and not reargued here: partners over the limit get a 429 with Retry-After (seconds to wait), limits are per API key, and the counters live in Redis.' None of the three appears under Open items or as a fresh choice under Decisions."
+    },
+    {
+      "text": "Per-tenant quotas and the mobile-app limit each appear as an open item or as an explicit decision with a revisit trigger, never inside the preamble",
+      "passed": true,
+      "evidence": "Open items 2 ('Is the mobile app limited? Lean: no, exempt it in v1') and 3 ('One limit for all 6 partners, or per-partner quotas? Lean: one limit; revisit when a partner has a legitimate need above it'). The preamble says only that three decisions are open and does not name them."
+    },
+    {
+      "text": "At least one decision is written in 'chose A over B because C' form with a revisit trigger",
+      "passed": true,
+      "evidence": "'Chose a token bucket ... over a sliding-window counter because partner traffic is bursty and short bursts are harmless; revisit if bursts alone slow the mobile app.' Two further decisions have the same form and a trigger."
+    },
+    {
+      "text": "Assumptions appear as a tick-list",
+      "passed": true,
+      "evidence": "'## Assumptions' holds four '- [ ]' checkbox items, e.g. '- [ ] Every partner request carries an API key.'"
+    },
+    {
+      "text": "At least one risk is written as a conditional ('X breaks if Y')",
+      "passed": true,
+      "evidence": "'A partner integration breaks if its normal peak is above the limit and log-only was too short to see it.' Also 'Every request slows down if Redis is slow'."
+    },
+    {
+      "text": "No Overview, Introduction, Background, or Next steps section under any name (a 'Why' section that is background counts)",
+      "passed": true,
+      "evidence": "Headers are Open items, Decisions, Assumptions, Risks, Scope out. No overview, background, why, or next-steps section; context is confined to the three-sentence preamble."
+    },
+    {
+      "text": "The whole file is at most 300 words excluding the title, or the document's first line says it exceeded the budget and why",
+      "passed": true,
+      "evidence": "415 words, over 300, but the first line after the title reads 'Over the 300-word budget: three decisions are still open.' Passes by the escape clause; the stated reason is thin (see eval_feedback)."
+    },
+    {
+      "text": "Every rate, limit, duration, and estimate in the document traces to NOTES.md or CLAUDE.md or is labelled as a proposed default (HTTP status codes are exempt)",
+      "passed": true,
+      "evidence": "100 rps / burst 200 is labelled 'Lean ... This is a guess'. 2k rps, ~40k daily users, 6 partners and the mobile 429 back-off all trace to NOTES.md. The log-only phase is 'for a period', with no invented duration. 'One round trip per request' is a description of the mechanism, not an estimate."
+    },
+    {
+      "text": "The chat reply is at most 120 words, names what needs the user's call, and does not enumerate the document's decisions",
+      "passed": false,
+      "evidence": "161 words per facts.json, over the 120 limit. It names the three calls needed, but then enumerates the document's decisions: 'Choices I made that you can overrule: token bucket for the algorithm, requests pass through if Redis is unreachable, and limits are hardcoded rather than configurable.' Fails on two of the three conditions."
+    }
+  ],
+  "summary": {
+    "passed": 10,
+    "failed": 1,
+    "total": 11,
+    "pass_rate": 0.91
+  },
+  "execution_metrics": {
+    "total_tool_calls": 5,
+    "output_chars": 3391,
+    "errors_encountered": 0,
+    "total_steps": 0,
+    "transcript_chars": 0
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The whole file is at most 300 words excluding the title, or the document's first line says it exceeded the budget and why",
+        "reason": "The escape hatch is nearly free: a one-clause first line ('Over the 300-word budget: three decisions are still open') licenses any length. The with-skill doc is 415 words, and its open items take only about 110 of them, so the stated reason does not account for the overrun. Consider a hard ceiling (e.g. 450) or requiring the overrun to be attributable to the named cause."
+      },
+      {
+        "assertion": "Per-tenant quotas and the mobile-app limit each appear as an open item or as an explicit decision with a revisit trigger, never inside the preamble",
+        "reason": "Only a heading-less preamble is protected. The baseline states both open questions as settled facts in its Summary section ('The limit is the same for every partner, and it applies to partner keys only at first') and still passes because they reappear under 'Decisions needed'. Consider: 'not stated as decided anywhere before the open-items section'."
+      },
+      {
+        "assertion": "At least one risk is written as a conditional ('X breaks if Y')",
+        "reason": "Satisfied by any incidental if-sentence about something going wrong; the baseline passes on a sentence buried in a recommendation, with no risks section at all. Consider requiring a risks list in which each item is conditional."
+      },
+      {
+        "assertion": "The chat reply is at most 120 words, names what needs the user's call, and does not enumerate the document's decisions",
+        "reason": "Bundles three independent conditions (length, names the ask, no enumeration). The with-skill reply fails two of them and the baseline one, but the grade cannot show that. Split into three assertions."
+      },
+      {
+        "assertion": "Every rate, limit, duration, and estimate in the document traces to NOTES.md or CLAUDE.md or is labelled as a proposed default (HTTP status codes are exempt)",
+        "reason": "'Labelled as a proposed default' needs a rule for vague quantities ('a period', 'a few seconds', 'a few minutes') and for arithmetic derived from recorded numbers (40x, 300 rps). I treated derived arithmetic as traceable and concrete unlabelled durations ('one week', 'a second or two') as failures."
+      },
+      {
+        "reason": "Nothing checks the 30-second balance-freshness invariant from NOTES.md. The baseline addresses it explicitly; the with-skill doc never mentions it. Nothing checks that the contradiction in docs/design.md (per-IP in-process counter) is surfaced either; both runs did surface it."
+      },
+      {
+        "reason": "Nothing checks provenance overclaiming. The baseline's 'Decisions already made' table lists 'one fixed default rather than configuration options' as recorded in NOTES.md; it is a user quote there, not a dated design decision."
+      }
+    ],
+    "overall": "The structural assertions discriminate well (10/11 vs 4/11), but the word-budget escape hatch and the conditional-risk check are too easy to satisfy, and the chat-reply assertion hides which of its three conditions failed. The only with-skill failure is the chat reply, which is over length and enumerates the document's decisions."
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "expectations": [
+    {
+      "text": "The description opens with one or two sentences naming the return-type change as the part needing the reviewer's judgment and the renames as mechanical",
+      "passed": false,
+      "evidence": "The body opens with '# Retry webhook delivery on 5xx' and '## What this does', followed by a description of the retry behavior. The return-type change first appears in the second section and the renames in the third; nothing in the opening says which part needs the reviewer's judgment."
+    },
+    {
+      "text": "The return-type change is surfaced as a deviation from the original ask, with the reason (callers need attempt counts)",
+      "passed": true,
+      "evidence": "'This was not part of the original ask (\"add retry to the webhook client\"). It was needed so the caller can log how many attempts a delivery took.'"
+    },
+    {
+      "text": "No per-file change inventory",
+      "passed": false,
+      "evidence": "A '## Files' section holds a six-row table, one row per file with its change ('| `src/webhook_client.py` | Retry with backoff; `DeliveryResult` return type |' through '| `tests/test_webhook_client.py` | 4 new tests for retry behavior |')."
+    },
+    {
+      "text": "The description body is at most 200 words",
+      "passed": false,
+      "evidence": "The fenced description body is 275 words by my count (219 even with the table rows removed). Limit is 200."
+    },
+    {
+      "text": "No markdown headers (terse label lines such as 'Risk:' are allowed)",
+      "passed": false,
+      "evidence": "One H1 and five H2 headers: '# Retry webhook delivery on 5xx', '## What this does', '## Change to the `send()` return type', '## Unrelated changes in this branch', '## Files', '## Testing'."
+    },
+    {
+      "text": "Every concrete number and claim traces to changes.md or the source file (invented test contents or implementation details not in changes.md fail)",
+      "passed": true,
+      "evidence": "3 attempts, 200ms base, jitter, 4xx no retry, DeliveryResult fields, `.ok`, one call site, 4 tests and the renames match changes.md; 'at-least-once ... dedupe on `event_id`' matches the source comment. No latency figure is given. The one claim beyond the sources is 'a dataclass instance is truthy unless it defines `__bool__`, so a failed delivery would read as a success': a general Python fact stated conditionally, not an invented detail of the implementation, and the chat text flags it for removal if `__bool__` is defined. No test contents are invented."
+    },
+    {
+      "text": "The chat text around the description is at most 60 words",
+      "passed": false,
+      "evidence": "The text outside the fence is 130 words by my count: a lead-in paragraph on what could not be verified and three bullets (test status, timeouts, truthiness). Limit is 60."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 5,
+    "total": 7,
+    "pass_rate": 0.29
+  },
+  "execution_metrics": {
+    "total_tool_calls": 3,
+    "output_chars": 3612,
+    "errors_encountered": 0,
+    "total_steps": 0,
+    "transcript_chars": 0
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "No per-file change inventory",
+        "reason": "'Per-file change inventory' is undefined at the margin. The with-skill run has no table but still has a 'Mechanical, skip:' block listing three files with their change, and names all six files somewhere. State a threshold (for example: no list or table whose entries are file paths), or the verdict depends on the grader."
+      },
+      {
+        "assertion": "The description opens with one or two sentences naming the return-type change as the part needing the reviewer's judgment and the renames as mechanical",
+        "reason": "The assertion requires both facts in the first one or two sentences. A description that leads with a title line and a 'Needs your judgment:' label, then puts the return-type change in the first bullet and the renames last, fails on position alone. Say whether a title line and label lines count as the opening."
+      },
+      {
+        "assertion": "Every concrete number and claim traces to changes.md or the source file (invented test contents or implementation details not in changes.md fail)",
+        "reason": "Two kinds of claim sit between sourced and invented and the assertion does not say how to treat them: logical consequences of changes.md (429 is a 4xx, so Retry-After is not honored) and general language facts (a dataclass instance is truthy unless it defines __bool__). Both runs passed only because I counted these as derivable. Add a rule for inferences, and for figures that need an unsourced assumption (0.6s needs a doubling multiplier)."
+      },
+      {
+        "reason": "No assertion checks that the description flags what changes.md leaves unsaid (retry on timeouts and connection errors, whether the tests pass). Both runs raised these in chat rather than in the description; neither behavior is rewarded or penalized."
+      },
+      {
+        "reason": "No assertion checks that the run discloses that the working copy lacks the branch changes, so the description is unverified against code. Both runs disclosed it, and that disclosure is what pushes the chat text past 60 words. The 60-word limit and honest disclosure pull against each other here."
+      }
+    ],
+    "overall": "Baseline fails five of seven on format (headers, file table, length, chat length, opening) and passes the two content assertions. Its truthiness warning about `if client.send(...)` is a useful reviewer point that no assertion rewards. total_tool_calls is the number of Bash steps listed in each transcript (3); the transcripts do not give exact call counts. Word counts are my own: text inside the code fence is the description body, text outside is chat."
+  }
+}

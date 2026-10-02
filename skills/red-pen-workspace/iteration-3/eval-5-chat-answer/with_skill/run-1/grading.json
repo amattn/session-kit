@@ -1,0 +1,72 @@
+{
+  "expectations": [
+    {
+      "text": "The first sentence is the answer with a lean",
+      "passed": true,
+      "evidence": "First sentence: 'Session cookies, with the session stored in Redis.' Direct answer, single stance."
+    },
+    {
+      "text": "The reply is at most 150 words",
+      "passed": true,
+      "evidence": "facts.json reports 140 words."
+    },
+    {
+      "text": "No headers and at most one bold phrase",
+      "passed": true,
+      "evidence": "facts.json: headers [] and bold_leads 0; the response contains no bold text at all."
+    },
+    {
+      "text": "The reason given ties to something in the project context, not generic textbook trade-offs only",
+      "passed": true,
+      "evidence": "'Redis is already shared by all three' replicas, so the stateless-JWT argument does not apply; 'This doesn't touch partner auth; they keep API keys.' NOTES.md and CLAUDE.md confirm three replicas, Redis, and partner API keys."
+    },
+    {
+      "text": "Technical claims are correct (a wrong statement about SameSite, CSRF, or JWT revocation fails)",
+      "passed": true,
+      "evidence": "Checked each claim: deleting the server-side session key revokes immediately (true); a JWT is valid until expiry unless a denylist is added, which reintroduces server state (true); HttpOnly cookie is unreadable by page JavaScript (true; it is HttpOnly, not SameSite, that does this, and the reply attributes it to the combined attribute string, which is acceptable); CSRF protection on state-changing routes (sound, though with SameSite=Strict it is defense in depth and the reply does not say so). No false statement found."
+    },
+    {
+      "text": "The reply notes that the project has no admin panel or auth yet, or asks one question that depends on it",
+      "passed": true,
+      "evidence": "'There's no admin panel in NOTES.md or the code yet, so I'm assuming a new, browser-based internal tool served from ledgerd; is that right?' Both notes the absence and asks one dependent question."
+    },
+    {
+      "text": "The reply ends with at most one question and no trailing offer",
+      "passed": true,
+      "evidence": "Final sentence is the single question 'is that right?'. Exactly one question mark in the reply; no offer of further work."
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 0,
+    "total": 7,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "total_tool_calls": 4,
+    "output_chars": 833,
+    "errors_encountered": 0,
+    "total_steps": 0,
+    "transcript_chars": 0
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The first sentence is the answer with a lean",
+        "reason": "Non-discriminating: both runs open with a near-identical 'Session cookies, with the session stored ... in Redis.' Same for the project-context, technical-correctness and no-admin-panel assertions; all four pass in both configurations, so the with/without delta rests entirely on the three format assertions (length, bold, ending)."
+      },
+      {
+        "assertion": "Technical claims are correct (a wrong statement about SameSite, CSRF, or JWT revocation fails)",
+        "reason": "Only catches false statements, not misleading omissions. The with-skill reply says 'You will need CSRF protection' right after recommending SameSite=Strict without saying Strict already blocks most cross-site CSRF and the token is defense in depth; a reader could take it either way. Consider an assertion that the SameSite/CSRF relationship is stated accurately rather than merely not contradicted."
+      },
+      {
+        "reason": "No assertion checks whether compression dropped substance. The baseline's extra 144 words include two useful points the with-skill reply omits or thins: the same-site serving requirement that SameSite=Strict imposes, and 'verify the IdP JWT once, then issue your own session cookie' for SSO. The with-skill reply instead says it would 'switch to JWT' if an external IdP issues them, which is weaker advice than the baseline's. An assertion on the flip condition being sound would catch this."
+      },
+      {
+        "assertion": "The reply notes that the project has no admin panel or auth yet, or asks one question that depends on it",
+        "reason": "The project does have partner API-key auth in NOTES.md, so 'no auth yet' is loosely worded; both replies correctly distinguish admin auth from partner API keys. Reword to 'no admin panel or admin auth'."
+      }
+    ],
+    "overall": "Four of seven assertions pass for both runs and do not discriminate; the skill's measured advantage is format only (length, bold, ending). Content quality differences, including one place where the baseline's advice is better, are not captured."
+  }
+}

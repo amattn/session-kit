@@ -1,0 +1,75 @@
+{
+  "expectations": [
+    {
+      "text": "The description opens with one or two sentences naming the return-type change as the part needing the reviewer's judgment and the renames as mechanical",
+      "passed": false,
+      "evidence": "The body opens with a title line ('Add retry to webhook client: exponential backoff on 5xx') and the label 'Needs your judgment:'. The first bullet does name the return-type change, but the opening does not call the renames mechanical: they appear as the third bullet under 'Needs your judgment' ('have nothing to do with retry; the formatter flagged them') and are only labelled mechanical in the last block, 'Mechanical, skip:'. No one- or two-sentence opening carries both points."
+    },
+    {
+      "text": "The return-type change is surfaced as a deviation from the original ask, with the reason (callers need attempt counts)",
+      "passed": true,
+      "evidence": "'`send()` now returns a `DeliveryResult` (status, attempts, last_error) instead of `bool`. This goes beyond the ask (\"add retry to the webhook client\"); it is there so the caller can log attempt counts.'"
+    },
+    {
+      "text": "No per-file change inventory",
+      "passed": false,
+      "evidence": "No table, but the description ends with a per-file list: 'Mechanical, skip: - `src/api/transactions.py`, `src/api/balances.py`: `_fmt` renamed to `_format_amount`. - `src/api/__init__.py`: import order.' That repeats the third judgment bullet file by file, and with `src/api/webhooks.py` and `tests/test_webhook_client.py` named elsewhere, every file in changes.md is listed with its change. The transcript calls it 'Record: file list of mechanical changes'. Borderline (partial inventory, three lines); failed under the strict reading."
+    },
+    {
+      "text": "The description body is at most 200 words",
+      "passed": false,
+      "evidence": "The fenced description body is 214 words by my count (wc -w on the text inside the fence), 14 over the limit."
+    },
+    {
+      "text": "No markdown headers (terse label lines such as 'Risk:' are allowed)",
+      "passed": true,
+      "evidence": "No lines begin with '#'. Structure is a plain title line plus label lines: 'Needs your judgment:', 'Behavior:', 'Risk:', 'Tests:', 'Mechanical, skip:'."
+    },
+    {
+      "text": "Every concrete number and claim traces to changes.md or the source file (invented test contents or implementation details not in changes.md fail)",
+      "passed": true,
+      "evidence": "3 attempts, 200ms base, jitter, 4xx fails fast, DeliveryResult fields, `.ok`, one call site, 4 tests and both renames match changes.md. 'at-least-once ... dedupe on event_id' and synchronous `send()` (httpx.Client) match src/webhook_client.py. The only latency figure, 'about 0.6s before jitter, if the delay doubles', is 200ms + 400ms from the 200ms base and is stated as conditional on doubling. '429 ... no retry, and the partner's Retry-After is ignored' is not written in changes.md but follows from '4xx fails fast'. No test contents are invented. Passed with those two inferences counted as derivable."
+    },
+    {
+      "text": "The chat text around the description is at most 60 words",
+      "passed": false,
+      "evidence": "The text outside the fence is 83 words by my count (facts.json says 84): the note that nothing was checked against code plus two bullets on timeouts and the 0.6s figure. Limit is 60."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 4,
+    "total": 7,
+    "pass_rate": 0.43
+  },
+  "execution_metrics": {
+    "total_tool_calls": 3,
+    "output_chars": 3386,
+    "errors_encountered": 0,
+    "total_steps": 0,
+    "transcript_chars": 0
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "No per-file change inventory",
+        "reason": "'Per-file change inventory' is undefined at the margin. The with-skill run has no table but still has a 'Mechanical, skip:' block listing three files with their change, and names all six files somewhere. State a threshold (for example: no list or table whose entries are file paths), or the verdict depends on the grader."
+      },
+      {
+        "assertion": "The description opens with one or two sentences naming the return-type change as the part needing the reviewer's judgment and the renames as mechanical",
+        "reason": "The assertion requires both facts in the first one or two sentences. A description that leads with a title line and a 'Needs your judgment:' label, then puts the return-type change in the first bullet and the renames last, fails on position alone. Say whether a title line and label lines count as the opening."
+      },
+      {
+        "assertion": "Every concrete number and claim traces to changes.md or the source file (invented test contents or implementation details not in changes.md fail)",
+        "reason": "Two kinds of claim sit between sourced and invented and the assertion does not say how to treat them: logical consequences of changes.md (429 is a 4xx, so Retry-After is not honored) and general language facts (a dataclass instance is truthy unless it defines __bool__). Both runs passed only because I counted these as derivable. Add a rule for inferences, and for figures that need an unsourced assumption (0.6s needs a doubling multiplier)."
+      },
+      {
+        "reason": "No assertion checks that the description flags what changes.md leaves unsaid (retry on timeouts and connection errors, whether the tests pass). Both runs raised these in chat rather than in the description; neither behavior is rewarded or penalized."
+      },
+      {
+        "reason": "No assertion checks that the run discloses that the working copy lacks the branch changes, so the description is unverified against code. Both runs disclosed it, and that disclosure is what pushes the chat text past 60 words. The 60-word limit and honest disclosure pull against each other here."
+      }
+    ],
+    "overall": "With-skill run fails four of seven, two of them by small margins (214 words against 200, 83 against 60). The assertions on length and headers discriminate well. The inventory and opening assertions need tighter wording. total_tool_calls is the number of Bash steps listed in each transcript (3); the transcripts do not give exact call counts. Word counts are my own: text inside the code fence is the description body, text outside is chat."
+  }
+}

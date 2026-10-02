@@ -1,0 +1,19 @@
+{
+  "run": "iteration-3/eval-7-pr-description/without_skill/run-1",
+  "files": [
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 130,
+    "words_incl_code": 407,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 3,
+    "redpen_breadcrumb": false,
+    "first_sentence": "Here is the PR description."
+  }
+}

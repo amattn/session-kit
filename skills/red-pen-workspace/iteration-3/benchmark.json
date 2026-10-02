@@ -1,0 +1,1028 @@
+{
+  "metadata": {
+    "skill_name": "red-pen",
+    "skill_path": "<path/to/skill>",
+    "executor_model": "<model-name>",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-10-02T21:37:58Z",
+    "evals_run": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "runs_per_configuration": 3
+  },
+  "runs": [
+    {
+      "eval_id": 0,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 28.0,
+        "tokens": 38599,
+        "tool_calls": 4,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "CLAUDE.md gains a Writing Conventions section marked with a `<!-- managed by /red-pen -->` breadcrumb",
+          "passed": true,
+          "evidence": "outputs/project/CLAUDE.md has '## Writing Conventions' followed directly by '<!-- managed by /red-pen -->'; facts.json redpen_breadcrumb: true."
+        },
+        {
+          "text": "The section covers all four output types (spec/plan, code comment, code/diff/commit, chat) with a one-line rule each",
+          "passed": true,
+          "evidence": "Table has four rows: 'Spec / plan / design note', 'Code comment', 'Code / diff / commit', 'Chat', each with a single-row rule of thumb (e.g. Chat: 'Answer first. Length matches the question...')."
+        },
+        {
+          "text": "The section states the reader default or a reader roster",
+          "passed": true,
+          "evidence": "Last line of the section: 'Readers (default for code, comments, chat: an insider who knows this codebase and this thread).' The default is stated; no roster table was written."
+        },
+        {
+          "text": "The agent asks exactly one question about who reads the project's output, or proposes a roster and asks to confirm it",
+          "passed": true,
+          "evidence": "response.md contains one question, 'One question: who reads what tidewatch produces?', and proposes a one-row roster (Slack channel readers) 'unless you correct it'. No other question appears."
+        },
+        {
+          "text": "The section is at most 280 words excluding any roster table, and nothing is offloaded to a second file",
+          "passed": true,
+          "evidence": "Section is 268 words by wc -w including heading, breadcrumb and mode table (260 without heading and breadcrumb), under 280. outputs/project/ contains only CLAUDE.md; no second file."
+        },
+        {
+          "text": "No project policy is invented that the repository cannot support (no Slack templates, terminology tables, or log formats conjured from a 6-line CLAUDE.md)",
+          "passed": true,
+          "evidence": "The section contains no Slack template, glossary, or log format; no tidewatch-specific rule at all. The Slack reader appears only as a proposal in the reply, flagged as a guess. Caveat: the block does carry generic skill defaults (commit subject format, 300-word spec budget) not derived from the repo."
+        },
+        {
+          "text": "The existing Project and Key Files sections of CLAUDE.md survive unchanged",
+          "passed": true,
+          "evidence": "diff against the original CLAUDE.md shows only an append after line 10 ('10a11,32'); Project and Key Files lines are byte-identical."
+        },
+        {
+          "text": "The chat reply is at most 150 words with at most one bold lead",
+          "passed": true,
+          "evidence": "facts.json: response words 141, bold_leads 0. The reply does include a 4-column markdown table, which the assertion does not restrict."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.91,
+        "passed": 10,
+        "failed": 1,
+        "total": 11,
+        "time_seconds": 68.4,
+        "tokens": 45026,
+        "tool_calls": 5,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "docs/rate_limiting.md is created",
+          "passed": true,
+          "evidence": "outputs/project/docs/rate_limiting.md exists (2424 bytes, 415 words per facts.json)."
+        },
+        {
+          "text": "The document opens with a prose preamble (no heading) that names product and engineering readers and says how each should read it",
+          "passed": true,
+          "evidence": "After the title and a one-line budget note, prose with no heading: 'This plan is for product, who own the limits and what partners experience, and for the engineers who will build it. Product can stop after \"Open items\"; the rest is implementation.'"
+        },
+        {
+          "text": "The Redis, 429 + Retry-After, and per-API-key decisions from NOTES.md are treated as settled, not re-raised as open choices",
+          "passed": true,
+          "evidence": "Preamble: 'Already settled in NOTES.md and not reargued here: partners over the limit get a 429 with Retry-After (seconds to wait), limits are per API key, and the counters live in Redis.' None of the three appears under Open items or as a fresh choice under Decisions."
+        },
+        {
+          "text": "Per-tenant quotas and the mobile-app limit each appear as an open item or as an explicit decision with a revisit trigger, never inside the preamble",
+          "passed": true,
+          "evidence": "Open items 2 ('Is the mobile app limited? Lean: no, exempt it in v1') and 3 ('One limit for all 6 partners, or per-partner quotas? Lean: one limit; revisit when a partner has a legitimate need above it'). The preamble says only that three decisions are open and does not name them."
+        },
+        {
+          "text": "At least one decision is written in 'chose A over B because C' form with a revisit trigger",
+          "passed": true,
+          "evidence": "'Chose a token bucket ... over a sliding-window counter because partner traffic is bursty and short bursts are harmless; revisit if bursts alone slow the mobile app.' Two further decisions have the same form and a trigger."
+        },
+        {
+          "text": "Assumptions appear as a tick-list",
+          "passed": true,
+          "evidence": "'## Assumptions' holds four '- [ ]' checkbox items, e.g. '- [ ] Every partner request carries an API key.'"
+        },
+        {
+          "text": "At least one risk is written as a conditional ('X breaks if Y')",
+          "passed": true,
+          "evidence": "'A partner integration breaks if its normal peak is above the limit and log-only was too short to see it.' Also 'Every request slows down if Redis is slow'."
+        },
+        {
+          "text": "No Overview, Introduction, Background, or Next steps section under any name (a 'Why' section that is background counts)",
+          "passed": true,
+          "evidence": "Headers are Open items, Decisions, Assumptions, Risks, Scope out. No overview, background, why, or next-steps section; context is confined to the three-sentence preamble."
+        },
+        {
+          "text": "The whole file is at most 300 words excluding the title, or the document's first line says it exceeded the budget and why",
+          "passed": true,
+          "evidence": "415 words, over 300, but the first line after the title reads 'Over the 300-word budget: three decisions are still open.' Passes by the escape clause; the stated reason is thin (see eval_feedback)."
+        },
+        {
+          "text": "Every rate, limit, duration, and estimate in the document traces to NOTES.md or CLAUDE.md or is labelled as a proposed default (HTTP status codes are exempt)",
+          "passed": true,
+          "evidence": "100 rps / burst 200 is labelled 'Lean ... This is a guess'. 2k rps, ~40k daily users, 6 partners and the mobile 429 back-off all trace to NOTES.md. The log-only phase is 'for a period', with no invented duration. 'One round trip per request' is a description of the mechanism, not an estimate."
+        },
+        {
+          "text": "The chat reply is at most 120 words, names what needs the user's call, and does not enumerate the document's decisions",
+          "passed": false,
+          "evidence": "161 words per facts.json, over the 120 limit. It names the three calls needed, but then enumerates the document's decisions: 'Choices I made that you can overrule: token bucket for the algorithm, requests pass through if Redis is unreachable, and limits are hardcoded rather than configurable.' Fails on two of the three conditions."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 9,
+        "failed": 0,
+        "total": 9,
+        "time_seconds": 30.2,
+        "tokens": 42460,
+        "tool_calls": 5,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The new reply is at most 120 words",
+          "passed": true,
+          "evidence": "facts.json: response.words = 115."
+        },
+        {
+          "text": "The first paragraph names the pick",
+          "passed": true,
+          "evidence": "First paragraph is the single line 'Token bucket, a burst allowance that refills at a fixed rate.'"
+        },
+        {
+          "text": "The reasons for the pick, if there are three or more, appear as a list rather than run together in a paragraph",
+          "passed": true,
+          "evidence": "Reasons are in a bulleted list. Only two reasons for the pick are given (caps each partner's average rate; lets a short burst through), both in the first bullet, so the three-or-more condition is not reached. Note: the three rejected algorithms are joined by semicolons inside one bullet."
+        },
+        {
+          "text": "At least one reason ties to the project (the partner burst incident), not a generic trade-off",
+          "passed": true,
+          "evidence": "'It caps each partner's average rate, which is what stops a repeat of the 2k rps incident' -- matches the NOTES.md user quote about a partner at 2k rps."
+        },
+        {
+          "text": "No headers and no performative phrases",
+          "passed": true,
+          "evidence": "facts.json: headers = [], performative = [], openers = 0, bold_leads = 0. Reading the reply confirms none."
+        },
+        {
+          "text": "The reply does not explain why the previous reply was long and does not apologize",
+          "passed": true,
+          "evidence": "facts.json: apology_or_meta = []. The reply contains no reference to the earlier draft or its length and no apology."
+        },
+        {
+          "text": "The reply does not restate decisions NOTES.md already settles (Redis, 429, per-key) as if new",
+          "passed": true,
+          "evidence": "Redis, 429 and per-API-key keying are not mentioned. The only reference to a settled item is 'leaky bucket queues requests, which you already rejected', which is explicitly marked as already decided (NOTES.md rejects silent queueing)."
+        },
+        {
+          "text": "No default numbers are invented without a source or without being labelled as a proposal",
+          "passed": true,
+          "evidence": "No limit values are given: 'Still to pick: bucket size and refill rate.' The only figures are '2k rps' (from NOTES.md) and '2x the limit across a window boundary' (a property of fixed windows, not a default)."
+        },
+        {
+          "text": "The reply does not close with an offer to do more",
+          "passed": true,
+          "evidence": "Final sentence is 'What sustained rate per partner is acceptable?' -- a question to the user, not an offer of further work. 'I'll hardcode one default' is a statement of intent, not an offer."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.62,
+        "passed": 5,
+        "failed": 3,
+        "total": 8,
+        "time_seconds": 83.1,
+        "tokens": 51133,
+        "tool_calls": 4,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "An edited grid_section.md is written and is shorter than the original",
+          "passed": true,
+          "evidence": "outputs/project/grid_section.md exists at 1,322 words against the 1,839-word original (wc -w), about 28% shorter."
+        },
+        {
+          "text": "All five subsections 6.1-6.5 remain and these rules survive: fill a 90-minute gap with two 45s, align to edges left by existing bookings, closeness-to-noon stays the ranking, the two adaptive-grid shapes, the duration/grid entanglement and its verification need",
+          "passed": true,
+          "evidence": "H3 headings 6.1-6.5 all present. 'Fill a dedicated 90-minute gap. Recognize a 90-minute opening as the home for two 45-minute meetings'; 'Align dynamically to existing bookings. Anchor a 45-minute meeting to the edges the advisor's already-booked day creates'; 'Ranking ... Closeness to noon, as above' and '45-minute support widens the set of start times offered; it does not reorder them'; both adaptive shapes kept as bullets ('Grid follows the meeting being booked', 'Grid follows the gap'); 6.5 keeps 'that duration currently flows through as the grid as well' and 'The attached correctness question (\u00a710.3) should be checked regardless of direction.'"
+        },
+        {
+          "text": "Sentences asserting that edge-based ranking was deliberately replaced or rejected number at most 3 (original: 10)",
+          "passed": false,
+          "evidence": "Counted 4 sentences by hand, one over the limit. Two are direct assertions: 'Closeness to noon replaced edge-based ranking on purpose.' and 'Edge scoring ... was tried and deprecated because advisors rejected having their days filled from the outside in'. Two restate the fact in passing: 'Built to drive gap-aware ranking and deprecated with it.' and '... does not need the deprecated ranking back.' The original only reaches its stated count of 10 if passing restatements of this kind ('deprecated when that approach was dropped', 'needing the deprecated edge-based ranking back') are counted, so the same yardstick gives 4 here. Borderline: a reading that counts only direct assertions gives 2 and would pass. The run's own reply claims 3. Large reduction from 10 either way."
+        },
+        {
+          "text": "Sentences opening with 'This is', 'That is', or 'That's' number at most 2 (original: 9)",
+          "passed": true,
+          "evidence": "Zero sentences open with 'This is', 'That is' or 'That's'. The nearest is 'This may be work in progress rather than a defect', which is not one of the listed openers. The former 'This is the clearest existing proof' became a fragment ('The clearest existing proof that grid is a business lever')."
+        },
+        {
+          "text": "The Duration/Grid definition bullets and the three packing-mechanism bullets remain as lists, not collapsed into prose",
+          "passed": true,
+          "evidence": "Duration and Grid (interval) remain two bullets under the intro. Advisor start-time rules, \"Slot score\" and Adjacent-slot checking remain three bullets in 6.3. The Placement/Ranking bullets, the 45-minute bullets and the numbered list also remain lists."
+        },
+        {
+          "text": "No content is added that is not in the source section",
+          "passed": true,
+          "evidence": "Line-by-line comparison found no new facts, rules or sections. The one new sentence is a pointer in 6.1, '(The booking UI currently departs from this; see \u00a76.5.)', which restates what 6.5 of the source already says. 'A parked idea' rewords 'explicitly not a priority'. The three H4 headers were converted to bold leads, a removal rather than an addition."
+        },
+        {
+          "text": "The chat reply has, in order: one line saying what was written and preserved, one before/after paragraph pair, then a symptom table of at most four rows; nothing else",
+          "passed": false,
+          "evidence": "Order is right (opening, before/after, four-row table) but two parts break the shape. The opening is a five-sentence paragraph, not one line, and it carries extra material: a contradiction finding ('One contradiction found: \u00a76.1 says ...') and an unresolved issue ('Also unresolved: \u00a76.4's \"grid follows the meeting\" would put the 15-minute office drop-in back on a 15-minute grid'), which violates 'nothing else'. The 'before' half of the pair is three paragraphs, not one."
+        },
+        {
+          "text": "The chat reply is at most 150 words outside the before/after pair and contains no word count",
+          "passed": false,
+          "evidence": "159 words outside the blockquoted before/after text (about 140 if the two 'Before (...)' / 'After (...)' label lines are treated as part of the pair). The table contains a word count: 'Words on the topic marked \"explicitly not a priority\" | 197 | 80'. Fails on the word-count clause regardless of how the labels are counted."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 4,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 48.2,
+        "tokens": 41662,
+        "tool_calls": 6,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "send() retries up to 3 attempts on 5xx responses with backoff between attempts and returns without retrying on 4xx",
+          "passed": true,
+          "evidence": "`for attempt in range(MAX_ATTEMPTS)` with MAX_ATTEMPTS = 3; sleep of BACKOFF_BASE_S * 2 ** (attempt - 1) * jitter before attempts 2 and 3 (0.2s, 0.4s nominal); `if resp.status_code < 500: return resp.status_code < 300` returns False on the first 4xx; falls through to `return False` after three 5xx."
+        },
+        {
+          "text": "Every comment and docstring in the file describes what the code actually does",
+          "passed": true,
+          "evidence": "All four comments match the code: the class comment is unchanged from the original; 'Timeouts and connection errors are not retried' holds because there is no try/except around post(); the jitter comment sits on random.uniform(0.5, 1.5); '429 fails fast with the rest of 4xx; Retry-After is not honored' matches the `< 500` branch and the absence of any header read. Minor looseness: 'they raise on the first attempt' is literally true only if the error occurs on attempt 1; an error on attempt 2 or 3 raises there. Read as 'raise on first occurrence' it is accurate."
+        },
+        {
+          "text": "No comment or docstring restates what the adjacent code visibly does, and none narrates the session",
+          "passed": true,
+          "evidence": "Each comment states something not visible in the adjacent line: unretried exceptions (an absence), the reason for jitter, and the 429 decision. No comment refers to the request, the user, or the change being made."
+        },
+        {
+          "text": "An edge case that the wording 'fail fast on 4xx' covers but its intent may not (429, or transport errors) is surfaced to the user in the reply or noted in a comment",
+          "passed": true,
+          "evidence": "Both edge cases are surfaced in the reply ('429 fails fast, per your wording. It is the one 4xx that arguably deserves a retry...'; 'Timeouts and connection errors are not retried... say if you want them in the retry set') and both are also recorded in code comments."
+        },
+        {
+          "text": "No TODO or stub placeholders in delivered code",
+          "passed": true,
+          "evidence": "No TODO, FIXME, pass, or NotImplemented in src/webhook_client.py; facts.json todo: false. send() is fully implemented."
+        },
+        {
+          "text": "The commit subject is verb-led and under 72 characters",
+          "passed": true,
+          "evidence": "'Add retry to webhook client: exponential backoff on 5xx' starts with the verb 'Add' and is 55 characters."
+        },
+        {
+          "text": "The commit body, if present, carries only non-obvious decisions and does not restate the diff",
+          "passed": true,
+          "evidence": "Borderline pass. Four of five bullets are decisions not obvious from the diff: 429 included and Retry-After not honored, transport errors unretried, bool return kept so call sites are unchanged, retry safe because partners dedupe on event_id. The first bullet ('3 attempts, 200ms base doubling, +/-50% jitter') repeats values readable from the diff; passed because the base and jitter were the agent's own unrequested choices, but a stricter reading of 'only' would fail it."
+        },
+        {
+          "text": "The diff is confined to webhook_client.py plus tests; NOTES.md, the constructor signature, and retry semantics beyond 5xx are untouched unless the reply surfaces the change as an ask with a reason",
+          "passed": true,
+          "evidence": "The saved project output contains only src/webhook_client.py; the constructor is byte-identical to the original (`def __init__(self, timeout: float = 5.0)`); only 5xx is retried; the reply says 'I added no test file'. NOTES.md being untouched rests on the transcript ('rewrote src/webhook_client.py' is the only write) since no other project files are saved."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 5,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 22.4,
+        "tokens": 38891,
+        "tool_calls": 4,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The first sentence is the answer with a lean",
+          "passed": true,
+          "evidence": "First sentence: 'Session cookies, with the session stored in Redis.' Direct answer, single stance."
+        },
+        {
+          "text": "The reply is at most 150 words",
+          "passed": true,
+          "evidence": "facts.json reports 140 words."
+        },
+        {
+          "text": "No headers and at most one bold phrase",
+          "passed": true,
+          "evidence": "facts.json: headers [] and bold_leads 0; the response contains no bold text at all."
+        },
+        {
+          "text": "The reason given ties to something in the project context, not generic textbook trade-offs only",
+          "passed": true,
+          "evidence": "'Redis is already shared by all three' replicas, so the stateless-JWT argument does not apply; 'This doesn't touch partner auth; they keep API keys.' NOTES.md and CLAUDE.md confirm three replicas, Redis, and partner API keys."
+        },
+        {
+          "text": "Technical claims are correct (a wrong statement about SameSite, CSRF, or JWT revocation fails)",
+          "passed": true,
+          "evidence": "Checked each claim: deleting the server-side session key revokes immediately (true); a JWT is valid until expiry unless a denylist is added, which reintroduces server state (true); HttpOnly cookie is unreadable by page JavaScript (true; it is HttpOnly, not SameSite, that does this, and the reply attributes it to the combined attribute string, which is acceptable); CSRF protection on state-changing routes (sound, though with SameSite=Strict it is defense in depth and the reply does not say so). No false statement found."
+        },
+        {
+          "text": "The reply notes that the project has no admin panel or auth yet, or asks one question that depends on it",
+          "passed": true,
+          "evidence": "'There's no admin panel in NOTES.md or the code yet, so I'm assuming a new, browser-based internal tool served from ledgerd; is that right?' Both notes the absence and asks one dependent question."
+        },
+        {
+          "text": "The reply ends with at most one question and no trailing offer",
+          "passed": true,
+          "evidence": "Final sentence is the single question 'is that right?'. Exactly one question mark in the reply; no offer of further work."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 6,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.78,
+        "passed": 7,
+        "failed": 2,
+        "total": 9,
+        "time_seconds": 56.2,
+        "tokens": 45388,
+        "tool_calls": 4,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The edited design.md has no Overview, Background, or Next steps scaffolding headers",
+          "passed": true,
+          "evidence": "Headers in the edited design.md are 'Transaction Export Design', 'Decisions', 'Assumptions', 'Open'. No Overview, Background or Next steps."
+        },
+        {
+          "text": "Narration sentences (In this document we will cover...) are removed",
+          "passed": true,
+          "evidence": "'In this document we will cover the motivation...' and 'This document describes the design...' are gone. Caveat: the new preamble contains one layout sentence, 'Settled decisions come first, and the one undecided item is under Open', which the skill's preamble rule prescribes; the original narration itself is removed."
+        },
+        {
+          "text": "The claim that the database choice is still open is flagged to the user as contradicting the record, not kept silently and not silently rewritten",
+          "passed": true,
+          "evidence": "Reply: 'Two claims were stale and I replaced them from NOTES.md: ... \"The database choice for ledgerd is still open.\" It is Postgres; that is now an assumption to tick.' Flagged explicitly, not silent. The claim is absent from the doc."
+        },
+        {
+          "text": "The claim that the rate limiting approach is undecided is flagged to the user as contradicting NOTES.md, not kept silently and not silently rewritten",
+          "passed": true,
+          "evidence": "Reply: '\"Rate limiting has not yet been decided\", with a per-IP in-process counter proposed. NOTES.md decided Redis state (09-10) and per-API-key keying with 429 + Retry-After (09-12).'"
+        },
+        {
+          "text": "The rewritten rate-limiting text matches NOTES.md's three decisions (Redis state, 429 + Retry-After, per-API-key)",
+          "passed": true,
+          "evidence": "design.md: 'Export requests are rate limited the way the rest of ledgerd is: state in Redis, keyed per API key, 429 with `Retry-After` when limited (NOTES.md, 2026-09-10 and 2026-09-12).' All three decisions, correct dates."
+        },
+        {
+          "text": "The storage choice, which is genuinely open, remains an ask with a stated lean",
+          "passed": true,
+          "evidence": "design.md 'Open' section: 'Where export files are stored: Postgres large objects or S3. ... Lean: Postgres, since a file lives 24 hours and it adds no new system; S3 if exports are too large to hold in the database.'"
+        },
+        {
+          "text": "No open questions or assumptions are introduced beyond what the draft, NOTES.md, CLAUDE.md, and the project's source files contain",
+          "passed": true,
+          "evidence": "The only open item is storage, from the draft. Both assumptions trace to the record: 'Postgres stays ledgerd's database' (draft: 'this design assumes Postgres'), and 'keeps running as more than one replica' (draft: 'does not work across replicas'; CLAUDE.md: three replicas). Borderline additions: 'This design sets no export-specific limit' and 'The largest expected export size would settle it' are new sentences, the latter part of the lean that assertion 6 requires; the reply tells the user the lean and the named reader are the agent's own."
+        },
+        {
+          "text": "The chat reply has: one line naming what was written and the stale claims found, one before/after pair, a symptom table of at most four rows; nothing else",
+          "passed": false,
+          "evidence": "Has one before/after pair and a four-row table, but not 'nothing else'. The opening is a three-sentence paragraph plus two bullets rather than one line, and a closing paragraph follows the table: 'Two things in the new text are mine, not the original's, so strike them if they are wrong...'."
+        },
+        {
+          "text": "The chat reply is at most 150 words outside the before/after pair and contains no word count",
+          "passed": false,
+          "evidence": "No word count appears in the reply. But the reply is 178 words outside the before/after pair (253 total), over the 150 limit. It is 123 only if the table's 55 words are excluded, which the assertion does not allow for."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 7,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.43,
+        "passed": 3,
+        "failed": 4,
+        "total": 7,
+        "time_seconds": 47.0,
+        "tokens": 41624,
+        "tool_calls": 3,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The description opens with one or two sentences naming the return-type change as the part needing the reviewer's judgment and the renames as mechanical",
+          "passed": false,
+          "evidence": "The body opens with a title line ('Add retry to webhook client: exponential backoff on 5xx') and the label 'Needs your judgment:'. The first bullet does name the return-type change, but the opening does not call the renames mechanical: they appear as the third bullet under 'Needs your judgment' ('have nothing to do with retry; the formatter flagged them') and are only labelled mechanical in the last block, 'Mechanical, skip:'. No one- or two-sentence opening carries both points."
+        },
+        {
+          "text": "The return-type change is surfaced as a deviation from the original ask, with the reason (callers need attempt counts)",
+          "passed": true,
+          "evidence": "'`send()` now returns a `DeliveryResult` (status, attempts, last_error) instead of `bool`. This goes beyond the ask (\"add retry to the webhook client\"); it is there so the caller can log attempt counts.'"
+        },
+        {
+          "text": "No per-file change inventory",
+          "passed": false,
+          "evidence": "No table, but the description ends with a per-file list: 'Mechanical, skip: - `src/api/transactions.py`, `src/api/balances.py`: `_fmt` renamed to `_format_amount`. - `src/api/__init__.py`: import order.' That repeats the third judgment bullet file by file, and with `src/api/webhooks.py` and `tests/test_webhook_client.py` named elsewhere, every file in changes.md is listed with its change. The transcript calls it 'Record: file list of mechanical changes'. Borderline (partial inventory, three lines); failed under the strict reading."
+        },
+        {
+          "text": "The description body is at most 200 words",
+          "passed": false,
+          "evidence": "The fenced description body is 214 words by my count (wc -w on the text inside the fence), 14 over the limit."
+        },
+        {
+          "text": "No markdown headers (terse label lines such as 'Risk:' are allowed)",
+          "passed": true,
+          "evidence": "No lines begin with '#'. Structure is a plain title line plus label lines: 'Needs your judgment:', 'Behavior:', 'Risk:', 'Tests:', 'Mechanical, skip:'."
+        },
+        {
+          "text": "Every concrete number and claim traces to changes.md or the source file (invented test contents or implementation details not in changes.md fail)",
+          "passed": true,
+          "evidence": "3 attempts, 200ms base, jitter, 4xx fails fast, DeliveryResult fields, `.ok`, one call site, 4 tests and both renames match changes.md. 'at-least-once ... dedupe on event_id' and synchronous `send()` (httpx.Client) match src/webhook_client.py. The only latency figure, 'about 0.6s before jitter, if the delay doubles', is 200ms + 400ms from the 200ms base and is stated as conditional on doubling. '429 ... no retry, and the partner's Retry-After is ignored' is not written in changes.md but follows from '4xx fails fast'. No test contents are invented. Passed with those two inferences counted as derivable."
+        },
+        {
+          "text": "The chat text around the description is at most 60 words",
+          "passed": false,
+          "evidence": "The text outside the fence is 83 words by my count (facts.json says 84): the note that nothing was checked against code plus two bullets on timeouts and the 0.6s figure. Limit is 60."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 0,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.12,
+        "passed": 1,
+        "failed": 7,
+        "total": 8,
+        "time_seconds": 43.0,
+        "tokens": 29910,
+        "tool_calls": 4,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "CLAUDE.md gains a Writing Conventions section marked with a `<!-- managed by /red-pen -->` breadcrumb",
+          "passed": false,
+          "evidence": "outputs/project/CLAUDE.md gains '## Writing', not 'Writing Conventions', and has no breadcrumb; facts.json redpen_breadcrumb: false for both project files."
+        },
+        {
+          "text": "The section covers all four output types (spec/plan, code comment, code/diff/commit, chat) with a one-line rule each",
+          "passed": false,
+          "evidence": "The '## Writing' section has five general bullets with no per-output-type rules. docs/writing-conventions.md covers comments and commits but has no spec/plan rule and no chat rule."
+        },
+        {
+          "text": "The section states the reader default or a reader roster",
+          "passed": true,
+          "evidence": "The '## Writing' section states a default reader: 'Lead with the point; write for a reader arriving cold.' No roster. Passes on the literal wording of the assertion only; see eval_feedback."
+        },
+        {
+          "text": "The agent asks exactly one question about who reads the project's output, or proposes a roster and asks to confirm it",
+          "passed": false,
+          "evidence": "response.md contains no question. It asks the user to check four guesses (units and datum, glossary terms, commit format, file location); none concerns who reads the output."
+        },
+        {
+          "text": "The section is at most 280 words excluding any roster table, and nothing is offloaded to a second file",
+          "passed": false,
+          "evidence": "The CLAUDE.md section is 70 words, but the conventions are offloaded to docs/writing-conventions.md (883 words per facts.json), which the section tells the reader to follow."
+        },
+        {
+          "text": "No project policy is invented that the repository cannot support (no Slack templates, terminology tables, or log formats conjured from a 6-line CLAUDE.md)",
+          "passed": false,
+          "evidence": "docs/writing-conventions.md invents a Slack summaries section ('The first line stands alone: date, station, and the day's headline figures'), a four-row glossary with banned synonyms, a log format ('Fetch failed for station 9447130 (HTTP 503); retrying in 30 s'), and an MLLW datum rule. The reply admits these are guesses."
+        },
+        {
+          "text": "The existing Project and Key Files sections of CLAUDE.md survive unchanged",
+          "passed": false,
+          "evidence": "Project is unchanged, but Key Files gained a third bullet: '- `docs/writing-conventions.md` \u2014 writing conventions for docs, comments, commits, and Slack summaries' (diff '10a11')."
+        },
+        {
+          "text": "The chat reply is at most 150 words with at most one bold lead",
+          "passed": false,
+          "evidence": "facts.json: response words 228 (limit 150), bold_leads 9 (limit 1)."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.36,
+        "passed": 4,
+        "failed": 7,
+        "total": 11,
+        "time_seconds": 67.4,
+        "tokens": 34087,
+        "tool_calls": 4,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "docs/rate_limiting.md is created",
+          "passed": true,
+          "evidence": "outputs/project/docs/rate_limiting.md exists (8288 bytes, 1390 words per facts.json)."
+        },
+        {
+          "text": "The document opens with a prose preamble (no heading) that names product and engineering readers and says how each should read it",
+          "passed": false,
+          "evidence": "The only text before the first heading is 'Status: proposed, 2026-10-02. Two decisions and one number need sign-off before enforcement starts (see \"Decisions needed\").' It names neither product nor engineering and gives no reading guidance for either."
+        },
+        {
+          "text": "The Redis, 429 + Retry-After, and per-API-key decisions from NOTES.md are treated as settled, not re-raised as open choices",
+          "passed": true,
+          "evidence": "'## Decisions already made ... recorded in NOTES.md and this plan follows them', with a table covering per API key, Redis, and 429 with Retry-After and their recorded reasons. None is reopened under 'Decisions needed'."
+        },
+        {
+          "text": "Per-tenant quotas and the mobile-app limit each appear as an open item or as an explicit decision with a revisit trigger, never inside the preamble",
+          "passed": true,
+          "evidence": "Both sit under '## Decisions needed': '1. Does the mobile app get limited in the first release?' and '2. Do different partners get different limits? ... If the observation week shows one partner with a legitimate need well above the others, we revisit then.' Neither is in the heading-less opening line. Passes on the letter only: the Summary section states both as if decided ('The limit is the same for every partner, and it applies to partner keys only at first')."
+        },
+        {
+          "text": "At least one decision is written in 'chose A over B because C' form with a revisit trigger",
+          "passed": false,
+          "evidence": "No decision combines the chosen option, the rejected option, the reason and a revisit trigger. The author's own decisions lack a trigger or an alternative: token bucket names no rejected option; fail-open ('The alternative is to reject every partner request ...') has no revisit trigger; the settled-decisions table has none. The only revisit triggers are attached to recommendations awaiting sign-off, which are not decisions and are not written in that form."
+        },
+        {
+          "text": "Assumptions appear as a tick-list",
+          "passed": false,
+          "evidence": "There is no assumptions section and no checkbox list anywhere in the file. Assumptions are embedded in prose, e.g. 'I could not confirm how mobile requests are identified'."
+        },
+        {
+          "text": "At least one risk is written as a conditional ('X breaks if Y')",
+          "passed": true,
+          "evidence": "'Limiting mobile adds risk without addressing the incident: if the mobile app's requests all arrive under one shared key, a per-key limit would throttle all 40k daily users as a single client.' One conditional risk exists, though there is no risks section and it is buried in a recommendation."
+        },
+        {
+          "text": "No Overview, Introduction, Background, or Next steps section under any name (a 'Why' section that is background counts)",
+          "passed": false,
+          "evidence": "The first section is '## Summary' (flagged as a scaffold header in facts.json). It is an overview that opens with background: 'Last month one partner sent about 2,000 requests per second and the mobile app slowed down for everyone.'"
+        },
+        {
+          "text": "The whole file is at most 300 words excluding the title, or the document's first line says it exceeded the budget and why",
+          "passed": false,
+          "evidence": "1390 words per facts.json. The first line is 'Status: proposed, 2026-10-02 ...' and says nothing about length."
+        },
+        {
+          "text": "Every rate, limit, duration, and estimate in the document traces to NOTES.md or CLAUDE.md or is labelled as a proposed default (HTTP status codes are exempt)",
+          "passed": false,
+          "evidence": "50 rps / burst 100 is labelled 'Proposed ... a starting point, not a measured one', and 40x and 300 rps are arithmetic on recorded numbers. But several figures are neither on record nor labelled: 'Observe for one week', 'requests succeed again within a second or two', 'Keys expire after a few seconds of inactivity', Retry-After 'minimum of 1', 'continuously rejected for more than a few minutes'."
+        },
+        {
+          "text": "The chat reply is at most 120 words, names what needs the user's call, and does not enumerate the document's decisions",
+          "passed": false,
+          "evidence": "203 words per facts.json, over the 120 limit. It does name the three sign-offs, but also lists the plan's choices ('a token bucket algorithm, and allowing requests through if Redis is down')."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.89,
+        "passed": 8,
+        "failed": 1,
+        "total": 9,
+        "time_seconds": 21.4,
+        "tokens": 29625,
+        "tool_calls": 3,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The new reply is at most 120 words",
+          "passed": true,
+          "evidence": "facts.json: response.words = 85."
+        },
+        {
+          "text": "The first paragraph names the pick",
+          "passed": true,
+          "evidence": "First paragraph is 'Token bucket, per API key, in Redis.'"
+        },
+        {
+          "text": "The reasons for the pick, if there are three or more, appear as a list rather than run together in a paragraph",
+          "passed": true,
+          "evidence": "Two reasons for the pick (caps sustained rate; lets short bursts through) sit in one sentence; the Lua-script sentence is an implementation note rather than a reason for choosing token bucket. Fewer than three, so the condition is not reached. Borderline: counting the atomicity sentence as a third reason would make this a fail."
+        },
+        {
+          "text": "At least one reason ties to the project (the partner burst incident), not a generic trade-off",
+          "passed": true,
+          "evidence": "'It caps a partner's sustained rate, which is what stops a repeat of the 2k rps incident'."
+        },
+        {
+          "text": "No headers and no performative phrases",
+          "passed": true,
+          "evidence": "facts.json: headers = [], performative = [], openers = 0, bold_leads = 0. Reading the reply confirms none."
+        },
+        {
+          "text": "The reply does not explain why the previous reply was long and does not apologize",
+          "passed": true,
+          "evidence": "facts.json: apology_or_meta = []. No reference to the earlier draft and no apology."
+        },
+        {
+          "text": "The reply does not restate decisions NOTES.md already settles (Redis, 429, per-key) as if new",
+          "passed": false,
+          "evidence": "The headline 'Token bucket, per API key, in Redis.' presents two decisions NOTES.md settled on 2026-09-10 and 2026-09-12 as part of the recommendation, with no marker that they are already decided. The reply also mentions 429s and 'one limit for all partners'. The transcript concedes it kept these 'as one-line context'."
+        },
+        {
+          "text": "No default numbers are invented without a source or without being labelled as a proposal",
+          "passed": true,
+          "evidence": "'Starting default, one limit for all partners: 100 rps refill, burst of 200. Those numbers are a guess, since I haven't seen normal partner traffic.' The numbers have no source but are explicitly labelled as a guess to be checked, which meets the 'labelled as a proposal' clause."
+        },
+        {
+          "text": "The reply does not close with an offer to do more",
+          "passed": true,
+          "evidence": "Final sentence is 'Check them against real per-partner peaks before we ship.' -- an instruction, not an offer."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.25,
+        "passed": 2,
+        "failed": 6,
+        "total": 8,
+        "time_seconds": 91.1,
+        "tokens": 38673,
+        "tool_calls": 4,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "An edited grid_section.md is written and is shorter than the original",
+          "passed": false,
+          "evidence": "An edited file was written but it is longer than the original: 2,014 words against 1,839."
+        },
+        {
+          "text": "All five subsections 6.1-6.5 remain and these rules survive: fill a 90-minute gap with two 45s, align to edges left by existing bookings, closeness-to-noon stays the ranking, the two adaptive-grid shapes, the duration/grid entanglement and its verification need",
+          "passed": true,
+          "evidence": "H3 headings 6.1-6.5 all present (6.2, 6.3 and 6.4 retitled). 'Fill a 90-minute gap. Recognize a 90-minute opening as room for two 45-minute meetings'; 'Align to existing bookings ... at the boundaries left by 15-minute appointments'; 'It does not need to reorder them' and 'Ranking stays as it is: closeness to noon'; both adaptive forms kept as bullets; 6.5 keeps 'That duration is currently used as the grid as well' and 'There is also a correctness question attached (\u00a710.3) that should be checked whichever direction the design goes.'"
+        },
+        {
+          "text": "Sentences asserting that edge-based ranking was deliberately replaced or rejected number at most 3 (original: 10)",
+          "passed": false,
+          "evidence": "Counted 8 by hand, plus an H4 header ('by design'). 'Ranking by gaps was tried and withdrawn because advisors rejected it'; 'deprecated when that approach was dropped'; 'That is not an oversight.'; 'It was deprecated in favour of closeness to noon because advisors rejected ...'; 'edge-based ranking was evaluated and rejected on purpose, not left unfinished'; 'closeness to noon won and edge-based ranking lost'; 'was deprecated for filling days outside-in'; 'ranking is the side where the gap-based approach was rejected'. The new summary added one to the original's set."
+        },
+        {
+          "text": "Sentences opening with 'This is', 'That is', or 'That's' number at most 2 (original: 9)",
+          "passed": false,
+          "evidence": "7 such openers: 'This is deliberate: the front desk ...'; 'That is not an oversight.'; 'That is close to the worst outcome for an advisor'; 'This is not a priority.'; 'This is where closeness to noon won'; 'That is how it is configured today'; 'This is the same conclusion \u00a76.2 reaches'."
+        },
+        {
+          "text": "The Duration/Grid definition bullets and the three packing-mechanism bullets remain as lists, not collapsed into prose",
+          "passed": true,
+          "evidence": "Duration and Grid remain two bullets. Advisor start-time rules, Slot score and Adjacent-slot checking remain three bullets in 6.3. facts.json reports mechanism_bullets_kept=false, which is a false negative: the bullets are there, with the dash after each bold lead changed to a full stop."
+        },
+        {
+          "text": "No content is added that is not in the source section",
+          "passed": false,
+          "evidence": "Two new blocks open the section: 'In brief' (four bullets) and 'Decisions this section asks for' (four numbered items plus 'Not asked for now'). The decisions list frames things the source does not ask for, for example '4. Whether to pursue an adaptive grid', where the source says only 'An alternative under consideration', and '1. Which additional meeting types, if any, move to a 15-minute grid'. The reply itself flags this: 'check that it matches what you want decided.' Also new: the definition sentence 'This section calls that leftover stranded time' and the specific 'longer meetings stay on the 30-minute grid' where the source says 'the coarser grid'."
+        },
+        {
+          "text": "The chat reply has, in order: one line saying what was written and preserved, one before/after paragraph pair, then a symptom table of at most four rows; nothing else",
+          "passed": false,
+          "evidence": "No before/after pair and no symptom table. The reply is an opening paragraph, a five-bullet 'What changed' list and a four-item numbered list of unresolved questions."
+        },
+        {
+          "text": "The chat reply is at most 150 words outside the before/after pair and contains no word count",
+          "passed": false,
+          "evidence": "329 words, all outside any before/after pair (there is none), more than twice the limit. It contains no word count, but the length clause fails."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 4,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.88,
+        "passed": 7,
+        "failed": 1,
+        "total": 8,
+        "time_seconds": 47.0,
+        "tokens": 33338,
+        "tool_calls": 5,
+        "errors": 1
+      },
+      "expectations": [
+        {
+          "text": "send() retries up to 3 attempts on 5xx responses with backoff between attempts and returns without retrying on 4xx",
+          "passed": true,
+          "evidence": "`for attempt in range(MAX_ATTEMPTS)` with MAX_ATTEMPTS = 3; `time.sleep(random.uniform(0, BACKOFF_BASE_SECONDS * 2**attempt))` after a 5xx when attempts remain (ceilings 0.5s, 1s); `if resp.status_code < 500: return resp.status_code < 300` returns False on the first 4xx; `return False` after three 5xx."
+        },
+        {
+          "text": "Every comment and docstring in the file describes what the code actually does",
+          "passed": true,
+          "evidence": "Two comments. The class comment is unchanged from the original. 'Full jitter, so replicas retrying the same partner outage don't hit the endpoint in step' sits on random.uniform(0, cap), which is full jitter; 'replicas' matches the three-replica deployment stated in the project's CLAUDE.md and NOTES.md."
+        },
+        {
+          "text": "No comment or docstring restates what the adjacent code visibly does, and none narrates the session",
+          "passed": true,
+          "evidence": "The single new comment gives the reason for the jitter rather than describing the line. No comment refers to the request or the session."
+        },
+        {
+          "text": "An edge case that the wording 'fail fast on 4xx' covers but its intent may not (429, or transport errors) is surfaced to the user in the reply or noted in a comment",
+          "passed": true,
+          "evidence": "Surfaced in the reply only: 'Timeouts and connection errors are not retried... A partner that is down hard usually shows up as a timeout rather than a 5xx, so say if you want those retried too' and '429 fails fast, along with every other 4xx'. The 429 mention is a bare statement with no note that it may deserve different handling; the transport-error item is a real flag. Neither appears in a code comment."
+        },
+        {
+          "text": "No TODO or stub placeholders in delivered code",
+          "passed": true,
+          "evidence": "No TODO, FIXME, pass, or NotImplemented in src/webhook_client.py; facts.json todo: false."
+        },
+        {
+          "text": "The commit subject is verb-led and under 72 characters",
+          "passed": true,
+          "evidence": "'Retry webhook delivery on 5xx with exponential backoff' starts with the verb 'Retry' and is 54 characters."
+        },
+        {
+          "text": "The commit body, if present, carries only non-obvious decisions and does not restate the diff",
+          "passed": false,
+          "evidence": "The body is three paragraphs that narrate the diff: 'WebhookClient.send now makes up to 3 attempts when the partner endpoint returns a 5xx, sleeping a random 0-0.5s before the second attempt and 0-1s before the third'; '2xx returns True, 3xx and 4xx (including 429) return False without a retry. If all three attempts get a 5xx, send returns False.' The non-obvious items (unretried transport errors, ~16.5s worst case, jitter reason) are present but mixed into the restatement."
+        },
+        {
+          "text": "The diff is confined to webhook_client.py plus tests; NOTES.md, the constructor signature, and retry semantics beyond 5xx are untouched unless the reply surfaces the change as an ask with a reason",
+          "passed": true,
+          "evidence": "The saved project output contains only src/webhook_client.py; the constructor is unchanged; only 5xx is retried; the reply says 'There are no tests in the repo and I didn't add any'. NOTES.md being untouched rests on the transcript ('only src/webhook_client.py was modified') since no other project files are saved."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 5,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.57,
+        "passed": 4,
+        "failed": 3,
+        "total": 7,
+        "time_seconds": 21.3,
+        "tokens": 29897,
+        "tool_calls": 3,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The first sentence is the answer with a lean",
+          "passed": true,
+          "evidence": "First sentence: 'Session cookies, with the session stored server-side in Redis.' Direct answer, single stance."
+        },
+        {
+          "text": "The reply is at most 150 words",
+          "passed": false,
+          "evidence": "facts.json reports 284 words, nearly double the 150-word limit."
+        },
+        {
+          "text": "No headers and at most one bold phrase",
+          "passed": false,
+          "evidence": "No headers, but facts.json reports bold_leads 3: '**Revocation.**', '**You already have the shared store.**', '**Browser storage.**'. Limit is one."
+        },
+        {
+          "text": "The reason given ties to something in the project context, not generic textbook trade-offs only",
+          "passed": true,
+          "evidence": "'ledgerd has three replicas and already keeps shared state in Redis for the rate limiter, so that argument doesn't apply'; 'On a system that serves balances'; 'partners keep using API keys'. NOTES.md and CLAUDE.md confirm three replicas, Redis, and partner API keys."
+        },
+        {
+          "text": "Technical claims are correct (a wrong statement about SameSite, CSRF, or JWT revocation fails)",
+          "passed": true,
+          "evidence": "Checked each claim: session deletion revokes immediately (true); JWT valid until expiry unless denylisted (true); HttpOnly cookie out of reach of page JavaScript, localStorage readable by XSS (true); SameSite=Strict plus a CSRF token on state-changing routes (sound); Strict cookie requires the panel to be same-site with the API (true: cross-site requests would not carry it); SSO IdP 'will hand you a JWT' (true for OIDC ID tokens, overgeneral for SAML, not one of the fail-listed topics); verify once then issue own session cookie (correct practice). No false statement about SameSite, CSRF or revocation."
+        },
+        {
+          "text": "The reply notes that the project has no admin panel or auth yet, or asks one question that depends on it",
+          "passed": true,
+          "evidence": "'Two assumptions, since nothing in the repo or NOTES.md describes the admin panel yet', followed by the two stated assumptions. Notes the absence; asks no question."
+        },
+        {
+          "text": "The reply ends with at most one question and no trailing offer",
+          "passed": false,
+          "evidence": "Ends with a trailing offer: 'I haven't recorded this in NOTES.md. Say the word if you want it added as a decision.' Zero questions, but the offer fails the assertion."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 6,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.44,
+        "passed": 4,
+        "failed": 5,
+        "total": 9,
+        "time_seconds": 50.9,
+        "tokens": 33898,
+        "tool_calls": 5,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The edited design.md has no Overview, Background, or Next steps scaffolding headers",
+          "passed": false,
+          "evidence": "Overview and Background are gone (Background renamed to 'Problem'), but the edited design.md still ends with a '## Next steps' section of five bullets."
+        },
+        {
+          "text": "Narration sentences (In this document we will cover...) are removed",
+          "passed": true,
+          "evidence": "The Overview paragraph containing 'In this document we will cover...' is removed; reply: 'Removed the Overview, which only described the document's own layout.' The doc opens with 'Status: draft. Storage and the export-specific rate limit are undecided (see Open questions).'"
+        },
+        {
+          "text": "The claim that the database choice is still open is flagged to the user as contradicting the record, not kept silently and not silently rewritten",
+          "passed": true,
+          "evidence": "Reply, under 'Stale claims fixed': 'Database: the draft said the database choice for ledgerd \"is also still open\". ledgerd runs on Postgres, so I removed the sentence.' Flagged, not silent."
+        },
+        {
+          "text": "The claim that the rate limiting approach is undecided is flagged to the user as contradicting NOTES.md, not kept silently and not silently rewritten",
+          "passed": true,
+          "evidence": "Reply: 'Rate limiting: the draft said the approach \"has not yet been decided\" and proposed a per-IP counter in process memory. NOTES.md decided all three points in September: Redis state, keyed per API key, 429 with Retry-After.'"
+        },
+        {
+          "text": "The rewritten rate-limiting text matches NOTES.md's three decisions (Redis state, 429 + Retry-After, per-API-key)",
+          "passed": true,
+          "evidence": "design.md 'Rate limiting': 'State lives in Redis, because the limit has to be shared across the three replicas. The limit is keyed per API key, not per IP. Partners share egress IPs. A limited request gets a 429 with `Retry-After`.'"
+        },
+        {
+          "text": "The storage choice, which is genuinely open, remains an ask with a stated lean",
+          "passed": false,
+          "evidence": "Storage stays open ('Not decided', two options listed) but no lean is stated anywhere in the doc or the reply; the reply says 'I did not invent answers to any of them'."
+        },
+        {
+          "text": "No open questions or assumptions are introduced beyond what the draft, NOTES.md, CLAUDE.md, and the project's source files contain",
+          "passed": false,
+          "evidence": "Six open questions are added that appear in no source: an export-specific rate limit, the request endpoint and parameters, download URL authorization, job/webhook failure handling, whether 24 hours is right (the draft called it 'a reasonable default'), and what runs the background job. The reply also admits two inferred claims ('an export costs far more than a page of /transactions'; large objects 'share the database with balance and transaction queries')."
+        },
+        {
+          "text": "The chat reply has: one line naming what was written and the stale claims found, one before/after pair, a symptom table of at most four rows; nothing else",
+          "passed": false,
+          "evidence": "No before/after pair and no symptom table. The reply is three bold-led bullet sections (Stale claims fixed, Cuts and restructuring, Additions) narrating each change, plus a closing paragraph."
+        },
+        {
+          "text": "The chat reply is at most 150 words outside the before/after pair and contains no word count",
+          "passed": false,
+          "evidence": "Reply is 347 words with no before/after pair to exclude. No word count appears, but the 150-word limit is exceeded by more than double."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 7,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.29,
+        "passed": 2,
+        "failed": 5,
+        "total": 7,
+        "time_seconds": 28.1,
+        "tokens": 30702,
+        "tool_calls": 3,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The description opens with one or two sentences naming the return-type change as the part needing the reviewer's judgment and the renames as mechanical",
+          "passed": false,
+          "evidence": "The body opens with '# Retry webhook delivery on 5xx' and '## What this does', followed by a description of the retry behavior. The return-type change first appears in the second section and the renames in the third; nothing in the opening says which part needs the reviewer's judgment."
+        },
+        {
+          "text": "The return-type change is surfaced as a deviation from the original ask, with the reason (callers need attempt counts)",
+          "passed": true,
+          "evidence": "'This was not part of the original ask (\"add retry to the webhook client\"). It was needed so the caller can log how many attempts a delivery took.'"
+        },
+        {
+          "text": "No per-file change inventory",
+          "passed": false,
+          "evidence": "A '## Files' section holds a six-row table, one row per file with its change ('| `src/webhook_client.py` | Retry with backoff; `DeliveryResult` return type |' through '| `tests/test_webhook_client.py` | 4 new tests for retry behavior |')."
+        },
+        {
+          "text": "The description body is at most 200 words",
+          "passed": false,
+          "evidence": "The fenced description body is 275 words by my count (219 even with the table rows removed). Limit is 200."
+        },
+        {
+          "text": "No markdown headers (terse label lines such as 'Risk:' are allowed)",
+          "passed": false,
+          "evidence": "One H1 and five H2 headers: '# Retry webhook delivery on 5xx', '## What this does', '## Change to the `send()` return type', '## Unrelated changes in this branch', '## Files', '## Testing'."
+        },
+        {
+          "text": "Every concrete number and claim traces to changes.md or the source file (invented test contents or implementation details not in changes.md fail)",
+          "passed": true,
+          "evidence": "3 attempts, 200ms base, jitter, 4xx no retry, DeliveryResult fields, `.ok`, one call site, 4 tests and the renames match changes.md; 'at-least-once ... dedupe on `event_id`' matches the source comment. No latency figure is given. The one claim beyond the sources is 'a dataclass instance is truthy unless it defines `__bool__`, so a failed delivery would read as a success': a general Python fact stated conditionally, not an invented detail of the implementation, and the chat text flags it for removal if `__bool__` is defined. No test contents are invented."
+        },
+        {
+          "text": "The chat text around the description is at most 60 words",
+          "passed": false,
+          "evidence": "The text outside the fence is 130 words by my count: a lead-in paragraph on what could not be verified and three bullets (test status, timeouts, truthiness). Limit is 60."
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 0.8425,
+        "stddev": 0.2163,
+        "min": 0.43,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 47.9375,
+        "stddev": 21.0055,
+        "min": 22.4,
+        "max": 83.1
+      },
+      "tokens": {
+        "mean": 43097.875,
+        "stddev": 4072.6295,
+        "min": 38599,
+        "max": 51133
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.475,
+        "stddev": 0.2855,
+        "min": 0.12,
+        "max": 0.89
+      },
+      "time_seconds": {
+        "mean": 46.275,
+        "stddev": 24.0863,
+        "min": 21.3,
+        "max": 91.1
+      },
+      "tokens": {
+        "mean": 32516.25,
+        "stddev": 3122.7545,
+        "min": 29625,
+        "max": 38673
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.37",
+      "time_seconds": "+1.7",
+      "tokens": "+10582"
+    }
+  },
+  "notes": []
+}

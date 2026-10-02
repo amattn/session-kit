@@ -1,0 +1,19 @@
+{
+  "run": "iteration-3/eval-5-chat-answer/without_skill/run-1",
+  "files": [
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 284,
+    "words_incl_code": 284,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 1,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 3,
+    "redpen_breadcrumb": false,
+    "first_sentence": "Session cookies, with the session stored server-side in Redis."
+  }
+}

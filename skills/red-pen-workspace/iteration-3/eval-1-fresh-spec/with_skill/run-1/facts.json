@@ -1,0 +1,39 @@
+{
+  "run": "iteration-3/eval-1-fresh-spec/with_skill/run-1",
+  "files": [
+    "project/docs/rate_limiting.md",
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 161,
+    "words_incl_code": 161,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 3,
+    "redpen_breadcrumb": false,
+    "first_sentence": "The plan is in `docs/rate_limiting.md`."
+  },
+  "project/docs/rate_limiting.md": {
+    "words": 415,
+    "words_incl_code": 415,
+    "headers": [
+      "Rate Limiting Plan",
+      "Open items",
+      "Decisions",
+      "Assumptions",
+      "Risks",
+      "Scope out"
+    ],
+    "scaffold_headers": [],
+    "openers": 1,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 3,
+    "redpen_breadcrumb": false,
+    "first_sentence": "# Rate Limiting Plan\n\nOver the 300-word budget: three decisions are still open."
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "expectations": [
+    {
+      "text": "The first sentence is the answer with a lean",
+      "passed": true,
+      "evidence": "First sentence: 'Session cookies, with the session stored server-side in Redis.' Direct answer, single stance."
+    },
+    {
+      "text": "The reply is at most 150 words",
+      "passed": false,
+      "evidence": "facts.json reports 284 words, nearly double the 150-word limit."
+    },
+    {
+      "text": "No headers and at most one bold phrase",
+      "passed": false,
+      "evidence": "No headers, but facts.json reports bold_leads 3: '**Revocation.**', '**You already have the shared store.**', '**Browser storage.**'. Limit is one."
+    },
+    {
+      "text": "The reason given ties to something in the project context, not generic textbook trade-offs only",
+      "passed": true,
+      "evidence": "'ledgerd has three replicas and already keeps shared state in Redis for the rate limiter, so that argument doesn't apply'; 'On a system that serves balances'; 'partners keep using API keys'. NOTES.md and CLAUDE.md confirm three replicas, Redis, and partner API keys."
+    },
+    {
+      "text": "Technical claims are correct (a wrong statement about SameSite, CSRF, or JWT revocation fails)",
+      "passed": true,
+      "evidence": "Checked each claim: session deletion revokes immediately (true); JWT valid until expiry unless denylisted (true); HttpOnly cookie out of reach of page JavaScript, localStorage readable by XSS (true); SameSite=Strict plus a CSRF token on state-changing routes (sound); Strict cookie requires the panel to be same-site with the API (true: cross-site requests would not carry it); SSO IdP 'will hand you a JWT' (true for OIDC ID tokens, overgeneral for SAML, not one of the fail-listed topics); verify once then issue own session cookie (correct practice). No false statement about SameSite, CSRF or revocation."
+    },
+    {
+      "text": "The reply notes that the project has no admin panel or auth yet, or asks one question that depends on it",
+      "passed": true,
+      "evidence": "'Two assumptions, since nothing in the repo or NOTES.md describes the admin panel yet', followed by the two stated assumptions. Notes the absence; asks no question."
+    },
+    {
+      "text": "The reply ends with at most one question and no trailing offer",
+      "passed": false,
+      "evidence": "Ends with a trailing offer: 'I haven't recorded this in NOTES.md. Say the word if you want it added as a decision.' Zero questions, but the offer fails the assertion."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 3,
+    "total": 7,
+    "pass_rate": 0.57
+  },
+  "execution_metrics": {
+    "total_tool_calls": 3,
+    "output_chars": 1672,
+    "errors_encountered": 0,
+    "total_steps": 0,
+    "transcript_chars": 0
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The first sentence is the answer with a lean",
+        "reason": "Non-discriminating: both runs open with a near-identical 'Session cookies, with the session stored ... in Redis.' Same for the project-context, technical-correctness and no-admin-panel assertions; all four pass in both configurations, so the with/without delta rests entirely on the three format assertions (length, bold, ending)."
+      },
+      {
+        "assertion": "Technical claims are correct (a wrong statement about SameSite, CSRF, or JWT revocation fails)",
+        "reason": "Only catches false statements, not misleading omissions. The with-skill reply says 'You will need CSRF protection' right after recommending SameSite=Strict without saying Strict already blocks most cross-site CSRF and the token is defense in depth; a reader could take it either way. Consider an assertion that the SameSite/CSRF relationship is stated accurately rather than merely not contradicted."
+      },
+      {
+        "reason": "No assertion checks whether compression dropped substance. The baseline's extra 144 words include two useful points the with-skill reply omits or thins: the same-site serving requirement that SameSite=Strict imposes, and 'verify the IdP JWT once, then issue your own session cookie' for SSO. The with-skill reply instead says it would 'switch to JWT' if an external IdP issues them, which is weaker advice than the baseline's. An assertion on the flip condition being sound would catch this."
+      },
+      {
+        "assertion": "The reply notes that the project has no admin panel or auth yet, or asks one question that depends on it",
+        "reason": "The project does have partner API-key auth in NOTES.md, so 'no auth yet' is loosely worded; both replies correctly distinguish admin auth from partner API keys. Reword to 'no admin panel or admin auth'."
+      }
+    ],
+    "overall": "Four of seven assertions pass for both runs and do not discriminate; the skill's measured advantage is format only (length, bold, ending). Content quality differences, including one place where the baseline's advice is better, are not captured."
+  }
+}

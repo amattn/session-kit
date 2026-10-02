@@ -1,0 +1,60 @@
+{
+  "run": "iteration-3/eval-3-edit-target/without_skill/run-1",
+  "files": [
+    "project/grid_section.md",
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 329,
+    "words_incl_code": 329,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 9,
+    "redpen_breadcrumb": false,
+    "first_sentence": "I edited `grid_section.md` in place for a product-management reader."
+  },
+  "project/grid_section.md": {
+    "words": 2014,
+    "words_incl_code": 2014,
+    "headers": [
+      "6. The grid \u2014 how slots are offered",
+      "6.1 Today's grid",
+      "6.2 What's needed: finer placement, not new grids",
+      "6.3 How this relates to slot ranking",
+      "Slot score measures closeness to noon, by design",
+      "Where edge-based ranking still has a case",
+      "Placement and ranking are separate problems",
+      "6.4 The grid may not stay a fixed per-type setting",
+      "6.5 Duration and grid are currently entangled"
+    ],
+    "scaffold_headers": [],
+    "openers": 7,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 19,
+    "redpen_breadcrumb": false,
+    "first_sentence": "## 6."
+  },
+  "grid_section": {
+    "replacement_fact_mentions": 15,
+    "openers": 7,
+    "h3_sections": [
+      "6.1 Today's grid",
+      "6.2 What's needed: finer placement, not new grids",
+      "6.3 How this relates to slot ranking",
+      "6.4 The grid may not stay a fixed per-type setting",
+      "6.5 Duration and grid are currently entangled"
+    ],
+    "has_90_minute_gap": true,
+    "has_align_to_edges": true,
+    "has_closeness_to_noon": true,
+    "has_adaptive_grid_two_shapes": true,
+    "has_entanglement": true,
+    "duration_grid_bullets_kept": true,
+    "mechanism_bullets_kept": false
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "expectations": [
+    {
+      "text": "send() retries up to 3 attempts on 5xx responses with backoff between attempts and returns without retrying on 4xx",
+      "passed": true,
+      "evidence": "`for attempt in range(MAX_ATTEMPTS)` with MAX_ATTEMPTS = 3; `time.sleep(random.uniform(0, BACKOFF_BASE_SECONDS * 2**attempt))` after a 5xx when attempts remain (ceilings 0.5s, 1s); `if resp.status_code < 500: return resp.status_code < 300` returns False on the first 4xx; `return False` after three 5xx."
+    },
+    {
+      "text": "Every comment and docstring in the file describes what the code actually does",
+      "passed": true,
+      "evidence": "Two comments. The class comment is unchanged from the original. 'Full jitter, so replicas retrying the same partner outage don't hit the endpoint in step' sits on random.uniform(0, cap), which is full jitter; 'replicas' matches the three-replica deployment stated in the project's CLAUDE.md and NOTES.md."
+    },
+    {
+      "text": "No comment or docstring restates what the adjacent code visibly does, and none narrates the session",
+      "passed": true,
+      "evidence": "The single new comment gives the reason for the jitter rather than describing the line. No comment refers to the request or the session."
+    },
+    {
+      "text": "An edge case that the wording 'fail fast on 4xx' covers but its intent may not (429, or transport errors) is surfaced to the user in the reply or noted in a comment",
+      "passed": true,
+      "evidence": "Surfaced in the reply only: 'Timeouts and connection errors are not retried... A partner that is down hard usually shows up as a timeout rather than a 5xx, so say if you want those retried too' and '429 fails fast, along with every other 4xx'. The 429 mention is a bare statement with no note that it may deserve different handling; the transport-error item is a real flag. Neither appears in a code comment."
+    },
+    {
+      "text": "No TODO or stub placeholders in delivered code",
+      "passed": true,
+      "evidence": "No TODO, FIXME, pass, or NotImplemented in src/webhook_client.py; facts.json todo: false."
+    },
+    {
+      "text": "The commit subject is verb-led and under 72 characters",
+      "passed": true,
+      "evidence": "'Retry webhook delivery on 5xx with exponential backoff' starts with the verb 'Retry' and is 54 characters."
+    },
+    {
+      "text": "The commit body, if present, carries only non-obvious decisions and does not restate the diff",
+      "passed": false,
+      "evidence": "The body is three paragraphs that narrate the diff: 'WebhookClient.send now makes up to 3 attempts when the partner endpoint returns a 5xx, sleeping a random 0-0.5s before the second attempt and 0-1s before the third'; '2xx returns True, 3xx and 4xx (including 429) return False without a retry. If all three attempts get a 5xx, send returns False.' The non-obvious items (unretried transport errors, ~16.5s worst case, jitter reason) are present but mixed into the restatement."
+    },
+    {
+      "text": "The diff is confined to webhook_client.py plus tests; NOTES.md, the constructor signature, and retry semantics beyond 5xx are untouched unless the reply surfaces the change as an ask with a reason",
+      "passed": true,
+      "evidence": "The saved project output contains only src/webhook_client.py; the constructor is unchanged; only 5xx is retried; the reply says 'There are no tests in the repo and I didn't add any'. NOTES.md being untouched rests on the transcript ('only src/webhook_client.py was modified') since no other project files are saved."
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 1,
+    "total": 8,
+    "pass_rate": 0.88
+  },
+  "execution_metrics": {
+    "total_tool_calls": 5,
+    "output_chars": 4027,
+    "errors_encountered": 1,
+    "total_steps": 0,
+    "transcript_chars": 0
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Every comment and docstring in the file describes what the code actually does",
+        "reason": "Both runs pass, but this cannot fail for a file with almost no comments. It rewards saying less. Pair it with a check that the unretried-exception behaviour and the 429 decision are recorded somewhere durable (comment or commit), which is where the two runs actually differ."
+      },
+      {
+        "assertion": "An edge case that the wording 'fail fast on 4xx' covers but its intent may not (429, or transport errors) is surfaced to the user in the reply or noted in a comment",
+        "reason": "Accepts either the reply or a comment, so both runs pass. The with-skill run put 429 and transport errors in code comments as well as the reply; the baseline left them only in the reply and commit body. Split into two assertions if in-code durability matters."
+      },
+      {
+        "assertion": "The commit body, if present, carries only non-obvious decisions and does not restate the diff",
+        "reason": "'Restates the diff' needs a sharper line. Chosen constants (200ms base, +/-50% jitter) are both a decision and readable from the diff; a grader can go either way on the with-skill body. State whether unrequested parameter choices count as non-obvious decisions."
+      },
+      {
+        "assertion": "The diff is confined to webhook_client.py plus tests; NOTES.md, the constructor signature, and retry semantics beyond 5xx are untouched unless the reply surfaces the change as an ask with a reason",
+        "reason": "Only src/webhook_client.py is saved under outputs/project, so 'NOTES.md untouched' and 'no other files changed' rest on the transcript's own claim. Save a diff or file listing of the whole project copy to make this verifiable."
+      },
+      {
+        "reason": "No assertion checks that the reply's verification claims are honest. Both runs correctly said httpx was not installed and that only a stub was exercised; an assertion on that would catch a run that claims tests passed."
+      },
+      {
+        "reason": "No assertion covers the blocking worst case. The baseline reported ~16.5s (three 5s timeouts plus sleeps); the with-skill run reported only the ~0.9s of added sleep, which understates how long a caller can be held."
+      }
+    ],
+    "overall": "Seven of eight assertions do not separate the two runs; only the commit-body assertion does, and its wording is loose enough that the with-skill pass is borderline. Assertion 8 is not verifiable from the saved outputs."
+  }
+}

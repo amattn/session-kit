@@ -1,0 +1,86 @@
+{
+  "expectations": [
+    {
+      "text": "The edited design.md has no Overview, Background, or Next steps scaffolding headers",
+      "passed": false,
+      "evidence": "Overview and Background are gone (Background renamed to 'Problem'), but the edited design.md still ends with a '## Next steps' section of five bullets."
+    },
+    {
+      "text": "Narration sentences (In this document we will cover...) are removed",
+      "passed": true,
+      "evidence": "The Overview paragraph containing 'In this document we will cover...' is removed; reply: 'Removed the Overview, which only described the document's own layout.' The doc opens with 'Status: draft. Storage and the export-specific rate limit are undecided (see Open questions).'"
+    },
+    {
+      "text": "The claim that the database choice is still open is flagged to the user as contradicting the record, not kept silently and not silently rewritten",
+      "passed": true,
+      "evidence": "Reply, under 'Stale claims fixed': 'Database: the draft said the database choice for ledgerd \"is also still open\". ledgerd runs on Postgres, so I removed the sentence.' Flagged, not silent."
+    },
+    {
+      "text": "The claim that the rate limiting approach is undecided is flagged to the user as contradicting NOTES.md, not kept silently and not silently rewritten",
+      "passed": true,
+      "evidence": "Reply: 'Rate limiting: the draft said the approach \"has not yet been decided\" and proposed a per-IP counter in process memory. NOTES.md decided all three points in September: Redis state, keyed per API key, 429 with Retry-After.'"
+    },
+    {
+      "text": "The rewritten rate-limiting text matches NOTES.md's three decisions (Redis state, 429 + Retry-After, per-API-key)",
+      "passed": true,
+      "evidence": "design.md 'Rate limiting': 'State lives in Redis, because the limit has to be shared across the three replicas. The limit is keyed per API key, not per IP. Partners share egress IPs. A limited request gets a 429 with `Retry-After`.'"
+    },
+    {
+      "text": "The storage choice, which is genuinely open, remains an ask with a stated lean",
+      "passed": false,
+      "evidence": "Storage stays open ('Not decided', two options listed) but no lean is stated anywhere in the doc or the reply; the reply says 'I did not invent answers to any of them'."
+    },
+    {
+      "text": "No open questions or assumptions are introduced beyond what the draft, NOTES.md, CLAUDE.md, and the project's source files contain",
+      "passed": false,
+      "evidence": "Six open questions are added that appear in no source: an export-specific rate limit, the request endpoint and parameters, download URL authorization, job/webhook failure handling, whether 24 hours is right (the draft called it 'a reasonable default'), and what runs the background job. The reply also admits two inferred claims ('an export costs far more than a page of /transactions'; large objects 'share the database with balance and transaction queries')."
+    },
+    {
+      "text": "The chat reply has: one line naming what was written and the stale claims found, one before/after pair, a symptom table of at most four rows; nothing else",
+      "passed": false,
+      "evidence": "No before/after pair and no symptom table. The reply is three bold-led bullet sections (Stale claims fixed, Cuts and restructuring, Additions) narrating each change, plus a closing paragraph."
+    },
+    {
+      "text": "The chat reply is at most 150 words outside the before/after pair and contains no word count",
+      "passed": false,
+      "evidence": "Reply is 347 words with no before/after pair to exclude. No word count appears, but the 150-word limit is exceeded by more than double."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 5,
+    "total": 9,
+    "pass_rate": 0.44
+  },
+  "execution_metrics": {
+    "total_tool_calls": 5,
+    "output_chars": 4452,
+    "errors_encountered": 0,
+    "total_steps": 0,
+    "transcript_chars": 0
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The chat reply is at most 150 words outside the before/after pair and contains no word count",
+        "reason": "Ambiguous whether the symptom table counts toward the 150 words. The with-skill reply is 178 words outside the pair with the table and 123 without it, so the verdict flips on that reading. State it explicitly."
+      },
+      {
+        "assertion": "Narration sentences (In this document we will cover...) are removed",
+        "reason": "Only checks that the original narration is gone. The with-skill doc adds a new layout sentence in the preamble ('Settled decisions come first, and the one undecided item is under Open'), which the skill prescribes but which is the same kind of sentence. Say whether a preamble routing sentence is allowed."
+      },
+      {
+        "assertion": "The claim that the database choice is still open is flagged to the user as contradicting the record, not kept silently and not silently rewritten",
+        "reason": "Passes for any reply that mentions the database claim. It does not check what the doc then says: the with-skill run turned settled Postgres into an unticked assumption ('Postgres stays ledgerd's database'), the baseline deleted the sentence. Consider asserting that the doc states Postgres as fact."
+      },
+      {
+        "assertion": "No open questions or assumptions are introduced beyond what the draft, NOTES.md, CLAUDE.md, and the project's source files contain",
+        "reason": "Conflicts with assertion 6 unless a lean is exempt: a stated lean and its rationale ('largest expected export size would settle it') are new content by definition. Exempt the lean explicitly, or the with-skill verdict here is a judgment call."
+      },
+      {
+        "reason": "No assertion checks that the draft's real content survives (background job, CSV, webhook, download URL, 24-hour expiry, the three storage options). A rewrite that dropped the approach would still pass."
+      }
+    ],
+    "overall": "4/9. The baseline caught and flagged both stale claims unaided, so assertions 3-5 do not discriminate skill from no-skill on this input; the discriminating ones are the scaffold header, the lean, added open questions, and reply shape. total_tool_calls is the count of tool steps listed in transcript.md, a lower bound."
+  }
+}

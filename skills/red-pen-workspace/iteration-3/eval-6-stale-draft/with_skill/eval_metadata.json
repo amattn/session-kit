@@ -1,0 +1,43 @@
+{
+  "eval_id": 6,
+  "eval_name": "stale-draft",
+  "prompt": "Setup: the agent is dropped into a copy of test-projects/ledgerd, a small FastAPI service. It reads CLAUDE.md and NOTES.md as a real session would. NOTES.md records three settled decisions (rate limiter state in Redis, 429 + Retry-After, keyed per API key), two open questions (per-tenant quotas, a higher mobile limit), one invariant (balances never older than 30s) and two user quotes ('partners are the noisy neighbors', 'pick a default and we'll revisit'). docs/design.md is a 263-word design doc with Overview/Background/Next steps headers, narration, and two claims that contradict the record (database 'still open'; rate limiting 'not decided'). Its storage choice is genuinely open. The baseline agent has no skill and must guess what 'red-pen' means.\n\nUser's message: red-pen docs/design.md",
+  "assertions": [
+    {
+      "text": "The edited design.md has no Overview, Background, or Next steps scaffolding headers",
+      "type": "content"
+    },
+    {
+      "text": "Narration sentences (In this document we will cover...) are removed",
+      "type": "content"
+    },
+    {
+      "text": "The claim that the database choice is still open is flagged to the user as contradicting the record, not kept silently and not silently rewritten",
+      "type": "content"
+    },
+    {
+      "text": "The claim that the rate limiting approach is undecided is flagged to the user as contradicting NOTES.md, not kept silently and not silently rewritten",
+      "type": "content"
+    },
+    {
+      "text": "The rewritten rate-limiting text matches NOTES.md's three decisions (Redis state, 429 + Retry-After, per-API-key)",
+      "type": "content"
+    },
+    {
+      "text": "The storage choice, which is genuinely open, remains an ask with a stated lean",
+      "type": "content"
+    },
+    {
+      "text": "No open questions or assumptions are introduced beyond what the draft, NOTES.md, CLAUDE.md, and the project's source files contain",
+      "type": "content"
+    },
+    {
+      "text": "The chat reply has: one line naming what was written and the stale claims found, one before/after pair, a symptom table of at most four rows; nothing else",
+      "type": "content"
+    },
+    {
+      "text": "The chat reply is at most 150 words outside the before/after pair and contains no word count",
+      "type": "content"
+    }
+  ]
+}

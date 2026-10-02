@@ -1,0 +1,73 @@
+{
+  "expectations": [
+    {
+      "text": "An edited grid_section.md is written and is shorter than the original",
+      "passed": false,
+      "evidence": "An edited file was written but it is longer than the original: 2,014 words against 1,839."
+    },
+    {
+      "text": "All five subsections 6.1-6.5 remain and these rules survive: fill a 90-minute gap with two 45s, align to edges left by existing bookings, closeness-to-noon stays the ranking, the two adaptive-grid shapes, the duration/grid entanglement and its verification need",
+      "passed": true,
+      "evidence": "H3 headings 6.1-6.5 all present (6.2, 6.3 and 6.4 retitled). 'Fill a 90-minute gap. Recognize a 90-minute opening as room for two 45-minute meetings'; 'Align to existing bookings ... at the boundaries left by 15-minute appointments'; 'It does not need to reorder them' and 'Ranking stays as it is: closeness to noon'; both adaptive forms kept as bullets; 6.5 keeps 'That duration is currently used as the grid as well' and 'There is also a correctness question attached (\u00a710.3) that should be checked whichever direction the design goes.'"
+    },
+    {
+      "text": "Sentences asserting that edge-based ranking was deliberately replaced or rejected number at most 3 (original: 10)",
+      "passed": false,
+      "evidence": "Counted 8 by hand, plus an H4 header ('by design'). 'Ranking by gaps was tried and withdrawn because advisors rejected it'; 'deprecated when that approach was dropped'; 'That is not an oversight.'; 'It was deprecated in favour of closeness to noon because advisors rejected ...'; 'edge-based ranking was evaluated and rejected on purpose, not left unfinished'; 'closeness to noon won and edge-based ranking lost'; 'was deprecated for filling days outside-in'; 'ranking is the side where the gap-based approach was rejected'. The new summary added one to the original's set."
+    },
+    {
+      "text": "Sentences opening with 'This is', 'That is', or 'That's' number at most 2 (original: 9)",
+      "passed": false,
+      "evidence": "7 such openers: 'This is deliberate: the front desk ...'; 'That is not an oversight.'; 'That is close to the worst outcome for an advisor'; 'This is not a priority.'; 'This is where closeness to noon won'; 'That is how it is configured today'; 'This is the same conclusion \u00a76.2 reaches'."
+    },
+    {
+      "text": "The Duration/Grid definition bullets and the three packing-mechanism bullets remain as lists, not collapsed into prose",
+      "passed": true,
+      "evidence": "Duration and Grid remain two bullets. Advisor start-time rules, Slot score and Adjacent-slot checking remain three bullets in 6.3. facts.json reports mechanism_bullets_kept=false, which is a false negative: the bullets are there, with the dash after each bold lead changed to a full stop."
+    },
+    {
+      "text": "No content is added that is not in the source section",
+      "passed": false,
+      "evidence": "Two new blocks open the section: 'In brief' (four bullets) and 'Decisions this section asks for' (four numbered items plus 'Not asked for now'). The decisions list frames things the source does not ask for, for example '4. Whether to pursue an adaptive grid', where the source says only 'An alternative under consideration', and '1. Which additional meeting types, if any, move to a 15-minute grid'. The reply itself flags this: 'check that it matches what you want decided.' Also new: the definition sentence 'This section calls that leftover stranded time' and the specific 'longer meetings stay on the 30-minute grid' where the source says 'the coarser grid'."
+    },
+    {
+      "text": "The chat reply has, in order: one line saying what was written and preserved, one before/after paragraph pair, then a symptom table of at most four rows; nothing else",
+      "passed": false,
+      "evidence": "No before/after pair and no symptom table. The reply is an opening paragraph, a five-bullet 'What changed' list and a four-item numbered list of unresolved questions."
+    },
+    {
+      "text": "The chat reply is at most 150 words outside the before/after pair and contains no word count",
+      "passed": false,
+      "evidence": "329 words, all outside any before/after pair (there is none), more than twice the limit. It contains no word count, but the length clause fails."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 6,
+    "total": 8,
+    "pass_rate": 0.25
+  },
+  "execution_metrics": {
+    "total_tool_calls": 4,
+    "output_chars": 15114,
+    "errors_encountered": 0,
+    "total_steps": 0,
+    "transcript_chars": 0
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The Duration/Grid definition bullets and the three packing-mechanism bullets remain as lists, not collapsed into prose",
+        "reason": "facts.json marks mechanism_bullets_kept=false for this run although all three bullets are present; the check appears to key on the dash after the bold lead. Fix the mechanical check or drop it in favour of a bullet-count check."
+      },
+      {
+        "assertion": "The chat reply has, in order: one line saying what was written and preserved, one before/after paragraph pair, then a symptom table of at most four rows; nothing else",
+        "reason": "This and the 150-word assertion describe the skill's reply format, which a baseline that has never seen the skill cannot hit except by chance. They measure format compliance, not edit quality; report them separately from the file-level assertions when comparing against the baseline."
+      },
+      {
+        "reason": "The baseline did useful work no assertion credits: it unified terminology (lattice, rhythm, interval, step size all became 'grid') and raised an open question about whether a 45-minute meeting on a 30-minute-grid type could start at :15 or :45. Whether replacing the source's 'lattice' vocabulary is a gain or a loss for this reader is not tested either way."
+      }
+    ],
+    "overall": "The assertions separate the two runs clearly on length, repetition, openers and added content. Two of the eight are reply-format checks the baseline could not be expected to pass."
+  }
+}

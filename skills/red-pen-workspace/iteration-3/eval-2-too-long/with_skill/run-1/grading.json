@@ -1,0 +1,102 @@
+{
+  "expectations": [
+    {
+      "text": "The new reply is at most 120 words",
+      "passed": true,
+      "evidence": "facts.json: response.words = 115."
+    },
+    {
+      "text": "The first paragraph names the pick",
+      "passed": true,
+      "evidence": "First paragraph is the single line 'Token bucket, a burst allowance that refills at a fixed rate.'"
+    },
+    {
+      "text": "The reasons for the pick, if there are three or more, appear as a list rather than run together in a paragraph",
+      "passed": true,
+      "evidence": "Reasons are in a bulleted list. Only two reasons for the pick are given (caps each partner's average rate; lets a short burst through), both in the first bullet, so the three-or-more condition is not reached. Note: the three rejected algorithms are joined by semicolons inside one bullet."
+    },
+    {
+      "text": "At least one reason ties to the project (the partner burst incident), not a generic trade-off",
+      "passed": true,
+      "evidence": "'It caps each partner's average rate, which is what stops a repeat of the 2k rps incident' -- matches the NOTES.md user quote about a partner at 2k rps."
+    },
+    {
+      "text": "No headers and no performative phrases",
+      "passed": true,
+      "evidence": "facts.json: headers = [], performative = [], openers = 0, bold_leads = 0. Reading the reply confirms none."
+    },
+    {
+      "text": "The reply does not explain why the previous reply was long and does not apologize",
+      "passed": true,
+      "evidence": "facts.json: apology_or_meta = []. The reply contains no reference to the earlier draft or its length and no apology."
+    },
+    {
+      "text": "The reply does not restate decisions NOTES.md already settles (Redis, 429, per-key) as if new",
+      "passed": true,
+      "evidence": "Redis, 429 and per-API-key keying are not mentioned. The only reference to a settled item is 'leaky bucket queues requests, which you already rejected', which is explicitly marked as already decided (NOTES.md rejects silent queueing)."
+    },
+    {
+      "text": "No default numbers are invented without a source or without being labelled as a proposal",
+      "passed": true,
+      "evidence": "No limit values are given: 'Still to pick: bucket size and refill rate.' The only figures are '2k rps' (from NOTES.md) and '2x the limit across a window boundary' (a property of fixed windows, not a default)."
+    },
+    {
+      "text": "The reply does not close with an offer to do more",
+      "passed": true,
+      "evidence": "Final sentence is 'What sustained rate per partner is acceptable?' -- a question to the user, not an offer of further work. 'I'll hardcode one default' is a statement of intent, not an offer."
+    }
+  ],
+  "summary": {
+    "passed": 9,
+    "failed": 0,
+    "total": 9,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "total_tool_calls": 5,
+    "output_chars": 1991,
+    "errors_encountered": 0,
+    "total_steps": 0,
+    "transcript_chars": 0
+  },
+  "claims": [
+    {
+      "claim": "Leaky bucket queueing was already rejected by the user",
+      "type": "factual",
+      "verified": true,
+      "evidence": "NOTES.md: 'Rejected: silently queueing requests -- hides the problem from partners.'"
+    },
+    {
+      "claim": "2k rps and the no-knob preference come from NOTES.md; no numbers invented",
+      "type": "process",
+      "verified": true,
+      "evidence": "Both appear in the NOTES.md user quotes; the reply contains no limit values."
+    },
+    {
+      "claim": "Ran symptoms.py --compare and wc -w on both replies",
+      "type": "process",
+      "verified": false,
+      "evidence": "Stated in the transcript only; no command output is recorded, so it cannot be confirmed. Tool-call count (5) is likewise read off the transcript's step list."
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The reasons for the pick, if there are three or more, appear as a list rather than run together in a paragraph",
+        "reason": "Conditional on 'three or more' reasons, so it passes vacuously for both runs (each gives about two reasons for the pick). It also does not cover rejected alternatives: the with-skill reply packs three ruled-out algorithms into one semicolon-joined bullet, which is the run-together shape the assertion is meant to catch."
+      },
+      {
+        "assertion": "The reply does not close with an offer to do more",
+        "reason": "Only catches offers. The with-skill reply ends on a question asking the user for the sustained rate, despite the user's recorded quote 'pick a default and we'll revisit'. No assertion checks that the reply respects that preference rather than handing the decision back."
+      },
+      {
+        "assertion": "No default numbers are invented without a source or without being labelled as a proposal",
+        "reason": "Does not separate numbers that are project defaults from generic figures. A reply that declines to give any default passes as easily as one that proposes a labelled default; given the 'pick a default' quote, those two outcomes arguably deserve different grades."
+      },
+      {
+        "reason": "No assertion checks that the recommendation is unchanged from draft_reply.md or that new unsupported claims are absent. The baseline introduces 'normal partner batch calls', which appears nowhere in the project files, and went uncaught."
+      }
+    ],
+    "overall": "9/9, but three passes are weak: the list assertion is vacuous here, and the closing question hands the default back to a user who said 'pick a default and we'll revisit'. The assertions do not distinguish this run from the baseline on that point."
+  }
+}

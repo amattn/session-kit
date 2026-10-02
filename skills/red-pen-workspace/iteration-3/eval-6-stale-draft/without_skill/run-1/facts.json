@@ -1,0 +1,51 @@
+{
+  "run": "iteration-3/eval-6-stale-draft/without_skill/run-1",
+  "files": [
+    "project/docs/design.md",
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 347,
+    "words_incl_code": 347,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 1,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 6,
+    "redpen_breadcrumb": false,
+    "first_sentence": "I rewrote `docs/design.md` in place."
+  },
+  "project/docs/design.md": {
+    "words": 386,
+    "words_incl_code": 386,
+    "headers": [
+      "Transaction Export Design",
+      "Problem",
+      "Approach",
+      "Rate limiting",
+      "Storage",
+      "Open questions",
+      "Next steps"
+    ],
+    "scaffold_headers": [
+      "Next steps"
+    ],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 2,
+    "redpen_breadcrumb": false,
+    "first_sentence": "# Transaction Export Design\n\nStatus: draft."
+  },
+  "design_md": {
+    "scaffold_headers": [
+      "Next steps"
+    ],
+    "narration": false,
+    "db_open_claim_kept": false,
+    "rl_undecided_claim_kept": false,
+    "storage_section": true
+  }
+}

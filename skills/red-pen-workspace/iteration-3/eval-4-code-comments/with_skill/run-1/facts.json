@@ -1,0 +1,34 @@
+{
+  "run": "iteration-3/eval-4-code-comments/with_skill/run-1",
+  "files": [
+    "project/src/webhook_client.py",
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 200,
+    "words_incl_code": 254,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 4,
+    "redpen_breadcrumb": false,
+    "first_sentence": "`WebhookClient.send` in `src/webhook_client.py` now makes up to 3 attempts on 5xx with exponential backoff, and returns `False` on the first 4xx."
+  },
+  "webhook_client": {
+    "comments": [
+      "# Partners register one HTTPS endpoint each. Delivery is at-least-once; the",
+      "# partner dedupes on event_id.",
+      "# Timeouts and connection errors are not retried; they raise on the first",
+      "# attempt.",
+      "# Jitter: a partner outage fails many events at once, and",
+      "# unjittered retries would all land on it together.",
+      "# 429 fails fast with the rest of 4xx; Retry-After is not honored."
+    ],
+    "todo": false,
+    "has_backoff": true,
+    "mentions_4xx_or_5xx": true
+  }
+}

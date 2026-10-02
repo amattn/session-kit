@@ -1,0 +1,19 @@
+{
+  "run": "iteration-3/eval-2-too-long/with_skill/run-1",
+  "files": [
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 115,
+    "words_incl_code": 115,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 0,
+    "redpen_breadcrumb": false,
+    "first_sentence": "Token bucket, a burst allowance that refills at a fixed rate."
+  }
+}

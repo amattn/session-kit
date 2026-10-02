@@ -1,0 +1,48 @@
+{
+  "run": "iteration-3/eval-1-fresh-spec/without_skill/run-1",
+  "files": [
+    "project/docs/rate_limiting.md",
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 203,
+    "words_incl_code": 203,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 1,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 3,
+    "redpen_breadcrumb": false,
+    "first_sentence": "The plan is in `docs/rate_limiting.md`."
+  },
+  "project/docs/rate_limiting.md": {
+    "words": 1390,
+    "words_incl_code": 1390,
+    "headers": [
+      "Rate limiting plan for the ledgerd API",
+      "Summary",
+      "What partners and mobile users will see",
+      "Decisions already made",
+      "Decisions needed",
+      "1. Does the mobile app get limited in the first release?",
+      "2. Do different partners get different limits?",
+      "3. The limit itself",
+      "How it works",
+      "Rollout",
+      "Monitoring",
+      "Not in this plan",
+      "Related: transaction export design"
+    ],
+    "scaffold_headers": [
+      "Summary"
+    ],
+    "openers": 2,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 20,
+    "redpen_breadcrumb": false,
+    "first_sentence": "# Rate limiting plan for the ledgerd API\n\nStatus: proposed, 2026-10-02."
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "expectations": [
+    {
+      "text": "The new reply is at most 120 words",
+      "passed": true,
+      "evidence": "facts.json: response.words = 85."
+    },
+    {
+      "text": "The first paragraph names the pick",
+      "passed": true,
+      "evidence": "First paragraph is 'Token bucket, per API key, in Redis.'"
+    },
+    {
+      "text": "The reasons for the pick, if there are three or more, appear as a list rather than run together in a paragraph",
+      "passed": true,
+      "evidence": "Two reasons for the pick (caps sustained rate; lets short bursts through) sit in one sentence; the Lua-script sentence is an implementation note rather than a reason for choosing token bucket. Fewer than three, so the condition is not reached. Borderline: counting the atomicity sentence as a third reason would make this a fail."
+    },
+    {
+      "text": "At least one reason ties to the project (the partner burst incident), not a generic trade-off",
+      "passed": true,
+      "evidence": "'It caps a partner's sustained rate, which is what stops a repeat of the 2k rps incident'."
+    },
+    {
+      "text": "No headers and no performative phrases",
+      "passed": true,
+      "evidence": "facts.json: headers = [], performative = [], openers = 0, bold_leads = 0. Reading the reply confirms none."
+    },
+    {
+      "text": "The reply does not explain why the previous reply was long and does not apologize",
+      "passed": true,
+      "evidence": "facts.json: apology_or_meta = []. No reference to the earlier draft and no apology."
+    },
+    {
+      "text": "The reply does not restate decisions NOTES.md already settles (Redis, 429, per-key) as if new",
+      "passed": false,
+      "evidence": "The headline 'Token bucket, per API key, in Redis.' presents two decisions NOTES.md settled on 2026-09-10 and 2026-09-12 as part of the recommendation, with no marker that they are already decided. The reply also mentions 429s and 'one limit for all partners'. The transcript concedes it kept these 'as one-line context'."
+    },
+    {
+      "text": "No default numbers are invented without a source or without being labelled as a proposal",
+      "passed": true,
+      "evidence": "'Starting default, one limit for all partners: 100 rps refill, burst of 200. Those numbers are a guess, since I haven't seen normal partner traffic.' The numbers have no source but are explicitly labelled as a guess to be checked, which meets the 'labelled as a proposal' clause."
+    },
+    {
+      "text": "The reply does not close with an offer to do more",
+      "passed": true,
+      "evidence": "Final sentence is 'Check them against real per-partner peaks before we ship.' -- an instruction, not an offer."
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 1,
+    "total": 9,
+    "pass_rate": 0.89
+  },
+  "execution_metrics": {
+    "total_tool_calls": 3,
+    "output_chars": 1253,
+    "errors_encountered": 0,
+    "total_steps": 0,
+    "transcript_chars": 0
+  },
+  "claims": [
+    {
+      "claim": "Short bursts must pass 'so normal partner batch calls don't get 429s'",
+      "type": "factual",
+      "verified": false,
+      "evidence": "No mention of batch calls anywhere in the ledgerd project files; this is an unsupported assertion about partner behaviour."
+    },
+    {
+      "claim": "'One small Lua script per request keeps it atomic across the three replicas'",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Three replicas is from NOTES.md and the Lua script for atomicity is carried over from step 3 of the 'Next steps' list in draft_reply.md. Supported, but it is implementation detail the user did not ask for in a 'which algorithm' answer."
+    },
+    {
+      "claim": "Dropped points already decided in NOTES.md except as one-line context",
+      "type": "process",
+      "verified": false,
+      "evidence": "The settled items are the reply's opening line, not background context."
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The reasons for the pick, if there are three or more, appear as a list rather than run together in a paragraph",
+        "reason": "Conditional on 'three or more' reasons, so it passes vacuously for both runs (each gives about two reasons for the pick). It also does not cover rejected alternatives: the with-skill reply packs three ruled-out algorithms into one semicolon-joined bullet, which is the run-together shape the assertion is meant to catch."
+      },
+      {
+        "assertion": "The reply does not close with an offer to do more",
+        "reason": "Only catches offers. The with-skill reply ends on a question asking the user for the sustained rate, despite the user's recorded quote 'pick a default and we'll revisit'. No assertion checks that the reply respects that preference rather than handing the decision back."
+      },
+      {
+        "assertion": "No default numbers are invented without a source or without being labelled as a proposal",
+        "reason": "Does not separate numbers that are project defaults from generic figures. A reply that declines to give any default passes as easily as one that proposes a labelled default; given the 'pick a default' quote, those two outcomes arguably deserve different grades."
+      },
+      {
+        "reason": "No assertion checks that the recommendation is unchanged from draft_reply.md or that new unsupported claims are absent. The baseline introduces 'normal partner batch calls', which appears nowhere in the project files, and went uncaught."
+      }
+    ],
+    "overall": "8/9. The only assertion that separates the runs is the settled-decisions one. The baseline is shorter and does pick a default as the user asked, which the assertions do not reward; it also adds one unsupported claim (partner batch calls) that no assertion penalises."
+  }
+}

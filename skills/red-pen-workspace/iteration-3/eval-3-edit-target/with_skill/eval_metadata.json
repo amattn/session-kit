@@ -1,0 +1,39 @@
+{
+  "eval_id": 3,
+  "eval_name": "edit-target",
+  "prompt": "Setup: the agent is dropped into test-projects/edit-target: a short CLAUDE.md (reader: product management) and grid_section.md, an 1,839-word requirements section for an advisory firm's booking tool, written in the style of unedited AI output. Known symptoms: one fact stated about 10 times, 9 'This is/That is' openers, 3 'see below', three sentence-length H4s. The baseline agent has no red-pen skill and must guess what 'red-pen' means.\n\nUser's message: red-pen grid_section.md. The reader is product management.",
+  "assertions": [
+    {
+      "text": "An edited grid_section.md is written and is shorter than the original",
+      "type": "content"
+    },
+    {
+      "text": "All five subsections 6.1-6.5 remain and these rules survive: fill a 90-minute gap with two 45s, align to edges left by existing bookings, closeness-to-noon stays the ranking, the two adaptive-grid shapes, the duration/grid entanglement and its verification need",
+      "type": "content"
+    },
+    {
+      "text": "Sentences asserting that edge-based ranking was deliberately replaced or rejected number at most 3 (original: 10)",
+      "type": "content"
+    },
+    {
+      "text": "Sentences opening with 'This is', 'That is', or 'That's' number at most 2 (original: 9)",
+      "type": "content"
+    },
+    {
+      "text": "The Duration/Grid definition bullets and the three packing-mechanism bullets remain as lists, not collapsed into prose",
+      "type": "content"
+    },
+    {
+      "text": "No content is added that is not in the source section",
+      "type": "content"
+    },
+    {
+      "text": "The chat reply has, in order: one line saying what was written and preserved, one before/after paragraph pair, then a symptom table of at most four rows; nothing else",
+      "type": "content"
+    },
+    {
+      "text": "The chat reply is at most 150 words outside the before/after pair and contains no word count",
+      "type": "content"
+    }
+  ]
+}
