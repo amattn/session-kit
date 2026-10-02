@@ -1,6 +1,6 @@
 # /notes — Quick Reference
 
-**Setup:** Run `/notes` on a project without NOTES.md. It creates NOTES.md with suggested sections (Key Design Decisions, Invariants, Important Concepts, Taxonomy, Open Questions), references it from CLAUDE.md, and adds a Notes Discipline block that enforces note-taking in every future session.
+**Setup:** Run `/notes` on a project without NOTES.md. It creates NOTES.md with suggested sections (Project Context, Invariants, Important Concepts, Taxonomy, Key Design Decisions, Open Questions), references it from CLAUDE.md, and adds a Notes Discipline block that enforces note-taking in every future session.
 
 **Ongoing:** Mostly automatic — the discipline block tells the agent to update NOTES.md after every decision before moving on. You don't need to invoke `/notes` for routine note-taking. Invoke it when you want to:
 - Reorganize sections that have grown unwieldy

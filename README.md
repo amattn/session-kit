@@ -8,15 +8,15 @@ Extracted from patterns discovered during 500+ sessions of AI-assisted developme
 
 | Skill | What it does |
 |-------|-------------|
-| `/start` | Unified bootstrap for the suite. One approval covers the plan, plus a quick multi-select for `.claude/settings.json` when that file is missing or marketplace-only. Tiers: `minimal` (/warmup), `standard` (default), `full`. Re-runnable — picks up only what's missing. |
-| `/warmup` | Session bootstrap and compaction recovery. Ensures skills, disciplines, and key files load reliably and survive context compaction. |
-| `/fast-chat` | Structured interaction patterns. Numbered questions, lettered options, batch answer codes (`1A, 2B, 3 let's discuss pros/cons`), and a review prompt with R/O stable tail. Always-on communication style that makes decisions faster. |
-| `/dictation` | Project-specific correction table. Originally designed for voice-to-text errors, but also useful for recurring typos and emergent shorthand — any systematic input pattern where the user means something other than what they literally typed. |
-| `/red-pen` | Writing directives. Makes AI-generated text less painful to read by substituting explicit constraints (word budgets, a named reader, a mandatory cut pass) for the editing cost generated text never pays. Separate rules for specs, code comments, code, and chat. |
-| `/notes` | Institutional memory. Captures decisions, rationale, and conventions in NOTES.md so future sessions don't re-litigate settled questions. |
-| `/stable-label` | Greppable stable references. Gives every referenceable thing an append-only ID (`REQ_3`, `DEC_14`) that never renumbers and always resolves to exactly one definition. |
-| `/multi-adversarial-review` | Sequential multi-model review. A lead commits a stable state, independent reviewer models inspect it one at a time, and the lead dispositions every finding and commits before the next model reviews. Read-only reviewers, evidence-backed findings, an auditable trail. (Also invocable as `/mar`.) |
-| `/feedback-foo` | Process improvement — pattern detection, observation tracking, and discipline creation. FOO = Feedback, Observation, Oversight. Proactively notices recurring patterns, tracks process observations with a resolution lifecycle, and helps formalize workflows as named disciplines. (Also invocable as `/foo`, `/feedback`, or `/observation`. Renamed from `/sharpen`.) |
+| [`/start`](#start) | Unified bootstrap for the suite. One approval covers the plan, plus a quick multi-select for `.claude/settings.json` when that file is missing or marketplace-only. Tiers: `minimal` (/warmup), `standard` (default), `full`. Re-runnable — picks up only what's missing. |
+| [`/warmup`](#warmup) | Session bootstrap and compaction recovery. Ensures skills, disciplines, and key files load reliably and survive context compaction. |
+| [`/fast-chat`](#fast-chat) | Structured interaction patterns. Numbered questions, lettered options, batch answer codes (`1A, 2B, 3 let's discuss pros/cons`), and a review prompt that always ends with R (show recommendations) and O (approve). Always-on communication style that makes decisions faster. |
+| [`/dictation`](#dictation) | Project-specific correction table. Originally designed for voice-to-text errors, but also useful for recurring typos and emergent shorthand — any systematic input pattern where the user means something other than what they literally typed. |
+| [`/red-pen`](#red-pen) | Writing directives. Makes AI-generated text less painful to read by substituting explicit constraints (word budgets, a named reader, a mandatory cut pass) for the editing cost generated text never pays. Separate rules for specs, code comments, code, and chat. |
+| [`/notes`](#notes) | Institutional memory. Captures decisions, rationale, and conventions in NOTES.md so future sessions don't re-litigate settled questions. |
+| [`/stable-label`](#stable-label) | Greppable stable references. Gives every referenceable thing an append-only ID (`REQ_3`, `DEC_14`) that never renumbers and always resolves to exactly one definition. |
+| [`/multi-adversarial-review`](#multi-adversarial-review) | Sequential multi-model review. A lead commits a stable state, independent reviewer models inspect it one at a time, and the lead dispositions every finding and commits before the next model reviews. Read-only reviewers, evidence-backed findings, an auditable trail. (Also invocable as `/mar`.) |
+| [`/feedback-foo`](#feedback-foo) | Process improvement — pattern detection, observation tracking, and discipline creation. FOO = Feedback, Observation, Oversight. Proactively notices recurring patterns, tracks process observations with a resolution lifecycle, and helps formalize workflows as named disciplines. (Also invocable as `/foo`, `/feedback`, or `/observation`.) |
 
 ## Install
 
@@ -476,7 +476,7 @@ You: (later) grep REQ_7
 
 ### `/multi-adversarial-review`
 
-**Setup:** Nothing to bootstrap. You need at least one reviewer route that is not the host model: `codex exec` for Codex, Pi (or cn / OpenCode) for GLM or another non-family model. The skill's `references/routes.md` carries the launch recipes. If your project defines its own review cadence in AGENTS.md or an iteration spec, that wins.
+**Setup:** Nothing to bootstrap. You need at least one reviewer route that is not the host model: `codex exec` for Codex, Pi, Continue's `cn`, or OpenCode (three coding-agent command-line tools; any one will do) for GLM or another non-family model. The skill's `references/routes.md` carries the launch recipes. If your project defines its own review cadence in AGENTS.md or an iteration spec, that wins.
 
 **Ongoing:** Invoke it when work is committed and ready for a gate:
 - `/mar` runs the default chain with the available non-host models, strongest finder last

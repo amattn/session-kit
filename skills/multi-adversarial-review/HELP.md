@@ -2,7 +2,7 @@
 
 `mar` is the short name. Same skill.
 
-**Setup:** Nothing to bootstrap. The skill needs at least one reviewer route that is not the host model: `codex exec` for Codex, Pi (or cn / OpenCode) for GLM or another non-family model. `references/routes.md` has the launch recipes; read it before launching any route. Project directives win: if your AGENTS.md or iteration spec defines its own review cadence, that governs.
+**Setup:** Nothing to bootstrap. The skill needs at least one reviewer route that is not the host model: `codex exec` for Codex, Pi, Continue's `cn`, or OpenCode (three coding-agent command-line tools; any one will do) for GLM or another non-family model. `references/routes.md` has the launch recipes; read it before launching any route. Project directives win: if your AGENTS.md or iteration spec defines its own review cadence, that governs.
 
 **Ongoing:** Invoke it when a piece of work is committed and ready for a gate. The chain is sequential: stable commit, reviewer N reads it, you (the lead) disposition every finding and commit, reviewer N+1 reads the new commit. Reviewers are read-only; you verify every finding against source before acting on it.
 

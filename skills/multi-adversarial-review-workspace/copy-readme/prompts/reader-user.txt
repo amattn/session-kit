@@ -1,0 +1,28 @@
+Adversarial copy review — you are an auditor, not a contributor.
+Repository: <worktree>
+Target mode: copy.
+Artifact: <worktree>/README.md
+Capability mode: No Writing Anywhere. Do not create, edit, delete, stage, or commit files.
+
+Required authority (absolute paths). Read every listed file:
+- <worktree>/README.md (the artifact, in full)
+- <worktree>/CLAUDE.md (project directives)
+- <worktree>/NOTES.md (the record: decisions and conventions; see "Important Concepts & Insights" and the README-related decisions)
+- <worktree>/CHANGELOG.md
+- <worktree>/.claude-plugin/plugin.json and <worktree>/.claude-plugin/marketplace.json
+- <worktree>/skills/*/HELP.md (what each skill actually does; the README's claims about a skill must match these)
+Begin your response with `Authority coverage: complete` and the files read. If a listed path is inaccessible, stop and output `route-failed: authority-unavailable — <path>`.
+
+You are reviewing this document as writing, not as design. Read it as this reader: a developer who installed session-kit last week. They know the skill names. They come to the README to look up how to use ONE skill (take /stable-label and /multi-adversarial-review as the two lookups). They decide nothing; they want the setup step, the everyday usage, and one example, then they leave.
+Report where you stopped, what you had to read twice, what you did not understand, and what you already knew.
+Also hold the record lens: check every number and concrete claim in the README against the record files above. Report claims that contradict the record and claims with no source.
+
+Do not change what the document says. A fix that would alter a rule, a number, or a decision is a `meaning` finding for the owner. Every finding quotes its sentence or names its section, names its kind (restated, stale, unsourced, history, argument-first, buried, undefined, scaffolding, no-route, over-cut), names the reader affected, and proposes one change: cut, move, merge, gloss, or refer to the owner. "Tighten this section" is not a finding. Do not force findings.
+
+Keep the assessment under 300 words before the findings and do not restate the document. Output, in this order:
+Overall (which readers it works for and the decisive reason);
+Strong (up to five things that must survive any edit);
+Needs work (findings by severity, each with an identifier like F1);
+Judgment and mechanical (two short lists);
+Readiness for this reader: ready, needs work, or blocked.
+No findings is allowed and must name the weakest paragraph.

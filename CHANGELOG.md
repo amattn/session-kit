@@ -4,6 +4,10 @@ All notable changes to session-kit. Versions track the plugin version in `.claud
 
 ## [Unreleased]
 
+### Changed
+- README: skill table links to each How to Use entry; R/O and the reviewer tool names glossed; rename history cut from the table (first `copy` review, stage 1)
+- `/notes` v0.1.3: HELP.md lists the suggested sections in the current order
+
 ### Added
 - `/multi-adversarial-review` v0.2.0: `copy` target for reviewing documents as writing
   - `references/copy-review.md`: named readers as the lenses, plus record and fidelity lenses
