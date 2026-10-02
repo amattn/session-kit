@@ -11,6 +11,7 @@ All notable changes to session-kit. Versions track the plugin version in `.claud
 - `/red-pen` v0.2.3: HELP.md example shows the current report shape
 - README: skills ordered by usefulness in every section (stable-label first, feedback-foo last); install commands skip the `*-workspace` eval directories; /notes claims softened; /stable-label example made consistent
 - `/stable-label` v0.1.2: HELP.md example no longer adds a p95 the user did not ask for
+- README Origin: generic ("hundreds of AI-assisted development sessions"); plet-skills link and "8+ parts" removed
 
 ### Added
 - `/multi-adversarial-review` v0.2.0: `copy` target for reviewing documents as writing

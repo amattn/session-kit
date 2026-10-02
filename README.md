@@ -599,7 +599,7 @@ The skills are independent — install any subset, or use `/start` to bootstrap 
 
 ## Origin
 
-Developed and battle-tested during [plet-skills](https://github.com/amattn/plet-skills) development (8+ parts, hundreds of sessions). Extracted as a standalone suite for use in any Claude Code project.
+Developed and refined over hundreds of AI-assisted development sessions, then extracted as a standalone suite for use in any Claude Code project.
 
 `/fast-chat` was strongly inspired by [snarktank's Ralph skills](https://github.com/snarktank/ralph).
 

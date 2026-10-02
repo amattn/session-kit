@@ -588,6 +588,10 @@ Same 8 cases, skill v0.2.0, 67 assertions. Graders: 84% vs 48%. Blind side-by-si
 - **From the graders, open:** graders still disagree with the user on pr-description (3/7 on length and a per-file list; the user preferred it). Several assertions do not discriminate (code-comments 8/8 vs 7/8, too-long 9/9 vs 8/9). Invented or unsupported claims still appear in both configurations.
 - **Skill at v0.2.1.** These changes are untested; a fourth iteration would confirm them.
 
+### README Origin made generic (2026-10-02)
+
+User: "plet is getting deprecated. i think this needs to be very generic like during hundreds of sessions or something like that." Origin now says the suite was developed and refined over hundreds of AI-assisted development sessions. Dropped the plet-skills link and the unsourced "8+ parts". The /dictation examples still use "plet" as a sample jargon term; left as is, since an example term does not need a live project behind it.
+
 ### README skill order: most used first (2026-10-02)
 
 Chose usefulness order over the earlier infrastructure-first order (warmup, fast-chat, dictation, notes, stable-label, foo; 2026-03-14), in all four README sections, keeping the same-order-everywhere rule. Order: stable-label, fast-chat, multi-adversarial-review, notes, red-pen, warmup, dictation, feedback-foo. The top four and the last follow the user's usage ranking; red-pen, warmup, and dictation were placed by Claude and approved. Prompted by the first `copy` review, whose evaluator reader had no way to tell which skill to try first. Rejected: table-only reorder, which would break the rule that a reader who learns the order in the table finds sections in the same order below. Cost accepted: How They Fit Together no longer opens with /warmup as the foundation.
