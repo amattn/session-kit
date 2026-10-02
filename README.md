@@ -9,13 +9,13 @@ Extracted from patterns discovered during hundreds of sessions of AI-assisted de
 | Skill | What it does |
 |-------|-------------|
 | [`/start`](#start) | Unified bootstrap for the suite. One approval covers the plan, plus a quick multi-select for `.claude/settings.json` when that file is missing or marketplace-only. Tiers: `minimal` (/warmup), `standard` (default), `full`. Re-runnable — picks up only what's missing. |
-| [`/warmup`](#warmup) | Session bootstrap and compaction recovery. Ensures skills, disciplines, and key files load reliably and survive context compaction. |
-| [`/fast-chat`](#fast-chat) | Structured interaction patterns. Numbered questions, lettered options, batch answer codes (`1A, 2B, 3 let's discuss pros/cons`), and a review prompt that always ends with R (show recommendations) and O (approve). Always-on communication style that makes decisions faster. |
-| [`/dictation`](#dictation) | Project-specific correction table. Originally designed for voice-to-text errors, but also useful for recurring typos and emergent shorthand — any systematic input pattern where the user means something other than what they literally typed. |
-| [`/red-pen`](#red-pen) | Writing directives. Makes AI-generated text less painful to read with explicit constraints: word budgets, a named reader, a mandatory cut pass. Separate rules for specs, code comments, code, and chat. |
-| [`/notes`](#notes) | Institutional memory. Captures decisions, rationale, and conventions in NOTES.md so future sessions don't re-litigate settled questions. |
 | [`/stable-label`](#stable-label) | Greppable stable references. Gives every referenceable thing an append-only ID (`REQ_3`, `DEC_14`) that never renumbers and always resolves to exactly one definition. |
+| [`/fast-chat`](#fast-chat) | Structured interaction patterns. Numbered questions, lettered options, batch answer codes (`1A, 2B, 3 let's discuss pros/cons`), and a review prompt that always ends with R (show recommendations) and O (approve). Always-on communication style that makes decisions faster. |
 | [`/multi-adversarial-review`](#multi-adversarial-review) | Sequential multi-model review. A lead commits a stable state, independent reviewer models inspect it one at a time, and the lead dispositions every finding and commits before the next model reviews. Read-only reviewers, evidence-backed findings, an auditable trail. (Also invocable as `/mar`.) |
+| [`/notes`](#notes) | Institutional memory. Captures decisions, rationale, and conventions in NOTES.md so future sessions don't re-litigate settled questions. |
+| [`/red-pen`](#red-pen) | Writing directives. Makes AI-generated text less painful to read with explicit constraints: word budgets, a named reader, a mandatory cut pass. Separate rules for specs, code comments, code, and chat. |
+| [`/warmup`](#warmup) | Session bootstrap and compaction recovery. Ensures skills, disciplines, and key files load reliably and survive context compaction. |
+| [`/dictation`](#dictation) | Project-specific correction table. Originally designed for voice-to-text errors, but also useful for recurring typos and emergent shorthand — any systematic input pattern where the user means something other than what they literally typed. |
 | [`/feedback-foo`](#feedback-foo) | Process improvement — pattern detection, observation tracking, and discipline creation. FOO = Feedback, Observation, Oversight. Proactively notices recurring patterns, tracks process observations with a resolution lifecycle, and helps formalize workflows as named disciplines. (Also invocable as `/foo`, `/feedback`, or `/observation`.) |
 
 ## Install
@@ -34,10 +34,10 @@ Installing activates nothing by itself. A skill sets itself up in a project the 
 
 ### Option 2: Global Installation
 
-Copy the skills into your Claude Code / OpenCode skills directory so they're available across all projects:
+Copy the skills into your Claude Code / OpenCode skills directory so they're available across all projects. The `*-workspace` directories hold eval artifacts and are skipped:
 
 ```bash
-cp -r skills/* ~/.claude/skills/
+rsync -a --exclude='*-workspace' skills/ ~/.claude/skills/
 ```
 
 ### Option 3: Project-Level Installation
@@ -49,7 +49,7 @@ mkdir -p .claude/skills
 ```
 
 ```bash
-cp -r /path/to/session-kit/skills/* .claude/skills/
+rsync -a --exclude='*-workspace' /path/to/session-kit/skills/ .claude/skills/
 ```
 
 ### Option 4: OpenCode (project or global)
@@ -73,14 +73,20 @@ Global (all projects):
 
 ```bash
 mkdir -p ~/.config/opencode/skills
-cp -r /path/to/session-kit/skills/* ~/.config/opencode/skills/
+```
+
+```bash
+rsync -a --exclude='*-workspace' /path/to/session-kit/skills/ ~/.config/opencode/skills/
 ```
 
 Project-level:
 
 ```bash
 mkdir -p .opencode/skills
-cp -r /path/to/session-kit/skills/* .opencode/skills/
+```
+
+```bash
+rsync -a --exclude='*-workspace' /path/to/session-kit/skills/ .opencode/skills/
 ```
 
 ### Option 5: Agent-compatible directories (Codex)
@@ -91,14 +97,20 @@ Global (all projects):
 
 ```bash
 mkdir -p ~/.agents/skills
-cp -r /path/to/session-kit/skills/* ~/.agents/skills/
+```
+
+```bash
+rsync -a --exclude='*-workspace' /path/to/session-kit/skills/ ~/.agents/skills/
 ```
 
 Project-level:
 
 ```bash
 mkdir -p .agents/skills
-cp -r /path/to/session-kit/skills/* .agents/skills/
+```
+
+```bash
+rsync -a --exclude='*-workspace' /path/to/session-kit/skills/ .agents/skills/
 ```
 
 ## The Skills
@@ -118,15 +130,15 @@ Re-runnable — picks up only what's missing; existing files are never overwritt
 
 Best for: new projects starting from scratch, existing projects missing one or more session-kit pieces, anyone who'd rather "just get me set up" than walk through per-skill bootstraps.
 
-### `/warmup` — Session Bootstrap & Compaction Recovery
+### `/stable-label` — Greppable Stable References
 
-AI agents don't reliably read project files at session start, and context compaction mid-session can silently drop critical instructions. `/warmup` is the reliability layer — it uses every available tactic (auto-memory, Required Reading sections, discipline blocks, loading canaries) to ensure that what matters gets loaded and stays loaded.
+Gives every referenceable thing an append-only ID using the `XXX_N` convention (`REQ_3`, `DEC_14`). IDs never renumber, never get reused, and always resolve to exactly one definition. A project-wide search such as `grep -rn REQ_3 .` returns the definition and every reference.
 
-Why it matters: every other skill in session-kit depends on the agent actually reading and following project directives. `/warmup` is what makes that reliable instead of aspirational.
+Why it matters: without stable IDs, cross-references are fragile text that breaks when things get renamed. With them, any ID is a permanent, greppable anchor — in docs, in code comments, in docstrings, anywhere text lives. Both humans and agents can trace a requirement from spec to implementation in seconds.
 
-What it adds over baseline Claude: the baseline can set up individual pieces (compaction recovery, required reading) but doesn't build the complete layered system — Required Reading + canaries + post-compaction rule + breadcrumbs + auto-memory guidance + cross-platform AGENTS.md — as integrated infrastructure. The skill also provides a systematic diagnostic checklist and escalation ladder for when rules aren't being followed reliably.
+What it adds over baseline Claude: convention enforcement is the biggest win — without the skill, Claude invents ad-hoc formats (kebab-case, dashes, zero-padding) that vary per session. The skill ensures consistent `XXX_N` format every time. Lifecycle operations are the second major differentiator: splits get provenance notes, merges keep tombstone redirects so every ID stays greppable, promotions get bidirectional cross-references, and crosscutting concerns get domain-specific faceted IDs instead of just prose. The baseline handles simple operations fine but loses ID traceability during lifecycle changes.
 
-Best for: long sessions that hit context limits, projects with CLAUDE.md directives that get ignored, any project where you've said "it keeps forgetting to do X."
+Best for: spec-driven projects, requirements tracking, any project with cross-referenced documents where you need to trace a decision from origin to implementation.
 
 ### `/fast-chat` — Structured Interaction Patterns
 
@@ -138,15 +150,25 @@ What it adds over baseline Claude: behavioral activation. Claude already *knows*
 
 Best for: decision-heavy sessions, review workflows, voice-input users, anyone tired of typing paragraphs when a single code would do.
 
-### `/dictation` — Correction Table
+### `/multi-adversarial-review` — Sequential Multi-Model Review
 
-Maintains a project-specific table for voice-to-text errors, recurring typos, and emergent shorthand. Originally designed for dictation (voice engines predictably mangle project jargon), but the table is useful for any systematic input pattern where the user means something other than what they literally typed.
+A model reviewing its own work shares its own blind spots. `/multi-adversarial-review` breaks the author/reviewer monoculture: a lead commits a stable state, then reviewer models from different families inspect it one at a time. Reviewers are read-only and must back every finding with evidence. After each pass the lead verifies each finding against source, fixes it, defers it with a home, or rejects it with a reason, and commits that disposition before the next model reviews the new state. "No findings" is a valid outcome, but it must name the residual risk. Targets: code, plan, code-vs-plan, spec, and copy. Short name: `/mar`.
 
-Why it matters: each uncorrected error costs a correction cycle — the user says it, the agent misunderstands, the user corrects, the agent apologizes. A correction table eliminates this for known patterns, and a learning loop captures new ones as they appear.
+Why it matters: review as a one-shot opinion gets averaged or ignored. Review as a sequential gate with a committed disposition between stages produces an audit trail, lets each reviewer build on the last one's confirmed findings, and forces the author to answer every finding instead of the ones it likes.
 
-What it adds over baseline Claude: the setup puts the correction table in CLAUDE.md (loaded every session) rather than an ad-hoc file. When input is garbled beyond the table, the skill presents structured disambiguation options instead of guessing. And the "What Does NOT Go" boundaries prevent table bloat — one-off typos and standard abbreviations (k8s, img) stay out.
+What it adds over baseline Claude: the discipline, not the critique. Baseline Claude will review code when asked and often finds real issues. The skill adds the parts that make review trustworthy: cross-model reviewers routed out of the host, read-only capability modes with write audits, disposition states with evidence, the commit-between-stages rule, stall and route-failure handling, and a bounded panel for contested findings. The spec target adds an output contract (overall, strong, needs work, viability, open vs mechanical, readiness) that keeps design review from collapsing into prose.
 
-Best for: voice-input users, projects with unusual jargon or internal tool names, anyone who finds themselves repeatedly correcting the same misinterpretation.
+Best for: implementation gates before merge, stress-testing a plan before building it, design-note and spec review against a project's principles, any project where the same model writes and reviews.
+
+### `/notes` — Institutional Memory
+
+A common failure mode in multi-session AI work: decisions get re-litigated because nobody remembers why they were made. `/notes` maintains a living `NOTES.md` that captures decisions, rationale, rejected alternatives, and conventions. Every session starts with an accurate picture of what's been decided and why.
+
+Why it matters: without institutional memory, session 12 reopens questions that session 3 settled. The rationale is gone, so the same arguments play out again. `/notes` makes this much less likely — the reasoning is written down, in the user's own words, before the conversation moves on.
+
+What it adds over baseline Claude: the CLAUDE.md discipline block is the killer feature — it makes note-taking behavior persist across sessions, not just the current one. The skill also enforces consistent structure (the same suggested sections in every project) and preserves user quotes verbatim where baseline Claude tends to paraphrase.
+
+Best for: multi-session projects, design-heavy work with many decisions, teams where context is lost between sessions or handoffs.
 
 ### `/red-pen` — Writing Directives
 
@@ -158,35 +180,25 @@ What it adds over baseline Claude: the rules are not novel — Claude knows "ans
 
 Best for: anyone who reads more AI output than they write, spec-heavy projects where a human ratifies decisions, codebases that have started accumulating narrating comments and defensive noise.
 
-### `/notes` — Institutional Memory
+### `/warmup` — Session Bootstrap & Compaction Recovery
 
-The most common failure mode in multi-session AI work: decisions get re-litigated because nobody remembers why they were made. `/notes` maintains a living `NOTES.md` that captures decisions, rationale, rejected alternatives, and conventions. Every session starts with an accurate picture of what's been decided and why.
+AI agents don't reliably read project files at session start, and context compaction mid-session can silently drop critical instructions. `/warmup` is the reliability layer — it uses every available tactic (auto-memory, Required Reading sections, discipline blocks, loading canaries) to ensure that what matters gets loaded and stays loaded.
 
-Why it matters: without institutional memory, session 12 reopens questions that session 3 settled. The rationale is gone, so the same arguments play out again. `/notes` makes this nearly impossible — the reasoning is written down, in the user's own words, before the conversation moves on.
+Why it matters: every other skill in session-kit depends on the agent actually reading and following project directives. `/warmup` is what makes that reliable instead of aspirational.
 
-What it adds over baseline Claude: the CLAUDE.md discipline block is the killer feature — it makes note-taking behavior persist across sessions, not just the current one. The skill also enforces consistent structure (same sections every project) and preserves user quotes verbatim where baseline Claude tends to paraphrase.
+What it adds over baseline Claude: the baseline can set up individual pieces (compaction recovery, required reading) but doesn't build the complete layered system — Required Reading + canaries + post-compaction rule + breadcrumbs + auto-memory guidance + cross-platform AGENTS.md — as integrated infrastructure. The skill also provides a systematic diagnostic checklist and escalation ladder for when rules aren't being followed reliably.
 
-Best for: multi-session projects, design-heavy work with many decisions, teams where context is lost between sessions or handoffs.
+Best for: long sessions that hit context limits, projects with CLAUDE.md directives that get ignored, any project where you've said "it keeps forgetting to do X."
 
-### `/stable-label` — Greppable Stable References
+### `/dictation` — Correction Table
 
-Gives every referenceable thing an append-only ID using the `XXX_N` convention (`REQ_3`, `DEC_14`). IDs never renumber, never get reused, and always resolve to exactly one definition. A project-wide search such as `grep -rn REQ_3 .` returns the definition and every reference.
+Maintains a project-specific table for voice-to-text errors, recurring typos, and emergent shorthand. Originally designed for dictation (voice engines predictably mangle project jargon), but the table is useful for any systematic input pattern where the user means something other than what they literally typed.
 
-Why it matters: without stable IDs, cross-references are fragile text that breaks when things get renamed. With them, any ID is a permanent, greppable anchor — in docs, in code comments, in docstrings, anywhere text lives. Both humans and agents can trace a requirement from spec to implementation in seconds.
+Why it matters: each uncorrected error costs a correction cycle — the user says it, the agent misunderstands, the user corrects, the agent apologizes. A correction table eliminates this for known patterns, and a learning loop captures new ones as they appear.
 
-What it adds over baseline Claude: convention enforcement is the biggest win — without the skill, Claude invents ad-hoc formats (kebab-case, dashes, zero-padding) that vary per session. The skill ensures consistent `XXX_N` format every time. Lifecycle operations are the second major differentiator: splits get provenance notes, merges keep tombstone redirects so every ID stays greppable, promotions get bidirectional cross-references, and crosscutting concerns get domain-specific faceted IDs instead of just prose. The baseline handles simple operations fine but loses ID traceability during lifecycle changes.
+What it adds over baseline Claude: the setup puts the correction table in CLAUDE.md (loaded every session) rather than an ad-hoc file. When input is garbled beyond the table, the skill presents structured disambiguation options instead of guessing. And the "What Does NOT Go" boundaries prevent table bloat — one-off typos and standard abbreviations (k8s, img) stay out.
 
-Best for: spec-driven projects, requirements tracking, any project with cross-referenced documents where you need to trace a decision from origin to implementation.
-
-### `/multi-adversarial-review` — Sequential Multi-Model Review
-
-A model reviewing its own work shares its own blind spots. `/multi-adversarial-review` breaks the author/reviewer monoculture: a lead commits a stable state, then reviewer models from different families inspect it one at a time. Reviewers are read-only and must back every finding with evidence. After each pass the lead verifies each finding against source, fixes it, defers it with a home, or rejects it with a reason, and commits that disposition before the next model reviews the new state. "No findings" is a valid outcome, but it must name the residual risk. Targets: code, plan, code-vs-plan, spec, and copy. Short name: `/mar`.
-
-Why it matters: review as a one-shot opinion gets averaged or ignored. Review as a sequential gate with a committed disposition between stages produces an audit trail, lets each reviewer build on the last one's confirmed findings, and forces the author to answer every finding instead of the ones it likes.
-
-What it adds over baseline Claude: the discipline, not the critique. Baseline Claude will review code when asked and often finds real issues. The skill adds the parts that make review trustworthy: cross-model reviewers routed out of the host, read-only capability modes with write audits, disposition states with evidence, the commit-between-stages rule, stall and route-failure handling, and a bounded panel for contested findings. The spec target adds an output contract (overall, strong, needs work, viability, open vs mechanical, readiness) that keeps design review from collapsing into prose.
-
-Best for: implementation gates before merge, stress-testing a plan before building it, design-note and spec review against a project's principles, any project where the same model writes and reviews.
+Best for: voice-input users, projects with unusual jargon or internal tool names, anyone who finds themselves repeatedly correcting the same misinterpretation.
 
 ### `/feedback-foo` — Process Improvement
 
@@ -255,31 +267,42 @@ You: O
 Agent: Bootstrapped. Loaded: AGENTS.md, NOTES.md. Git: working tree clean. Ready.
 ```
 
-### `/warmup`
+### `/stable-label`
 
-**Setup:** Run `/warmup` in your project. It audits your CLAUDE.md (or creates one), then sets up Required Reading, a post-compaction rule, loading canaries, and auto-memory entries. It also bootstraps `.gitignore` (with `.DS_Store`) and `.claude/settings.json` (with a low-friction permissions allowlist, privacy defaults, and session-kit plugin enablement) — only when those files don't already exist. All managed sections in CLAUDE.md/AGENTS.md are marked with `<!-- managed by /warmup -->` breadcrumbs.
+**Setup:** Run `/stable-label` in your project. It branches on what's already there:
+- **Branch A** — if `/notes` was already bootstrapped (the common case under `/start`), it detects the pre-seeded prefix table in NOTES.md and just adds the convention rules to CLAUDE.md, then offers to customize the seeded prefixes.
+- **Branch B** — if no prefix table exists, it scans existing artifacts, proposes a prefix table (e.g., `DEC` for decisions, `REQ` for requirements), adds convention rules to CLAUDE.md, and writes the table to NOTES.md under Taxonomy / Conventions.
 
-**Ongoing:** You rarely invoke `/warmup` directly after setup. Its infrastructure works in the background — canaries verify files loaded, the post-compaction rule triggers re-reads after context compression. Invoke it again when:
-- A rule or file isn't loading reliably (it walks an escalation ladder: tighten wording → improve positioning → add redundancy → promote to auto-memory)
-- You want to add a new file to the Required Reading chain
-- You suspect compaction dropped something mid-session
+**Ongoing:** IDs are assigned automatically when you create or commit to something — a new requirement, a design decision, a feature. The agent won't assign IDs to exploratory output (brainstorms, summaries, option lists). Invoke `/stable-label` when you want to:
+- Add a new prefix to the table
+- Run a consistency pass (Quick for a single ID, Standard for a batch, Sweep for a whole prefix)
+- Manage ID lifecycle — splitting, merging, deprecating, or promoting items
 
 **Example:**
 ```
-You: /warmup
-Agent: I've audited your CLAUDE.md. Here's what I set up:
-       - Required Reading: NOTES.md, PLAN.md
-       - Post-Compaction Rule: re-read Required Reading after compaction
-       - Session Start Canary: report git status before doing other work
-       - Auto-memory entry: "always read NOTES.md"
+You: add a new requirement: API responses must be under 200ms
+Agent: Added to the requirements spec:
+       REQ_7 — API responses must complete in under 200ms
 
-You: (later) It keeps forgetting to read NOTES.md
-Agent: The Required Reading rule is present and auto-memory is set,
-       but the rule is positioned at the bottom of CLAUDE.md where
-       compaction is likely dropping it. I'll move it to the top
-       and strengthen the wording. I'll also add a cross-file
-       reinforcement pointer at the top of NOTES.md pointing back
-       to CLAUDE.md.
+You: let's go with Redis caching to meet that
+Agent: (adds to NOTES.md)
+
+       ### Caching strategy: Redis (2026-03-14)
+       DEC_12 — Use Redis for response caching to meet REQ_7.
+       - Rejected: CDN-only — doesn't help for authenticated endpoints
+
+You: ok now implement the caching middleware
+Agent: (writes code with traceability)
+
+       # Cache middleware for API responses
+       # Implements DEC_12 (Redis caching) to satisfy REQ_7 (under 200ms)
+       class ResponseCache:
+           ...
+
+You: (later) grep REQ_7
+       spec.md:         REQ_7 — API responses must complete in under 200ms
+       NOTES.md:        DEC_12 — Redis caching to meet REQ_7
+       middleware.py:   # Implements DEC_12 to satisfy REQ_7
 ```
 
 ### `/fast-chat`
@@ -346,28 +369,67 @@ Agent: For 3, I'd recommend A (per-user token bucket) — it prevents
        Noted 4 as still open. Applied 1A and 2B.
 ```
 
-### `/dictation`
+### `/multi-adversarial-review`
 
-**Setup:** Run `/dictation` in your project. It scans project jargon, proposes a correction table (focused on terms voice engines are likely to mangle), and writes the table to CLAUDE.md with a `<!-- managed by /dictation -->` breadcrumb.
+**Setup:** Nothing to bootstrap. You need at least one reviewer route that is not the host model: `codex exec` for Codex, Pi, Continue's `cn`, or OpenCode (three coding-agent command-line tools; any one will do) for GLM or another non-family model. The launch recipes are in [`references/routes.md`](skills/multi-adversarial-review/references/routes.md). If your project defines its own review cadence in AGENTS.md or an iteration spec, that wins.
 
-**Ongoing:** Always-on — known corrections are applied silently. When input is garbled beyond the table, the agent presents disambiguation options instead of guessing. Your side:
-- When the agent misinterprets a recurring term, say something like "add 'pleat' means 'plet' to the correction table" — or just correct it and the agent will offer to add it
-- One-off typos don't need table entries; the table is for systematic, recurring patterns
+**Ongoing:** Invoke it when work is committed and ready for a gate:
+- `/mar` runs the default chain with the available non-host models, strongest finder last
+- `/mar with Claude, Codex, and GLM 5.3` uses the order you name
+- `/mar to review HEAD against <base>` points reviewers at a range
+- `/mar review <note> as a spec` runs the spec target with its output contract
+- `/mar review <doc> as copy for <readers>` reviews a document as writing, with its named readers as the lenses
+
+Each stage: the reviewer reads a stable commit, the lead (your agent, with you ruling on anything contested) dispositions every finding (`accepted-fixed`, `accepted-deferred`, `rejected` with evidence, `unclear-blocked`, `no-findings` with residual risk, `route-failed`, `contested`) and commits, and the next reviewer reads the new commit.
 
 **Example:**
 ```
-You: push the jason config to the Maine branch and update the cloud API key
-Agent: (silently corrects to "JSON config", "main branch", and "Claude API key",
-        proceeds with the task)
+You: /mar to review HEAD against main
+Agent: Baseline 3f2a1c9 is stable. Launching GLM through Pi in a disposable
+       worktree, no writes to the primary checkout.
+       GLM: 3 findings. Verified against source:
+       - F1 retry loop swallows TransportError — accepted-fixed, test added
+       - F2 "unused import" — rejected, used in the type annotation
+       - F3 backoff cap unbounded — accepted-deferred, tracked as RSK_4
+       Committed 8b77e02. Launching Codex against 8b77e02 ...
 
-You: we need to fix the pleet workflow
-Agent: I'm not sure what "pleet" refers to. Did you mean:
-       A. plet (the dev orchestrator)
-       B. fleet (deployment fleet)
-       C. Something else
+       Review chain
+       - 3f2a1c9: stable baseline
+       - 8b77e02: after GLM disposition - 1 fixed, 1 rejected, 1 deferred
+       - c41d9aa: after Codex disposition - no findings; residual risk: RSK_4
+```
 
-You: A
-Agent: Got it. Want me to add "pleet → plet" to the correction table?
+### `/notes`
+
+**Setup:** Run `/notes` on a project without NOTES.md. It copies the canonical NOTES.md template — suggested sections (Project Context, Invariants, Important Concepts, Taxonomy, Key Design Decisions, Open Questions, Things to Monitor), Quick Reference front-matter, and a default stable-label prefix table pre-seeded under § Taxonomy / Conventions — then references it from CLAUDE.md and adds a Notes Discipline block that enforces note-taking in every future session.
+
+**Ongoing:** Mostly automatic — the discipline block tells the agent to update NOTES.md after every decision before moving on. You don't need to invoke `/notes` for routine note-taking. Invoke it when you want to:
+- Reorganize sections that have grown unwieldy
+- Set up routing for multiple NOTES.md files (e.g., `guide/NOTES.md` for a subfolder with its own decision history)
+- Set up a new project
+
+**Example:**
+```
+You: let's go with PostgreSQL for the event store
+Agent: (updates NOTES.md immediately)
+
+       ### Database choice: PostgreSQL for event store (2026-03-14)
+       User: "let's go with PostgreSQL for the event store"
+       Chosen for durability guarantees and JSONB support.
+       - Rejected: SQLite — insufficient for concurrent writes
+       - Rejected: DynamoDB — team has no AWS experience
+
+You: oh and we should never delete events, only soft-delete
+Agent: (adds to Invariants & Critical Requirements)
+
+       **Events are append-only — never hard-delete.**
+       Soft-delete via a `deleted_at` timestamp. This is load-bearing
+       for audit compliance and event replay.
+
+You: I keep saying this but — names should be verbs for actions, nouns for systems
+Agent: (adds to Important Concepts & Insights, under "From the user")
+
+       User: "names should be verbs for actions, nouns for systems"
 ```
 
 ### `/red-pen`
@@ -417,105 +479,55 @@ Agent: This plan is for you as the one approving the limiter design;
        Scope out: no admin UI for limits, no per-endpoint overrides.
 ```
 
-### `/notes`
+### `/warmup`
 
-**Setup:** Run `/notes` on a project without NOTES.md. It copies the canonical NOTES.md template — suggested sections (Project Context, Invariants, Important Concepts, Taxonomy, Key Design Decisions, Open Questions, Things to Monitor), Quick Reference front-matter, and a default stable-label prefix table pre-seeded under § Taxonomy / Conventions — then references it from CLAUDE.md and adds a Notes Discipline block that enforces note-taking in every future session.
+**Setup:** Run `/warmup` in your project. It audits your CLAUDE.md (or creates one), then sets up Required Reading, a post-compaction rule, loading canaries, and auto-memory entries. It also bootstraps `.gitignore` (with `.DS_Store`) and `.claude/settings.json` (with a low-friction permissions allowlist, privacy defaults, and session-kit plugin enablement) — only when those files don't already exist. All managed sections in CLAUDE.md/AGENTS.md are marked with `<!-- managed by /warmup -->` breadcrumbs.
 
-**Ongoing:** Mostly automatic — the discipline block tells the agent to update NOTES.md after every decision before moving on. You don't need to invoke `/notes` for routine note-taking. Invoke it when you want to:
-- Reorganize sections that have grown unwieldy
-- Set up routing for multiple NOTES.md files (e.g., `guide/NOTES.md` for a subfolder with its own decision history)
-- Set up a new project
-
-**Example:**
-```
-You: let's go with PostgreSQL for the event store
-Agent: (updates NOTES.md immediately)
-
-       ### Database choice: PostgreSQL for event store (2026-03-14)
-       User: "let's go with PostgreSQL for the event store"
-       Chosen for durability guarantees and JSONB support.
-       - Rejected: SQLite — insufficient for concurrent writes
-       - Rejected: DynamoDB — team has no AWS experience
-
-You: oh and we should never delete events, only soft-delete
-Agent: (adds to Invariants & Critical Requirements)
-
-       **Events are append-only — never hard-delete.**
-       Soft-delete via a `deleted_at` timestamp. This is load-bearing
-       for audit compliance and event replay.
-
-You: I keep saying this but — names should be verbs for actions, nouns for systems
-Agent: (adds to Important Concepts & Insights, under "From the user")
-
-       User: "names should be verbs for actions, nouns for systems"
-```
-
-### `/stable-label`
-
-**Setup:** Run `/stable-label` in your project. It branches on what's already there:
-- **Branch A** — if `/notes` was already bootstrapped (the common case under `/start`), it detects the pre-seeded prefix table in NOTES.md and just adds the convention rules to CLAUDE.md, then offers to customize the seeded prefixes.
-- **Branch B** — if no prefix table exists, it scans existing artifacts, proposes a prefix table (e.g., `DEC` for decisions, `REQ` for requirements), adds convention rules to CLAUDE.md, and writes the table to NOTES.md under Taxonomy / Conventions.
-
-**Ongoing:** IDs are assigned automatically when you create or commit to something — a new requirement, a design decision, a feature. The agent won't assign IDs to exploratory output (brainstorms, summaries, option lists). Invoke `/stable-label` when you want to:
-- Add a new prefix to the table
-- Run a consistency pass (Quick for a single ID, Standard for a batch, Sweep for a whole prefix)
-- Manage ID lifecycle — splitting, merging, deprecating, or promoting items
+**Ongoing:** You rarely invoke `/warmup` directly after setup. Its infrastructure works in the background — canaries verify files loaded, the post-compaction rule triggers re-reads after context compression. Invoke it again when:
+- A rule or file isn't loading reliably (it walks an escalation ladder: tighten wording → improve positioning → add redundancy → promote to auto-memory)
+- You want to add a new file to the Required Reading chain
+- You suspect compaction dropped something mid-session
 
 **Example:**
 ```
-You: add a new requirement: API responses must be under 200ms
-Agent: Added to the requirements spec:
-       REQ_7 — API responses must complete within 200ms (p95)
+You: /warmup
+Agent: I've audited your CLAUDE.md. Here's what I set up:
+       - Required Reading: NOTES.md, PLAN.md
+       - Post-Compaction Rule: re-read Required Reading after compaction
+       - Session Start Canary: report git status before doing other work
+       - Auto-memory entry: "always read NOTES.md"
 
-You: let's go with Redis caching to meet that
-Agent: (adds to NOTES.md)
-
-       ### Caching strategy: Redis (2026-03-14)
-       DEC_12 — Use Redis for response caching to meet REQ_7.
-       - Rejected: CDN-only — doesn't help for authenticated endpoints
-
-You: ok now implement the caching middleware
-Agent: (writes code with traceability)
-
-       # Cache middleware for API responses
-       # Implements DEC_12 (Redis caching) to satisfy REQ_7 (200ms p95)
-       class ResponseCache:
-           ...
-
-You: (later) grep REQ_7
-       spec.md:         REQ_7 — API responses must complete within 200ms
-       NOTES.md:        DEC_12 — Redis caching to meet REQ_7
-       middleware.py:   # Implements DEC_12 to satisfy REQ_7
+You: (later) It keeps forgetting to read NOTES.md
+Agent: The Required Reading rule is present and auto-memory is set,
+       but the rule is positioned at the bottom of CLAUDE.md where
+       compaction is likely dropping it. I'll move it to the top
+       and strengthen the wording. I'll also add a cross-file
+       reinforcement pointer at the top of NOTES.md pointing back
+       to CLAUDE.md.
 ```
 
-### `/multi-adversarial-review`
+### `/dictation`
 
-**Setup:** Nothing to bootstrap. You need at least one reviewer route that is not the host model: `codex exec` for Codex, Pi, Continue's `cn`, or OpenCode (three coding-agent command-line tools; any one will do) for GLM or another non-family model. The launch recipes are in [`references/routes.md`](skills/multi-adversarial-review/references/routes.md). If your project defines its own review cadence in AGENTS.md or an iteration spec, that wins.
+**Setup:** Run `/dictation` in your project. It scans project jargon, proposes a correction table (focused on terms voice engines are likely to mangle), and writes the table to CLAUDE.md with a `<!-- managed by /dictation -->` breadcrumb.
 
-**Ongoing:** Invoke it when work is committed and ready for a gate:
-- `/mar` runs the default chain with the available non-host models, strongest finder last
-- `/mar with Claude, Codex, and GLM 5.3` uses the order you name
-- `/mar to review HEAD against <base>` points reviewers at a range
-- `/mar review <note> as a spec` runs the spec target with its output contract
-- `/mar review <doc> as copy for <readers>` reviews a document as writing, with its named readers as the lenses
-
-Each stage: the reviewer reads a stable commit, the lead (your agent, with you ruling on anything contested) dispositions every finding (`accepted-fixed`, `accepted-deferred`, `rejected` with evidence, `unclear-blocked`, `no-findings` with residual risk, `route-failed`, `contested`) and commits, and the next reviewer reads the new commit.
+**Ongoing:** Always-on — known corrections are applied silently. When input is garbled beyond the table, the agent presents disambiguation options instead of guessing. Your side:
+- When the agent misinterprets a recurring term, say something like "add 'pleat' means 'plet' to the correction table" — or just correct it and the agent will offer to add it
+- One-off typos don't need table entries; the table is for systematic, recurring patterns
 
 **Example:**
 ```
-You: /mar to review HEAD against main
-Agent: Baseline 3f2a1c9 is stable. Launching GLM through Pi in a disposable
-       worktree, no writes to the primary checkout.
-       GLM: 3 findings. Verified against source:
-       - F1 retry loop swallows TransportError — accepted-fixed, test added
-       - F2 "unused import" — rejected, used in the type annotation
-       - F3 backoff cap unbounded — accepted-deferred, tracked as RSK_4
-       Committed 8b77e02. Launching Codex against 8b77e02 ...
+You: push the jason config to the Maine branch and update the cloud API key
+Agent: (silently corrects to "JSON config", "main branch", and "Claude API key",
+        proceeds with the task)
 
-       Review chain
-       - 3f2a1c9: stable baseline
-       - 8b77e02: after GLM disposition - 1 fixed, 1 rejected, 1 deferred
-       - c41d9aa: after Codex disposition - no findings; residual risk: RSK_4
+You: we need to fix the pleet workflow
+Agent: I'm not sure what "pleet" refers to. Did you mean:
+       A. plet (the dev orchestrator)
+       B. fleet (deployment fleet)
+       C. Something else
+
+You: A
+Agent: Got it. Want me to add "pleet → plet" to the correction table?
 ```
 
 ### `/feedback-foo`
@@ -557,33 +569,33 @@ Agent: Added FOO_4 to FEEDBACK_FOO.md:
 /start → bootstraps the whole suite (or any tier) in one pass
                       (the on-ramp — use this for a new project)
 
-/warmup           → ensures everything loads reliably
-                     (the foundation — without it, nothing else is guaranteed)
+/stable-label     → makes cross-references greppable and permanent
+                     (machine-verifiable navigation)
 
 /fast-chat        → makes every interaction faster
                      (structured codes replace prose)
 
-/dictation        → removes input friction
-                     (correction table for voice, typos, shorthand)
-
-/red-pen          → makes every output cheaper to read
-                     (mode-specific rules and a cut pass)
+/multi-adversarial-review
+                  → gates committed work behind independent reviewers
+                     (stable commit, disposition, commit, next model)
 
 /notes            → captures what was decided and why
                      (institutional memory across sessions)
 
-/stable-label     → makes cross-references greppable and permanent
-                     (machine-verifiable navigation)
+/red-pen          → makes every output cheaper to read
+                     (mode-specific rules and a cut pass)
+
+/warmup           → ensures everything loads reliably
+                     (the foundation the others rely on)
+
+/dictation        → removes input friction
+                     (correction table for voice, typos, shorthand)
 
 /feedback-foo     → detects patterns, tracks observations, creates disciplines
                      (FOO = Feedback, Observation, Oversight)
-
-/multi-adversarial-review
-                  → gates committed work behind independent reviewers
-                     (stable commit, disposition, commit, next model)
 ```
 
-The skills are independent — install any subset, or use `/start` to bootstrap a coordinated set in one pass. They're designed to complement each other: `/warmup` ensures `/notes` loads every session, `/stable-label` gives `/notes` entries greppable IDs, `/fast-chat` speeds up the decisions `/notes` captures, `/dictation` keeps voice input from garbling the whole conversation, `/red-pen` keeps the prose that remains worth reading, `/multi-adversarial-review` puts committed work in front of a model that did not write it (prose included, using `/red-pen`'s vocabulary), and `/feedback-foo` turns recurring friction into tracked observations and named disciplines.
+The skills are independent — install any subset, or use `/start` to bootstrap a coordinated set in one pass. The order above runs from most used to least. They are designed to complement each other: `/stable-label` gives `/notes` entries greppable IDs, `/fast-chat` speeds up the decisions `/notes` captures, `/multi-adversarial-review` puts committed work in front of a model that did not write it (prose included, using `/red-pen`'s vocabulary), `/red-pen` keeps the prose that remains worth reading, `/warmup` makes sure `/notes` and the rest load every session, `/dictation` keeps voice input from garbling the whole conversation, and `/feedback-foo` turns recurring friction into tracked observations and named disciplines.
 
 ## Origin
 

@@ -11,7 +11,7 @@
 ```
 You: add a new requirement: API responses must be under 200ms
 Agent: Added to the requirements spec:
-       REQ_7 — API responses must complete within 200ms (p95)
+       REQ_7 — API responses must complete in under 200ms
 
 You: let's go with Redis caching to meet that
 Agent: (adds to NOTES.md)
@@ -24,12 +24,12 @@ You: ok now implement the caching middleware
 Agent: (writes code with traceability)
 
        # Cache middleware for API responses
-       # Implements DEC_12 (Redis caching) to satisfy REQ_7 (200ms p95)
+       # Implements DEC_12 (Redis caching) to satisfy REQ_7 (under 200ms)
        class ResponseCache:
            ...
 
 You: (later) grep REQ_7
-       spec.md:         REQ_7 — API responses must complete within 200ms
+       spec.md:         REQ_7 — API responses must complete in under 200ms
        NOTES.md:        DEC_12 — Redis caching to meet REQ_7
        middleware.py:   # Implements DEC_12 to satisfy REQ_7
 ```

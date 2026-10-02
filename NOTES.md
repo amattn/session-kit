@@ -588,6 +588,19 @@ Same 8 cases, skill v0.2.0, 67 assertions. Graders: 84% vs 48%. Blind side-by-si
 - **From the graders, open:** graders still disagree with the user on pr-description (3/7 on length and a per-file list; the user preferred it). Several assertions do not discriminate (code-comments 8/8 vs 7/8, too-long 9/9 vs 8/9). Invented or unsupported claims still appear in both configurations.
 - **Skill at v0.2.1.** These changes are untested; a fourth iteration would confirm them.
 
+### README skill order: most used first (2026-10-02)
+
+Chose usefulness order over the earlier infrastructure-first order (warmup, fast-chat, dictation, notes, stable-label, foo; 2026-03-14), in all four README sections, keeping the same-order-everywhere rule. Order: stable-label, fast-chat, multi-adversarial-review, notes, red-pen, warmup, dictation, feedback-foo. The top four and the last follow the user's usage ranking; red-pen, warmup, and dictation were placed by Claude and approved. Prompted by the first `copy` review, whose evaluator reader had no way to tell which skill to try first. Rejected: table-only reorder, which would break the rule that a reader who learns the order in the table finds sections in the same order below. Cost accepted: How They Fit Together no longer opens with /warmup as the foundation.
+
+### First `copy` review: the README (2026-10-02)
+
+Two stages, GLM then Codex, two reader lenses each (evaluator, existing user) plus the record lens. 23 findings after dedup: 14 fixed by the editor, 1 rejected (summary and detail are two layers, not duplication), 8 deferred to the owner, of which 7 are now ruled. Record: `skills/multi-adversarial-review-workspace/copy-readme/`.
+
+- **What only the record lens found:** an unsourced "500+ sessions", install commands that copied the eval workspaces, and four README examples that had drifted from their skills' current behavior. None of these is visible from the README alone.
+- **What sequencing found:** Codex corrected a claim in GLM's review and one in the stage 1 disposition (the install fences were not one command per block).
+- **Lesson for the target:** meaning findings dominate on a mature document; stage 2 sent 6 of 15 to the owner. Expected, since the editor must not change claims, but worth batching as one set of questions at the end of the chain.
+- **Claude's own provenance slip:** while fixing a gloss, Claude added a link it could not source, and removed it before committing. The record lens applies to the editor too.
+
 ### /multi-adversarial-review gains a `copy` target (2026-10-02)
 
 The review method the user uses most for code, applied to prose. Follows the port decision that /red-pen's review would be a MAR target rather than its own doctrine.
