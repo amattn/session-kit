@@ -1,0 +1,98 @@
+{
+  "expectations": [
+    {
+      "text": "The first sentence is the answer with a lean",
+      "passed": true,
+      "evidence": "facts.json first_sentence: 'Session cookies, stored in Redis.' A direct pick, no preamble; the second sentence immediately supplies the reason ('Nothing here favors JWT: ...')."
+    },
+    {
+      "text": "The reply is under 150 words",
+      "passed": true,
+      "evidence": "facts.json words: 134."
+    },
+    {
+      "text": "No headers and at most one bold phrase",
+      "passed": true,
+      "evidence": "facts.json headers: [], bold_leads: 0. Manual read of response.md confirms zero '**' markers and no '#' lines; it is two plain paragraphs."
+    },
+    {
+      "text": "The reply does not restate the question and has no performative phrases",
+      "passed": true,
+      "evidence": "Opens directly with the pick; 'JWT' / 'session cookies' appear only as answer content, never as 'You asked whether...'. facts.json performative: [], openers: 0, apology_or_meta: []. Closing line 'Is either true? If not, I'll record this in NOTES.md.' is a question back, not a courtesy phrase."
+    },
+    {
+      "text": "The reason given ties to something in the project context (the mobile app, partners, admin staff, or existing infra), not generic textbook trade-offs only",
+      "passed": true,
+      "evidence": "'Redis is already shared across the three replicas (same reason the rate-limiter state lives there)' matches NOTES.md 'Rate limiter state lives in Redis ... three replicas and the limit has to be shared'. Also names ledgerd and admin logins. The revocation/denylist point is textbook, but it is paired with verified infra reasoning, so the assertion holds."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Read": 1,
+      "Bash": 4
+    },
+    "total_tool_calls": 5,
+    "total_steps": 7,
+    "errors_encountered": 0,
+    "note": "No metrics.json present; counts derived from transcript.md 'Tools used: Read (1), Bash (4)'.",
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "claims": [
+    {
+      "claim": "Redis is already shared across the three replicas, same reason the rate-limiter state lives there",
+      "type": "factual",
+      "verified": true,
+      "evidence": "test-projects/ledgerd/NOTES.md line 20-22: 'Rate limiter state lives in Redis ... three replicas and the limit has to be shared.'"
+    },
+    {
+      "claim": "The admin panel is a browser UI talking to one service",
+      "type": "factual",
+      "verified": false,
+      "evidence": "No admin panel is mentioned anywhere in the project (transcript step 3 and baseline grep both confirm). This is an assumption; the reply does hedge it in the second paragraph by asking whether admin calls come from a CLI or another service."
+    },
+    {
+      "claim": "Ran scripts/symptoms.py on the draft; 134 words, all symptom counts 0",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript step 5; independent facts.json agrees (134 words, all symptom lists empty)."
+    },
+    {
+      "claim": "No project files were created or modified",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript step 2 copies to scratchpad; step 7 says project/ is empty. No outputs other than response.md/transcript.md exist."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": [],
+    "note": "No user_notes.md present."
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The first sentence is the answer with a lean",
+        "reason": "Both the skill run and the baseline pass this identically, so it does not discriminate in this eval. The baseline's failure mode is everything after the first sentence; consider an assertion on the overall shape (e.g. 'no bullet lists' or 'at most two paragraphs')."
+      },
+      {
+        "assertion": "The reason given ties to something in the project context",
+        "reason": "Satisfiable by name-dropping 'Redis' or 'partners' without the reasoning actually depending on it. A stricter form: 'the reply cites a specific prior decision from NOTES.md (the shared-Redis rate limiter or the sticky-sessions rejection) as the reason'."
+      },
+      {
+        "reason": "No assertion checks technical correctness of the recommendation. The skill run's content is fine, but the baseline asserts that SameSite=Lax does not block cross-site top-level POST, which is wrong, and nothing in the eval would catch it. A content-accuracy assertion would guard against the skill trading length for correctness."
+      },
+      {
+        "reason": "The skill's Mode 4 behaviour of ending with exactly one question back (ask before recording an irreversible decision) is the most distinctive thing in this output, and no assertion covers it."
+      }
+    ],
+    "overall": "Assertions are mechanical and the skill run clears them cleanly. The length/formatting assertions discriminate well against the baseline; the first-sentence and context assertions do not, since the baseline passes them too. Add shape and correctness checks."
+  }
+}

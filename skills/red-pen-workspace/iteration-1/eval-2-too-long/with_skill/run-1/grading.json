@@ -1,0 +1,89 @@
+{
+  "expectations": [
+    {
+      "text": "The new reply is under 150 words",
+      "passed": true,
+      "evidence": "facts.json response.words = 65. Down from 358 in draft_reply.md (verified with wc -w on test-projects/ledgerd/draft_reply.md)."
+    },
+    {
+      "text": "The first sentence states the recommendation with a reason",
+      "passed": false,
+      "evidence": "facts.json first_sentence = \"Token bucket.\" The first sentence is a bare recommendation with no reason. The reason (\"Partner traffic is bursty (the 2k rps incident), and a bucket lets a partner burst...\") is the second sentence. Strictly read, the assertion requires recommendation AND reason in the first sentence; this response splits them."
+    },
+    {
+      "text": "No headers and no performative phrases (Great question, I hope this helps, Certainly)",
+      "passed": true,
+      "evidence": "facts.json headers = [], performative = [], openers = 0. Manual read of response.md confirms: two plain paragraphs, no markdown headers, no 'Great question' / 'I hope this helps' / 'Certainly' or any sign-off."
+    },
+    {
+      "text": "The reply does not explain why the previous reply was long and does not apologize",
+      "passed": true,
+      "evidence": "facts.json apology_or_meta = []. response.md contains no reference to the prior draft, its length, or any apology; it opens directly with 'Token bucket.' Transcript step 3 records the skill rule applied: 'resend, no explanation.'"
+    },
+    {
+      "text": "The reply does not re-list all five algorithms",
+      "passed": true,
+      "evidence": "response.md names only two: token bucket (the pick) and sliding-window counter (one alternative). Leaky bucket, fixed window, and sliding window log are not mentioned. Transcript step 3 lists 'the five-algorithm menu' among the cuts."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 1,
+    "total": 5,
+    "pass_rate": 0.8
+  },
+  "claims": [
+    {
+      "claim": "Partner traffic is bursty (the 2k rps incident)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "NOTES.md 'From the user': 'one of them hammered us at 2k rps last month and the mobile app got slow'."
+    },
+    {
+      "claim": "Implementation is one Redis Lua script per API key",
+      "type": "factual",
+      "verified": true,
+      "evidence": "NOTES.md decisions: limiter state in Redis (2026-09-10), keyed per API key (2026-09-12). Lua-for-atomicity was in draft_reply.md next steps."
+    },
+    {
+      "claim": "Ran scripts/symptoms.py --compare; before 358 words / 5 headers / 5 bold leads / 2 openers, after 65 words / all zero",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript step 4 records the invocation. Independent check: wc -w draft_reply.md = 358; facts.json for response.md = 65 words, 0 headers, 0 bold leads, 0 openers. Counts match."
+    },
+    {
+      "claim": "No project files created or modified; draft_reply.md left as-is",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript step 5; test-projects/ledgerd/draft_reply.md still contains the original 358-word draft."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The first sentence states the recommendation with a reason",
+        "reason": "Both runs lead with a bare pick ('Token bucket.') and put the reason in sentence two, which is a natural 'answer first' shape and arguably what the skill teaches. If the author intends 'the opening states the pick and a reason the reader can check', rephrase to 'first two sentences' or 'first paragraph' so the assertion does not fail good answers on sentence-boundary punctuation. If the author genuinely wants pick+reason in one sentence, the skill should say so explicitly, because right now it produces the fragment form."
+      },
+      {
+        "reason": "No assertion checks that the reason given is grounded in the project (the 2k rps incident from NOTES.md) rather than generic ('handles bursty traffic'). The with-skill run did ground it; a generic reply would pass every current assertion. A grounding check would discriminate skill from baseline here."
+      },
+      {
+        "reason": "No assertion checks that the reply avoids restating decisions already recorded in NOTES.md (Redis, 429, per-API-key). The skill explicitly cuts those; the baseline restates two of them in its first sentence. This is the clearest observed behavioral difference and it is uncovered."
+      }
+    ],
+    "overall": "Assertions are mostly mechanical (length, headers, phrases) and the baseline satisfies them nearly as well as the skill run. The one failure is a literal-reading issue with the first-sentence assertion. Add a grounding check and a 'does not restate settled decisions' check to make the eval discriminate."
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 0,
+    "transcript_chars": 0
+  }
+}

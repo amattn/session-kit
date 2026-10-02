@@ -1,0 +1,104 @@
+{
+  "expectations": [
+    {
+      "text": "The first sentence is the answer with a lean",
+      "passed": true,
+      "evidence": "facts.json first_sentence: \"Session cookies, stored in Redis.\" A committed pick, not a hedge, and the response opens with it."
+    },
+    {
+      "text": "The reply is under 150 words",
+      "passed": true,
+      "evidence": "facts.json words: 123 (words_incl_code: 123)."
+    },
+    {
+      "text": "No headers and at most one bold phrase",
+      "passed": true,
+      "evidence": "facts.json headers: [], bold_leads: 0. Independent grep for '**...**' in response.md returns 0; no lines begin with '#'."
+    },
+    {
+      "text": "The reason given ties to something in the project context (shared Redis, partners, the sticky-sessions rejection, the admin staff), not generic textbook trade-offs only",
+      "passed": true,
+      "evidence": "\"Redis is already in the deploy and shared by the three replicas\" matches CLAUDE.md (\"Redis for caching. Deployed as three replicas\") and the 2026-09-10 NOTES.md decision. \"offboarded staff, stolen laptop\" ties revocation to admin staff. \"The 'partners don't send cookies' note in NOTES.md is about the rate limiter, not this\" correctly disarms the sticky-sessions rejection as a non-precedent. The lead reason is project-specific, not textbook-only."
+    },
+    {
+      "text": "Technical claims are correct (a wrong statement about SameSite, CSRF, or JWT revocation fails)",
+      "passed": true,
+      "evidence": "Checked each claim. (1) \"HttpOnly, SameSite cookie is the simplest XSS/CSRF story\": HttpOnly blocks JS reading the credential (XSS theft), SameSite limits cross-site sends (CSRF) \u2014 correct as a characterisation. (2) \"instant revocation ... a stateless JWT can't give you without a denylist, which is a session store anyway\": correct \u2014 stateless JWTs cannot be revoked before expiry without server-side state; a denylist is strictly smaller than a full session store but the point (server-side state returns) holds. (3) \"JWT wins only if the panel is a separate SPA on another origin, or if machine clients need the admin API\": a judgment, not a factual error \u2014 cross-origin cookies require SameSite=None and a separate CSRF mechanism, so bearer tokens are a defensible choice there. (4) The NOTES.md provenance claim is accurate. No wrong statement about SameSite, CSRF, or revocation."
+    },
+    {
+      "text": "The reply ends with at most one question back and no menu of further offers",
+      "passed": true,
+      "evidence": "Final paragraph: \"Nothing in the repo mentions an admin panel yet. Is it a browser UI served by ledgerd itself?\" Exactly one question mark in the whole response; no 'If you want, I can...' offers anywhere."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Read": 1,
+      "Bash": 9
+    },
+    "total_tool_calls": 10,
+    "total_steps": 8,
+    "errors_encountered": 0,
+    "output_chars": 709,
+    "transcript_chars": 1459,
+    "note": "Tool counts are approximate; the transcript is a prose summary, not a raw tool log. output_chars is response.md only."
+  },
+  "claims": [
+    {
+      "claim": "Redis is already in the deploy and shared by the three replicas",
+      "type": "factual",
+      "verified": true,
+      "evidence": "CLAUDE.md: 'Postgres for storage, Redis for caching. Deployed as three replicas behind a load balancer.' NOTES.md 2026-09-10: rate limiter state in Redis because 'there are three replicas and the limit has to be shared.'"
+    },
+    {
+      "claim": "The 'partners don't send cookies' note in NOTES.md is about the rate limiter",
+      "type": "factual",
+      "verified": true,
+      "evidence": "NOTES.md, under 'Rate limiter state lives in Redis (2026-09-10)': 'Rejected: sticky sessions \u2014 partners don't send cookies.'"
+    },
+    {
+      "claim": "Nothing in the repo mentions an admin panel",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript step 4 grep for jwt|session|cookie|admin|auth found only the sticky-sessions line. Independent read of CLAUDE.md and NOTES.md confirms no admin panel or auth content."
+    },
+    {
+      "claim": "scripts/symptoms.py reported all counts 0 on the draft",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript step 6; facts.json independently shows openers 0, performative [], apology_or_meta [], bold_leads 0."
+    },
+    {
+      "claim": "A denylist 'is a session store anyway'",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Slightly loose (a denylist holds only revoked tokens until expiry, so it is smaller than a full session store) but the substantive point \u2014 revocation reintroduces shared server-side state \u2014 is correct."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The reply ends with at most one question back and no menu of further offers",
+        "reason": "A single trailing 'If you want, I'll ...' offer is not a 'menu', so it passes this assertion as written (the baseline ends exactly that way). If the skill's intent is 'no trailing offers at all', the assertion should say so."
+      },
+      {
+        "reason": "No assertion checks that the reply flags the missing admin panel (the prompt's whole point: 'the agent has to reason from what is there'). Both runs did flag it, but an answer that silently assumed one exists would pass all six assertions."
+      },
+      {
+        "reason": "The 'ties to project context' assertion is satisfiable by name-dropping Redis without reasoning from it. Consider requiring that the lead reason be project-specific (e.g., 'the first reason given is the shared Redis / three replicas, not a textbook point')."
+      }
+    ],
+    "overall": "All six pass on genuine substance: lean first, 123 words, zero formatting, project-grounded reasoning, no technical errors, one closing question. The assertions discriminate well on form (the baseline fails two of them) but are thin on the reasoning-from-absence behaviour the prompt was designed to test."
+  }
+}

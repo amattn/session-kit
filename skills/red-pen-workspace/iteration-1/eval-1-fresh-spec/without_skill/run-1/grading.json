@@ -1,0 +1,129 @@
+{
+  "expectations": [
+    {
+      "text": "docs/rate_limiting.md is created",
+      "passed": true,
+      "evidence": "outputs/project/docs/rate_limiting.md exists, 1070 words, 15 headers (facts.json), substantive content. Transcript step 3 shows it written via heredoc; step 4 copies it to outputs."
+    },
+    {
+      "text": "The document opens with a prose preamble (no heading) that names product and engineering readers and says how each should read it",
+      "passed": false,
+      "evidence": "The doc opens with a metadata line, not prose: \"Status: proposal. Owner: eng. Reviewers: product, eng.\" then immediately \"## Why\". It names product and eng only as reviewers and says nothing about what each comes for or where either can stop. The reader-specific guidance is deferred to \"## For product\" and \"## For eng\" sections near the end, which is section-by-section routing after the fact, not an opening preamble."
+    },
+    {
+      "text": "The Redis, 429 + Retry-After, and per-API-key decisions from NOTES.md are treated as settled, not re-raised as open choices",
+      "passed": true,
+      "evidence": "\"## What is already decided\" states: \"These were settled in `NOTES.md` and this plan builds on them rather than reopening them\" followed by a three-row table (Redis, 429 + Retry-After, per API key). No alternatives are reopened anywhere; Implementation assumes a Redis Lua script and `ratelimit:{api_key}` keys. The table does re-explain each rationale from NOTES.md (restating the record), but it does not re-raise them as choices."
+    },
+    {
+      "text": "Per-tenant quotas and the mobile-app limit appear as asks or open items in their own section, not inside the preamble",
+      "passed": false,
+      "evidence": "The doc resolves both unilaterally rather than posing them as asks: \"This answers the two open questions in `NOTES.md` with a default: no per-partner quotas yet, and mobile is exempt rather than given its own higher limit.\" (under ### Who gets limited, inside Proposal). They reappear under \"## Follow-ups (not in v1)\" as deferred work (\"Per-partner quotas, once shadow data shows...\", \"Per-user limit on mobile, only if abuse shows up\"), and in \"## Decisions this plan makes\" as settled items \"so they land in NOTES.md once agreed\". Nowhere is product asked to make the call. There is no preamble, so the 'not inside the preamble' half is vacuously met, but the 'as asks or open items' half is not."
+    },
+    {
+      "text": "At least one decision is written in 'chose A over B because C' form with a revisit trigger",
+      "passed": true,
+      "evidence": "\"Per the project's stated preference, this is one hardcoded default, not a per-partner config system. We revisit once we have data.\" (A=one hardcoded default, B=per-partner config, C=project preference, revisit=once we have data). Also: \"mobile is exempt rather than given its own higher limit\" + \"If we later see abuse from the mobile side, add a per-user limit then.\" The token-bucket section compares A over three alternatives with reasons but has no revisit trigger."
+    },
+    {
+      "text": "No Overview, Introduction, Background, or Next steps headers",
+      "passed": true,
+      "evidence": "facts.json headers: Rate Limiting Plan, Why, What is already decided, Proposal, Who gets limited, The limit, Algorithm: token bucket, Implementation, Interaction with the 30-second balance invariant, Rollout, What we'll watch, For product, For eng, Follow-ups (not in v1), Decisions this plan makes. None of the four forbidden names appears. Note that \"Why\" functions as Background and \"Decisions this plan makes\" restates the spec at the end (the pattern the 'Next steps' ban targets), but the assertion is literal."
+    },
+    {
+      "text": "The body is at or under roughly 350 words, or the top of the document says it exceeded the budget and why",
+      "passed": false,
+      "evidence": "facts.json: 1070 words, roughly three times the threshold. The top of the document (\"Status: proposal. Owner: eng. Reviewers: product, eng.\" then \"## Why\") says nothing about a budget or an overage."
+    },
+    {
+      "text": "The chat reply does not restate the document's contents",
+      "passed": false,
+      "evidence": "response.md (258 words, 4 bold leads per facts.json) restates the doc: the three settled decisions by name, four bolded bullets reproducing the plan's decisions (\"Token bucket, 100 rps sustained / 200 burst per partner key... 6 x 100 = 600 rps\", \"Mobile app exempt in v1. It's what we're protecting, not what we're protecting against\" - verbatim from the doc, \"Fail open if Redis is down\", \"Shadow mode first\"), a section inventory (\"It has separate 'For product' and 'For eng' sections, a metrics list, and a 'Decisions this plan makes' list\"), and both noticed items (design.md contradiction, missing src/api/) that are already in the doc."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 4,
+    "total": 8,
+    "pass_rate": 0.5
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Bash": 5
+    },
+    "total_tool_calls": 5,
+    "total_steps": 4,
+    "errors_encountered": 0,
+    "output_chars": 2063,
+    "transcript_chars": 2063,
+    "note": "No metrics.json present; counts taken from transcript.md. No draft/cut pass; the doc was written once."
+  },
+  "claims": [
+    {
+      "claim": "docs/design.md proposes a per-IP in-process counter for exports, contradicting NOTES.md",
+      "type": "factual",
+      "verified": true,
+      "evidence": "test-projects/ledgerd/docs/design.md line 17: \"proposes a simple per-IP counter in process memory\"."
+    },
+    {
+      "claim": "CLAUDE.md points at src/api/ for route handlers but the directory is not in the tree",
+      "type": "factual",
+      "verified": true,
+      "evidence": "CLAUDE.md line 15: \"`src/api/` \u2014 route handlers\"; test project src/ contains only webhook_client.py."
+    },
+    {
+      "claim": "6 partners at 100 rps each is 600 rps worst case, well under 2k rps",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Arithmetic correct; NOTES.md names 6 partners and the 2k rps incident. Ignores burst (6 x 200 = 1200 rps momentary), still under 2k."
+    },
+    {
+      "claim": "Estimate: one engineer, about a week",
+      "type": "quality",
+      "verified": false,
+      "evidence": "No basis in the project for the estimate; unverifiable."
+    },
+    {
+      "claim": "Redis Lua call should be sub-millisecond",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Plausible for a local Redis but not supported by anything in the project; unverifiable."
+    },
+    {
+      "claim": "The plan builds on NOTES.md decisions rather than reopening them",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Confirmed; see assertion 3. The decisions are restated with their rationale but not re-argued."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [
+      "100/200 limits are a guess without traffic data",
+      "Exact file paths for the middleware since src/api/ is missing"
+    ],
+    "needs_review": [
+      "docs/design.md export rate-limiting paragraph contradicts NOTES.md"
+    ],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "No Overview, Introduction, Background, or Next steps headers",
+        "reason": "Passed here despite a \"Why\" section (Background by another name) and a closing \"Decisions this plan makes\" list that restates the spec (the Next-steps anti-pattern). A literal header-name check is easy to satisfy by renaming; consider testing for the behavior (no closing section that restates earlier decisions; no motivation section before the first decision) rather than the names."
+      },
+      {
+        "assertion": "Per-tenant quotas and the mobile-app limit appear as asks or open items in their own section, not inside the preamble",
+        "reason": "Ambiguous for a doc with no preamble and a 'Follow-ups' section: deferred work is arguably an 'open item'. State whether the intent is that product is explicitly asked to decide (as the skill's Mode 1 implies) or merely that the items are sectioned off."
+      },
+      {
+        "assertion": "At least one decision is written in 'chose A over B because C' form with a revisit trigger",
+        "reason": "The baseline passes on a decision spread across two sentences with a vague 'revisit once we have data'. If the intent is a compact `chose A over B because C; revisit if D` line, require the trigger to be a concrete condition and the four parts to be adjacent."
+      },
+      {
+        "reason": "Nothing checks for restatement inside the doc. The baseline restates the three NOTES.md decisions with full rationale in a table, then restates its own four decisions in a closing list; the 'treated as settled' assertion passes anyway because nothing was re-raised. A 'settled decisions are referenced in one sentence, not re-explained' check would discriminate here."
+      }
+    ],
+    "overall": "The baseline is a competent but conventional ~1070-word plan with For-product/For-eng sections tacked on at the end instead of a preamble. Four assertions discriminate well (preamble, asks section, budget, chat restatement); three of the four it passed (header names, A-over-B form, settled decisions) are satisfiable by a doc that still exhibits the skill's anti-patterns under other names."
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "expectations": [
+    {
+      "text": "send() retries up to 3 attempts on 5xx responses with increasing delay and returns without retrying on 4xx",
+      "passed": false,
+      "evidence": "Attempt count and 4xx fail-fast are correct (grader stub: [503,503,503] -> False, 3 calls; [503,400] -> False, 2 calls; [404] -> False, 1 call, no sleep). But delay is `random.uniform(0, 0.2 * 2**(attempt-1))` (full jitter), so delays are NOT increasing: grader run produced sleeps [0.13, 0.029] on [500,500,500] and [0.065, 0.06] on [503,503,200]; a 100k-sample simulation shows the second delay is shorter than the first ~25% of the time. The code's own comment claims 'delays are 0.2s, 0.4s (plus jitter)', which the code does not do. Only the cap grows; the assertion says the delay increases. Failing strictly; see eval_feedback on the ambiguity."
+    },
+    {
+      "text": "No comment restates what the adjacent code visibly does",
+      "passed": false,
+      "evidence": "`except httpx.TransportError:` is immediately followed by '# Timeout / connection failure.' -- a plain-English gloss of the exception class on the line above. The constant annotation 'delays are 0.2s, 0.4s (plus jitter)' is a what-comment paraphrasing _backoff()'s arithmetic (and paraphrasing it wrongly). The '4xx: our request is bad' and 'Full jitter so three replicas...' comments are genuine whys."
+    },
+    {
+      "text": "No comment narrates the session (added per request, updated to, as asked)",
+      "passed": true,
+      "evidence": "facts.json lists all 7 comment lines; none contain 'added', 'per request', 'updated', 'as asked' or any reference to the task or conversation."
+    },
+    {
+      "text": "Every comment present answers a why, an invariant, an external fact, or a deliberate omission",
+      "passed": false,
+      "evidence": "`BASE_DELAY = 0.2  # seconds; delays are 0.2s, 0.4s (plus jitter)` is a what (a derived schedule), not a why/invariant/external fact/omission -- and it is false for this code, whose full-jitter _backoff() yields uniform(0,0.2) then uniform(0,0.4). The TransportError comment's second sentence ('Safe to retry: at-least-once delivery, partner dedupes on event_id') is a why but duplicates the file's header comment verbatim in substance. Remaining comments (4xx reason, jitter reason, header) qualify."
+    },
+    {
+      "text": "No TODO or stub placeholders in delivered code",
+      "passed": true,
+      "evidence": "grep for TODO/FIXME/XXX/NotImplemented/bare `pass` over without_skill/outputs/project (src and tests) returns nothing; facts.json `todo: false`. Tests are complete (6 functions with assertions); transcript step 5 reports 6 passed in a scratch venv."
+    },
+    {
+      "text": "The commit subject is verb-led and under 72 characters; a body is present only for a non-obvious decision and does not list files",
+      "passed": true,
+      "evidence": "Subject 'Retry webhook delivery on 5xx and transport errors, fail fast on 4xx' is 68 chars, verb-led. Body explains two non-obvious decisions (why transport errors are retried despite the ask naming 5xx; why backoff values are constants not config, citing NOTES.md) and names no files. First paragraph does restate the before/after mechanics, but the non-obvious-decision condition is met."
+    },
+    {
+      "text": "The diff is confined to webhook_client.py plus tests, with no unrelated refactors or renames",
+      "passed": false,
+      "evidence": "NOTES.md was modified (new 'Webhook delivery retries on 5xx and transport errors...' Key Design Decision entry; `diff` vs original shows 4 added lines). Transcript step 6 and the file list in facts.json confirm. Additionally the public constructor gained a `sleep=time.sleep` parameter as a test seam, and the retry policy was widened beyond the ask to httpx.TransportError -- behavioral scope beyond 'retry on 5xx'. Files changed: src/webhook_client.py, tests/__init__.py, tests/test_webhook_client.py, NOTES.md."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 4,
+    "total": 7,
+    "pass_rate": 0.43
+  },
+  "execution_metrics": {
+    "note": "no metrics.json in outputs; counts from transcript",
+    "total_steps": 7,
+    "errors_encountered": 0,
+    "project_files_changed": 4,
+    "total_tool_calls": 0,
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "claims": [
+    {
+      "claim": "send now retries up to 3 times on 5xx and on transport errors, and returns False immediately on any 4xx",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Grader stub: 5xx x3 -> 3 calls, False; ConnectError then 200 -> True in 2 calls; 400 -> False in 1 call. (Note: 'retries up to 3 times' is loose -- it is 3 attempts, i.e. 2 retries.)"
+    },
+    {
+      "claim": "6 tests using httpx.MockTransport ... All pass",
+      "type": "process",
+      "verified": true,
+      "evidence": "tests/test_webhook_client.py has 6 test functions; transcript step 5 reports pytest -q: 6 passed in a scratch venv with httpx and pytest installed. Not re-run by grader (httpx not installed locally)."
+    },
+    {
+      "claim": "delays are 0.2s, 0.4s (plus jitter)  [in-code comment]",
+      "type": "factual",
+      "verified": false,
+      "evidence": "_backoff returns uniform(0, 0.2*2**(attempt-1)); delays are in [0,0.2] and [0,0.4], not 0.2s/0.4s plus jitter. Comment contradicts code."
+    },
+    {
+      "claim": "Delays and attempt count are class constants, not constructor knobs, per your 'pick a default' preference",
+      "type": "factual",
+      "verified": true,
+      "evidence": "MAX_ATTEMPTS and BASE_DELAY are class attributes; however a new constructor knob `sleep=` was added, which the response discloses as a test seam."
+    },
+    {
+      "claim": "NOTES.md -- added the decision entry (why transport errors are retried, why 429 is treated as 4xx)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "diff of NOTES.md shows the new entry; note it is out of scope for the asked change."
+    },
+    {
+      "claim": "If you'd rather keep it strictly 5xx, delete the except httpx.TransportError branch and it's a one-line revert",
+      "type": "quality",
+      "verified": false,
+      "evidence": "Removing the except branch alone leaves a try/else structure and two transport-error tests that would then fail; it is a multi-line change, not one line."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [
+      "Retry policy widened to transport errors without being asked; response flags it as 'one call you should know about'.",
+      "No logging of attempt counts; response defers."
+    ],
+    "workarounds": [
+      "Added `sleep=` constructor parameter so tests avoid real waits."
+    ]
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "send() retries up to 3 attempts on 5xx responses with increasing delay and returns without retrying on 4xx",
+        "reason": "This run implements standard full-jitter exponential backoff, which the assertion's 'increasing delay' wording fails on a strict read. Decide whether that is intended and reword ('exponentially growing cap' vs 'monotonically increasing sleep')."
+      },
+      {
+        "reason": "No assertion checks comment accuracy against the code. The 'delays are 0.2s, 0.4s (plus jitter)' comment is wrong for this implementation and was only caught via the why/what assertion as a side effect."
+      },
+      {
+        "reason": "The scope assertion conflates files touched with behavior changed. This run widened the retry policy (transport errors) and the constructor signature; a separate assertion like 'retry triggers only on 5xx unless the user agreed otherwise' would isolate behavioral scope creep from file scope creep."
+      }
+    ],
+    "overall": "Baseline produced solid, tested code but failed the comment-quality and scope assertions; one failure (increasing delay) rests on an ambiguous assertion that should be tightened."
+  }
+}

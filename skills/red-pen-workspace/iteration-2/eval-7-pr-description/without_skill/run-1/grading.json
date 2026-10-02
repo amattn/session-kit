@@ -1,0 +1,116 @@
+{
+  "expectations": [
+    {
+      "text": "The description opens with one or two sentences naming the return-type change as the part needing the reviewer's judgment and the renames as mechanical",
+      "passed": false,
+      "evidence": "The description (between the `---` rules) opens with \"## Webhook client: retry on 5xx with exponential backoff\" then \"### What\" then \"`WebhookClient.send()` now retries partner deliveries that fail with a 5xx response: up to 3 attempts...\" The return-type change is the second paragraph of 'What'; the renames are five sections down under 'Unrelated changes in this diff'. The judgment-vs-mechanical split appears only in the chat preamble outside the description (\"Two things I'd flag before you paste it: the return-type change is the part reviewers need to look at ... the `_fmt` renames plus the import-order fix are unrelated\"), which a reviewer on GitHub would never see."
+    },
+    {
+      "text": "The return-type change is surfaced as a deviation from the original ask, with the reason (callers need attempt counts)",
+      "passed": true,
+      "evidence": "\"`send()` also changes its return type from `bool` to a `DeliveryResult` dataclass (`status`, `attempts`, `last_error`). The original ask was just \\\"add retry,\\\" but once there are multiple attempts the caller needs to know how many it took and why the last one failed, and a `bool` can't carry that.\" Deviation and attempt-count reason both present."
+    },
+    {
+      "text": "No per-file change inventory",
+      "passed": true,
+      "evidence": "The description is organized What / Why / Review notes / Unrelated / Tests, not file by file. The 'Unrelated changes' section does use `path: change` bullets for the two mechanical items (\"`src/api/transactions.py`, `src/api/balances.py`: `_fmt` renamed to `_format_amount`.\" / \"`src/api/__init__.py`: import order.\"), which is the changes.md format for a subset, and all six files are named somewhere. Passed because the description as a whole is not an inventory; borderline."
+    },
+    {
+      "text": "The description is under roughly 150 words",
+      "passed": false,
+      "evidence": "facts.json words_incl_code = 468 for the whole response; the description body between the `---` rules alone is 331 words by `wc -w`. More than double the limit either way."
+    },
+    {
+      "text": "No section headers at all, including renamed scaffolding (What/Why/Changes/Things to check)",
+      "passed": false,
+      "evidence": "Six markdown headers: \"## Webhook client: retry on 5xx with exponential backoff\", \"### What\", \"### Why\", \"### Review notes\", \"### Unrelated changes in this diff\", \"### Tests\". 'What' and 'Why' are literally the scaffolding named in the assertion, and 'Review notes' is 'Things to check' renamed. Note facts.json lists scaffold_headers = [] despite 'What' and 'Why' being present, so the extractor's scaffold detection missed them."
+    },
+    {
+      "text": "Every concrete number and claim traces to changes.md or the source file (an invented latency figure or invented test contents fails)",
+      "passed": false,
+      "evidence": "The latency figure is sourced: \"With the client's 5s timeout, three attempts plus backoff is roughly 15-16s\" derives from `timeout: float = 5.0` and 3 attempts with 200ms base (15s + ~0.6s backoff). But the Tests section invents test contents: \"adds 4 tests covering retry behaviour: success after transient 5xx, exhaustion after 3 attempts, fail-fast on 4xx, and the populated `DeliveryResult` fields.\" changes.md says only 'added 4 tests for retry behavior'. The model admits this in the trailing caveat (\"I inferred the four cases from the description of the feature\") but left the invented list in the description. Also unsourced: \"Retry parameters are fixed constants, not config\" (not in changes.md)."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 4,
+    "total": 6,
+    "pass_rate": 0.33
+  },
+  "execution_metrics": {
+    "total_tool_calls": 3,
+    "output_chars": 5202,
+    "errors_encountered": 0,
+    "transcript_chars": 2210,
+    "response_chars": 2992,
+    "note": "Transcript is a summary; it enumerates three Bash steps (copy+list project, read seven files, write outputs). Drafting was done without tools.",
+    "total_steps": 0
+  },
+  "claims": [
+    {
+      "claim": "Three attempts plus backoff is roughly 15-16s of blocking in the worst case",
+      "type": "factual",
+      "verified": true,
+      "evidence": "3 x 5.0s timeout (webhook_client.py) + 200ms + 400ms backoff (changes.md) = ~15.6s; jitter unspecified. Derivable."
+    },
+    {
+      "claim": "The 4 tests cover success after transient 5xx, exhaustion after 3 attempts, fail-fast on 4xx, populated DeliveryResult fields",
+      "type": "factual",
+      "verified": false,
+      "evidence": "changes.md: 'added 4 tests for retry behavior' with no case list; tests/ not in working tree. Self-admitted inference in the caveat paragraph."
+    },
+    {
+      "claim": "Retry parameters are fixed constants, not config",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Not in changes.md or source. Inferred from NOTES.md 'pick a default and we'll revisit'."
+    },
+    {
+      "claim": "Retrying is safe because delivery is already at-least-once and partners dedupe on event_id",
+      "type": "factual",
+      "verified": true,
+      "evidence": "webhook_client.py header comment."
+    },
+    {
+      "claim": "The branch's src/api/ and tests/ files aren't in this working tree",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript step 1 lists the copied project; no src/api/ or tests/ present. The test-projects/ledgerd source tree only has src/webhook_client.py."
+    },
+    {
+      "claim": "Led with the return-type change as the reviewer-relevant item",
+      "type": "quality",
+      "verified": false,
+      "evidence": "Transcript step 3 claims this, but in the description the first paragraph is the retry mechanics; the return-type change is the second paragraph under 'What'. The lead-in exists only in the chat preamble."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [
+      "Executor's trailing caveat: test list was inferred, not read; exact backoff formula unknown."
+    ],
+    "needs_review": [
+      "Tests section should be checked against the real test file (executor's own words)."
+    ],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "No section headers at all, including renamed scaffolding (What/Why/Changes/Things to check)",
+        "reason": "facts.json scaffold_headers = [] for this run even though '### What' and '### Why' are present verbatim in the headers list. The scaffold detector is not matching heading text; grading had to be done by hand."
+      },
+      {
+        "assertion": "The description opens with one or two sentences naming the return-type change...",
+        "reason": "The baseline put the required framing in the chat wrapper and not in the description. The assertion should state explicitly that only the pasteable description counts, otherwise a lenient grader could pass this."
+      },
+      {
+        "assertion": "Every concrete number and claim traces to changes.md or the source file",
+        "reason": "This assertion did its job here (caught invented test cases). But the eval setup makes invention tempting: tests/ is absent from the project. Consider adding a stub tests/test_webhook_client.py with four named tests so the eval can distinguish 'read the file' from 'guessed plausibly'."
+      },
+      {
+        "reason": "No assertion checks the chat wrapper. The baseline's preamble and 70-word caveat paragraph roughly double the response; the with-skill run asked one targeted question (split the renames?). That difference in reply discipline is a real skill outcome and is unmeasured."
+      }
+    ],
+    "overall": "Baseline fails on the structural assertions (headers, length, opening) and on provenance via invented test contents, while getting the reasoning right (deviation surfaced, retry safety sourced from the code comment). The assertions discriminate well against this baseline; the weak spots are in what facts.json measures, not in the assertions themselves."
+  }
+}

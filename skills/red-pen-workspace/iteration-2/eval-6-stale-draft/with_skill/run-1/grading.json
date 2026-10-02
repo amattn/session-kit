@@ -1,0 +1,125 @@
+{
+  "expectations": [
+    {
+      "text": "The edited design.md has no Overview, Background, or Next steps scaffolding headers",
+      "passed": true,
+      "evidence": "outputs/project/docs/design.md headers are exactly: '# Transaction Export Design', '## Storage', '## Rate limiting', '## Approach'. Overview, Background and Next steps are gone; facts.json scaffold_headers: []. The reply's one-liner accounts for the cut ('cut Overview, Background, and Next steps (two of its four items are now settled, the other two restate the Approach)')."
+    },
+    {
+      "text": "Narration sentences (In this document we will cover...) are removed",
+      "passed": true,
+      "evidence": "Neither 'In this document we will cover' nor 'This document describes the design for' appears in the edited file; facts.json design_md.narration: false. Replaced by a reader-naming preamble ('This note is for the ledgerd owner ... and for the engineer building the job'), which the mode requires."
+    },
+    {
+      "text": "The claim that the database choice is still open is flagged to the user as contradicting the record (Postgres), not kept silently and not silently rewritten",
+      "passed": true,
+      "evidence": "response.md symptom table row: 'Claims the record already settles (\"database choice still open\" \u2014 CLAUDE.md fixes Postgres; ...) | 2 | 0'. The claim is named, the contradicting source is cited, and the edited file no longer contains it (facts.json db_open_claim_kept: false). Flagged AND edited."
+    },
+    {
+      "text": "The claim that the rate limiting approach is undecided is flagged to the user as contradicting NOTES.md, not kept silently and not silently rewritten",
+      "passed": true,
+      "evidence": "Same table row names '\"rate limiting not yet decided\" \u2014 NOTES.md has three decisions', and a second row flags the consequence: 'Proposal contradicting the record (per-IP counter in process memory vs. Redis state, keyed per API key) | 1 | 0'. Edited file drops the claim (rl_undecided_claim_kept: false)."
+    },
+    {
+      "text": "The rewritten rate-limiting text matches NOTES.md's three decisions (Redis state, 429 + Retry-After, per-API-key)",
+      "passed": true,
+      "evidence": "Edited design.md Rate limiting section: 'Exports go through the existing limiter (state in Redis, keyed per API key, 429 with `Retry-After`; NOTES.md 2026-09-10 and 2026-09-12)'. All three decisions present with correct dates matching NOTES.md L20, L24, L28."
+    },
+    {
+      "text": "The storage choice, which is genuinely open, remains an ask with a stated lean",
+      "passed": true,
+      "evidence": "Edited Storage section: 'Open: Postgres large objects or S3. ... Lean S3 on this note's own grounds (durable, cheap); Postgres large objects if keeping everything in one system matters more.' Preamble names the owner as the decider ('the ledgerd owner, who decides where export files are stored'). Local filesystem is ruled out with a reason traceable to the record (three replicas, CLAUDE.md L11)."
+    },
+    {
+      "text": "No new open questions or assumptions are introduced beyond what the draft and the record contain",
+      "passed": false,
+      "evidence": "The edited file adds an 'Assumptions:' tick-list whose second item is new: '[ ] Webhook delivery is at-least-once and partners dedupe on `event_id` (src/webhook_client.py), so a repeated \"export ready\" notification is harmless.' Neither the draft nor NOTES.md/CLAUDE.md contains this; it is sourced from a code comment in src/webhook_client.py L3-4 (so it is grounded, not invented) but it is an assumption beyond the draft and the record. The Rate limiting section also adds a new revisit condition ('revisit if bulk exports crowd out partners' ordinary traffic') and the reply adds a reader assumption ('The doc named no reader, so the preamble names the owner ... change it if that is wrong'). Strictly, new assumptions were introduced. The first assumption ('Paging /transactions is the pain') is a legitimate restatement of the draft's Background."
+    },
+    {
+      "text": "The chat reply follows the editing-pass report shape: one line, symptom table, one pair, nothing else",
+      "passed": false,
+      "evidence": "Near miss. The three elements are present in order and nothing follows the pair: an opening paragraph, a Symptom/Before/After table, one Before/After paragraph pair. But two of the skill's explicit rules for the shape are broken: (1) the opening is three sentences (~63 words) rather than 'one line' \u2014 it also carries the reader-assumption caveat; (2) the table includes a 'Words | 263 | 184' row although SKILL.md L272 says 'no word count unless the reader asked'. Outside-the-pair word count (~187) is under the 200 limit. Judged strictly against the stated shape this fails; the deviation is small and the baseline's 663-word bulleted review is in a different class."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 2,
+    "total": 8,
+    "pass_rate": 0.75
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Read": 3,
+      "Bash": 12
+    },
+    "total_tool_calls": 15,
+    "total_steps": 6,
+    "errors_encountered": 1,
+    "output_chars": 2862,
+    "transcript_chars": 1599,
+    "note": "Counts estimated from the summarized transcript (no metrics.json). The one error is the HELP.md read that 'errored on a shell quirk after HELP.md printed'. output_chars = response.md (1717) + project/docs/design.md (1145)."
+  },
+  "claims": [
+    {
+      "claim": "Document went from 263 to 184 words",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Original design.md is 263 words per eval metadata; facts.json reports the edited file at 184 words."
+    },
+    {
+      "claim": "Two of the four Next steps items are now settled, the other two restate the Approach",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Original Next steps: 'Decide on storage' (still open, moved into Storage as an ask with lean), 'Decide on rate limiting' (settled by NOTES.md), 'Implement the background job', 'Implement the webhook notification' (both restate Approach L21). Strictly only 'Decide on rate limiting' is settled; 'Decide on storage' is folded into the Storage ask rather than settled, so the one-liner slightly overstates."
+    },
+    {
+      "claim": "Hedges on a settled default: 2 before, 0 after",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Original L17 'which can be revisited later' and L21 'This is a reasonable default'; neither appears in the edited file."
+    },
+    {
+      "claim": "Webhook delivery is at-least-once and partners dedupe on event_id",
+      "type": "factual",
+      "verified": true,
+      "evidence": "src/webhook_client.py L3-4: 'Delivery is at-least-once; the partner dedupes on event_id.'"
+    },
+    {
+      "claim": "symptoms.py --compare delta: headers 7->4, scaffold headers 3->0, openers 1->0, narration 2->0",
+      "type": "process",
+      "verified": true,
+      "evidence": "Original has 7 headers (title + 6 H2), edited has 4; facts.json confirms scaffold_headers [] and openers 0 on the edited file. The script run itself is described in transcript step 5 but its raw output is not in the outputs dir."
+    },
+    {
+      "claim": "Files changed in the project: docs/design.md only",
+      "type": "process",
+      "verified": true,
+      "evidence": "outputs/project contains only docs/design.md."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [
+      "Reader identification: no reader named in the doc and no roster in CLAUDE.md, so the agent inferred owner + implementing engineer and flagged it in the reply rather than asking."
+    ],
+    "needs_review": [],
+    "workarounds": [
+      "HELP.md read hit a shell quirk on first attempt; retried."
+    ]
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "No new open questions or assumptions are introduced beyond what the draft and the record contain",
+        "reason": "Define 'the record'. The with-skill run's only new assumption is grounded in src/webhook_client.py (a file CLAUDE.md lists under Key Files), which is arguably part of the record even though it is not NOTES.md/CLAUDE.md. As written the assertion fails a well-sourced assumption the same way it would fail an invented one; the author probably wants to catch the latter only. Consider 'every assumption or open question in the edited file traces to the draft, NOTES.md, CLAUDE.md, or a cited project file'."
+      },
+      {
+        "assertion": "The chat reply follows the editing-pass report shape: one line, symptom table, one pair, nothing else",
+        "reason": "The assertion bundles the three-element shape with per-element rules (one line, no word count). A reply with the right three elements but a Words row and a three-sentence opener fails it, while a one-line reply with no table would also fail it \u2014 the same verdict for very different outputs. Splitting into 'reply is exactly opener + table + one pair' and 'opener is one line and the table carries no word count unless asked' would make the signal discriminating."
+      },
+      {
+        "reason": "No assertion checks that the local-filesystem option is dropped with the replica reason, or that the preamble names a reader. Both are Mode 1 requirements the skill run satisfied and the baseline did not; they would be cheap, discriminating additions."
+      }
+    ],
+    "overall": "Six of eight assertions are discriminating and the skill run passes them cleanly. The two failures are a boundary question (does project source count as 'the record'?) and a strict reading of the report shape; both are near misses the author should decide on rather than clear skill defects."
+  }
+}

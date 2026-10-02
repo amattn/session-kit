@@ -1,0 +1,31 @@
+{
+  "eval_id": 7,
+  "eval_name": "pr-description",
+  "prompt": "Setup: the agent is dropped into a copy of test-projects/ledgerd, a small FastAPI service. It reads CLAUDE.md and NOTES.md as a real session would. NOTES.md records three settled decisions (rate limiter state in Redis, 429 + Retry-After, keyed per API key), two open questions (per-tenant quotas, a higher mobile limit), one invariant (balances never older than 30s) and two user quotes ('partners are the noisy neighbors', 'pick a default and we'll revisit'). changes.md summarizes a branch: retry added to the webhook client, the return type changed from bool to a DeliveryResult (not asked for; needed so the caller can log attempts), two mechanical renames flagged by the formatter, four tests. The description should separate what needs a reviewer's judgment from what is mechanical.\n\nUser's message: Write the PR description for the webhook-retry branch. changes.md summarizes what changed.",
+  "assertions": [
+    {
+      "text": "The description opens with one or two sentences naming the return-type change as the part needing the reviewer's judgment and the renames as mechanical",
+      "type": "content"
+    },
+    {
+      "text": "The return-type change is surfaced as a deviation from the original ask, with the reason (callers need attempt counts)",
+      "type": "content"
+    },
+    {
+      "text": "No per-file change inventory",
+      "type": "content"
+    },
+    {
+      "text": "The description is under roughly 150 words",
+      "type": "content"
+    },
+    {
+      "text": "No section headers at all, including renamed scaffolding (What/Why/Changes/Things to check)",
+      "type": "content"
+    },
+    {
+      "text": "Every concrete number and claim traces to changes.md or the source file (an invented latency figure or invented test contents fails)",
+      "type": "content"
+    }
+  ]
+}

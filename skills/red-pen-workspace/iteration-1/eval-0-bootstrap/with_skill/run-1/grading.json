@@ -1,0 +1,104 @@
+{
+  "expectations": [
+    {
+      "text": "CLAUDE.md gains a Writing Conventions section marked with a `<!-- managed by /red-pen -->` breadcrumb",
+      "passed": true,
+      "evidence": "project/CLAUDE.md has a new `## Writing Conventions` header (facts.json headers: [CLAUDE.md, Project, Key Files, Writing Conventions]) with `<!-- managed by /red-pen -->` on the line directly beneath it; facts.json redpen_breadcrumb=true, grep count 1. The original Project and Key Files sections are untouched."
+    },
+    {
+      "text": "The section covers all four output types (spec/plan, code comment, code/diff/commit, chat) with a one-line rule each",
+      "passed": true,
+      "evidence": "The `Output | Rule of thumb` table has exactly four rows: 'Spec / plan / design note', 'Code comment', 'Code / diff / commit', 'Chat', each with its rule in a single table cell (e.g. Chat: 'Answer first. Length matches the question. No restating, no performative phrases. Formatting is rare. One question back at most.'). The spec/plan cell is several sentences but still one table line."
+    },
+    {
+      "text": "The section states the reader default (an insider who knows the codebase and thread) or a reader roster",
+      "passed": true,
+      "evidence": "Section contains 'Readers (default for code, comments, chat: an insider who knows this codebase and this thread):' followed by a Reader/Knows/Decides/Stops-at roster table with two rows (maintainer; Slack summary readers). Both the default and a roster are present."
+    },
+    {
+      "text": "The agent asks exactly one question about who reads the project's output, or proposes a roster and asks to confirm it",
+      "passed": true,
+      "evidence": "response.md: 'One question: who reads what this project produces? I seeded the roster with two rows from the project description ... If the only reader is you, I'll drop the table; if there's an on-call rotation or a product owner, name them and I'll add rows.' Exactly one question mark in the response (grep count 1); it both asks about readers and proposes the seeded roster for confirmation."
+    },
+    {
+      "text": "The section is a reference card under roughly 250 words, not a tutorial",
+      "passed": false,
+      "evidence": "Counted the `## Writing Conventions` section alone (everything after the header): 322 words by wc -w, 285 words after stripping table pipes and the HTML marker. Whole-file count in facts.json is 356 with a 34-word preamble, consistent with ~322. That is 14-29% over the 250 budget, beyond what 'roughly' covers. Stylistically it is a reference card (mode table + dense core paragraph + roster table), not a tutorial, but the word budget is exceeded; the mode table plus core paragraph alone is near 250 before the roster table is added."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 1,
+    "total": 5,
+    "pass_rate": 0.8
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Read": 1,
+      "Bash": 4
+    },
+    "total_tool_calls": 5,
+    "total_steps": 6,
+    "errors_encountered": 0,
+    "output_chars": 0,
+    "transcript_chars": 0,
+    "note": "No metrics.json present; tool counts taken from transcript.md's own tally."
+  },
+  "claims": [
+    {
+      "claim": "CLAUDE.md had no existing style or commit conventions, so nothing needed merging.",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The pre-existing content is only `## Project` (one sentence) and `## Key Files` (two bullets); no conventions to merge."
+    },
+    {
+      "claim": "Did not create AGENTS.md \u2014 the project only has CLAUDE.md.",
+      "type": "process",
+      "verified": true,
+      "evidence": "outputs/project/ contains only CLAUDE.md."
+    },
+    {
+      "claim": "Appended the block from SKILL.md \u00a7 Bootstrap, with roster seeded from the project description (maintainer; Slack summary readers).",
+      "type": "process",
+      "verified": true,
+      "evidence": "The roster rows match the project description (a maintainer of a service that posts a daily Slack summary). The exact match to SKILL.md's template cannot be verified from this eval directory, but the transcript step 1 shows SKILL.md was read first."
+    },
+    {
+      "claim": "`/red-pen <file>` edits a file or section against these rules; 'too long' or 'red-pen this' works mid-conversation.",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Describes skill behaviour not exercised in this eval; unverifiable from outputs. Note facts.json flags 'too long' under apology_or_meta, which is a false positive here \u2014 it is a quoted trigger phrase, not meta-commentary."
+    },
+    {
+      "claim": "The original test-projects directory was not modified.",
+      "type": "process",
+      "verified": false,
+      "evidence": "Transcript asserts work was done on a scratchpad copy; the original directory is not in the eval outputs so this cannot be confirmed here."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": [],
+    "note": "No user_notes.md present."
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The section is a reference card under roughly 250 words, not a tutorial",
+        "reason": "The skill's own bootstrap template (mode table + core paragraph) lands near 250 words before any roster is added, so a correctly-followed skill fails this assertion whenever it seeds a roster. Either the template needs trimming or the assertion should state the budget precisely and say whether the roster table counts (e.g. 'the conventions text excluding the reader roster is under 250 words'). As written, 'roughly' invites inconsistent grading."
+      },
+      {
+        "assertion": "The section covers all four output types ... with a one-line rule each",
+        "reason": "'One-line rule' is satisfied by a table cell of any length; the spec/plan cell here is four sentences. If brevity per mode matters, cap it (e.g. under 40 words per row)."
+      },
+      {
+        "reason": "No assertion checks that existing CLAUDE.md content is preserved unchanged, or that the agent reported what it found/merged. Both happened correctly here but an overwrite would go uncaught."
+      },
+      {
+        "reason": "No assertion checks the chat reply itself follows the chat rule the skill installs (answer first, no scaffolding, one question back at most). The response did comply, and this is the most discriminating with-vs-without signal observed: facts.json shows 0 bold_leads with skill vs 10 without."
+      }
+    ],
+    "overall": "Four of five assertions are discriminating and the skill passed them cleanly. The word-budget assertion is the weak spot: it fails a faithful execution of the skill's own template, which points at a skill/template problem as much as a grading one."
+  }
+}

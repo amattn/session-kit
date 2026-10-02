@@ -1,0 +1,110 @@
+{
+  "expectations": [
+    {
+      "text": "send() retries up to 3 attempts on 5xx responses with backoff between attempts and returns without retrying on 4xx",
+      "passed": true,
+      "evidence": "src/webhook_client.py lines 15-23: `for attempt in range(MAX_ATTEMPTS)` (3) posts, `if resp.status_code < 500: return resp.status_code < 300` returns on any 4xx without retry, `time.sleep(BACKOFF_BASE_SECONDS * 2**attempt)` between 5xx attempts. Grader simulation with a stubbed httpx: [503,503,503] -> False, 3 calls, sleeps [0.2, 0.4]; [400] -> False, 1 call; [503,200] -> True, 2 calls; [503,404] -> False, 2 calls."
+    },
+    {
+      "text": "Every comment in the file describes what the code actually does (a comment that states fixed delays over jittered code fails)",
+      "passed": true,
+      "evidence": "Two comments in file. (1) Pre-existing header 'Partners register one HTTPS endpoint each. Delivery is at-least-once; the partner dedupes on event_id.' is an external fact, unchanged. (2) '5xx is the partner's outage; 4xx means they rejected this payload, and an identical resend gets the same answer.' sits above `if resp.status_code < 500` and matches the code: 5xx loops/retries, <500 returns immediately. No claims about delay shape, jitter, or attempt counts that could drift; constants carry those."
+    },
+    {
+      "text": "No comment restates what the adjacent code visibly does and none narrates the session",
+      "passed": true,
+      "evidence": "The 5xx/4xx comment gives the reason for the split (outage vs rejection) rather than saying 'retry on 5xx, return on 4xx'. No comment mentions the task, the session, NOTES.md, or what was changed. No docstring added."
+    },
+    {
+      "text": "Every comment present answers a why, an invariant, an external fact, or a deliberate omission",
+      "passed": true,
+      "evidence": "Header comment = external fact (partner setup, at-least-once contract). 5xx/4xx comment = why (an identical resend to a 4xx gets the same answer). Both qualify; nothing else is commented."
+    },
+    {
+      "text": "No TODO or stub placeholders in delivered code",
+      "passed": true,
+      "evidence": "grep for TODO/FIXME/pass/NotImplemented finds nothing; facts.json webhook_client.todo = false. send() and close() are fully implemented."
+    },
+    {
+      "text": "The commit subject is verb-led and under 72 characters; the body, if present, carries only a non-obvious decision and does not restate the diff",
+      "passed": false,
+      "evidence": "Subject 'Add retry to WebhookClient.send: exponential backoff on 5xx' is verb-led and 59 chars (passes). But the body opens with a 'Mechanics:' block that restates the diff: '3 attempts, 0.2s base, doubling (sleeps 0.2s, 0.4s)', '4xx returns False on first response', '3xx and transport errors unchanged (False / raise)'. These are readable directly from MAX_ATTEMPTS, BACKOFF_BASE_SECONDS, and the loop. Only the 'Design:' block (constants not constructor args per NOTES.md; no jitter because 6 endpoints x 3 replicas can't stampede) carries non-obvious decisions. The assertion requires the body carry ONLY non-obvious decisions."
+    },
+    {
+      "text": "The diff is confined to webhook_client.py plus tests; NOTES.md, the constructor signature, and retry semantics beyond 5xx are untouched unless the reply surfaces the change as an ask with a reason",
+      "passed": true,
+      "evidence": "diff against test-projects/ledgerd: only src/webhook_client.py changed (+14/-2 lines). NOTES.md not present in outputs/project (untouched). `__init__(self, timeout: float = 5.0)` unchanged. Only 5xx is retried; 3xx still returns False once and transport errors still raise (response: '2xx/3xx handling and transport errors (still raise) are unchanged'). No tests written, but the response names tests as a follow-up rather than silently skipping."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 1,
+    "total": 7,
+    "pass_rate": 0.86
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Read": 1,
+      "Bash": 11
+    },
+    "total_tool_calls": 12,
+    "total_steps": 8,
+    "errors_encountered": 0,
+    "output_chars": 4967,
+    "transcript_chars": 2804,
+    "note": "tool_calls estimated from the summary transcript; `import httpx` failed once (not installed) and was resolved via pip --target, not counted as an error"
+  },
+  "claims": [
+    {
+      "claim": "Done in src/webhook_client.py (+11 lines)",
+      "type": "factual",
+      "verified": false,
+      "evidence": "diff shows +14/-2, net +12 lines (26 vs 14). Off by one; immaterial but inaccurate."
+    },
+    {
+      "claim": "Worst case send() now blocks ~15.6s (3 x 5s timeout + 0.6s backoff)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "timeout default 5.0, sleeps 0.2 + 0.4 = 0.6; 15.6s is correct."
+    },
+    {
+      "claim": "Verified six paths with a scratch script against httpx.MockTransport",
+      "type": "process",
+      "verified": true,
+      "evidence": "transcript step 6 lists the six cases and expected sleeps; grader re-ran equivalent cases and all matched."
+    },
+    {
+      "claim": "No jitter: 6 partner endpoints and 3 replicas is too few senders to stampede",
+      "type": "quality",
+      "verified": true,
+      "evidence": "NOTES.md: '6 partner integrations', 'Three replicas'. Numbers are sourced; the judgment is defensible and is surfaced as overridable."
+    },
+    {
+      "claim": "No test suite in the repo",
+      "type": "factual",
+      "verified": true,
+      "evidence": "test-projects/ledgerd has no tests/ directory."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The commit subject is verb-led and under 72 characters; the body, if present, carries only a non-obvious decision and does not restate the diff",
+        "reason": "This run passes the subject half and fails only the body half; the two halves measure different things (format vs. restraint). Splitting them would make the result legible: a body that restates the diff is exactly the behavior the skill targets and should not be masked by a correct subject."
+      },
+      {
+        "assertion": "Every comment in the file describes what the code actually does (a comment that states fixed delays over jittered code fails)",
+        "reason": "facts.json's webhook_client.comments extractor only lists `#` lines. A docstring is the most common place an agent restates mechanics (see baseline). State explicitly that docstrings count as comments, and have the extractor capture them."
+      },
+      {
+        "reason": "No assertion checks that reply claims are numerically correct against the diff. This run says '+11 lines' when the diff is +12; harmless here, but the same lapse on the 15.6s worst-case number would mislead the user. Consider: 'every number in the reply traces to the diff or NOTES.md'."
+      }
+    ],
+    "overall": "Assertions discriminate well: the skill run cleanly passes the comment-quality and scope assertions where the baseline fails, and the one failure (commit body restating mechanics) is a genuine miss the skill should have caught. Assertion 6 would be more useful split into subject and body."
+  }
+}

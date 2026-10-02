@@ -1,0 +1,138 @@
+{
+  "expectations": [
+    {
+      "text": "docs/rate_limiting.md is created",
+      "passed": true,
+      "evidence": "outputs/project/docs/rate_limiting.md exists, 348 words (facts.json), with seven sections (title, Open item, Decisions, Assumptions, Risks, Implementation, Scope out) and substantive content. Transcript step 10 confirms the file was the only project file created."
+    },
+    {
+      "text": "The document opens with a prose preamble (no heading) that names product and engineering readers and says how each should read it",
+      "passed": true,
+      "evidence": "Directly under the H1 title, with no section heading: \"This plan is for product, who confirm who gets limited and what partners see, and for the engineers building it. Product can stop after Decisions. NOTES.md already settled...\" Both readers named with what each comes for; product is given an explicit stopping point. Eng's reading path is only implied (by contrast, eng reads to the end), which is thin but the preamble does route both readers."
+    },
+    {
+      "text": "The Redis, 429 + Retry-After, and per-API-key decisions from NOTES.md are treated as settled, not re-raised as open choices",
+      "passed": true,
+      "evidence": "Preamble: \"NOTES.md already settled state in Redis, 429 + Retry-After, and keying per API key.\" One sentence of record, never re-argued. Implementation section assumes them (\"a Lua script refills and decrements the bucket\", \"Key `ratelimit:{api_key}`\"). No alternative to Redis/429/per-key is offered anywhere in the doc."
+    },
+    {
+      "text": "Per-tenant quotas and the mobile-app limit appear as asks or open items in their own section, not inside the preamble",
+      "passed": true,
+      "evidence": "\"## Open item\" section: \"Is v1 partners-only, with one limit for all? Product's call. Lean yes... Mobile stays unlimited. Revisit if mobile abuse appears or a partner negotiates a higher tier.\" Both NOTES.md open questions (one limit for all = per-tenant quotas; partners-only = mobile treatment) are folded into one explicit product-owned ask in a dedicated section. Per-tenant quotas also listed under \"## Scope out\". The preamble contains no ask."
+    },
+    {
+      "text": "At least one decision is written in 'chose A over B because C' form with a revisit trigger",
+      "passed": true,
+      "evidence": "Decisions: \"Token bucket over sliding window: partners run batch syncs, and a burst allowance lets a catch-up through while capping the average. Revisit if partners report 429s they cannot predict.\" A=token bucket, B=sliding window, C=batch syncs need a burst allowance, revisit trigger=unpredictable 429s. The Open item also carries a revisit trigger."
+    },
+    {
+      "text": "No Overview, Introduction, Background, or Next steps headers",
+      "passed": true,
+      "evidence": "facts.json headers: [Rate Limiting Plan, Open item, Decisions, Assumptions, Risks, Implementation, Scope out]; scaffold_headers: []. None of the forbidden headers or close synonyms appear."
+    },
+    {
+      "text": "The body is at or under roughly 350 words, or the top of the document says it exceeded the budget and why",
+      "passed": true,
+      "evidence": "facts.json: 348 words (including title). Under the 350 threshold. Note: the doc itself does not mention the budget; the overage past the skill's own 300-word default is explained only in the chat reply (\"over the 300 default because the one product-owned question got its own section\"), which the transcript (step 8) says was a deliberate choice. Passes on the first branch of the assertion."
+    },
+    {
+      "text": "The chat reply does not restate the document's contents",
+      "passed": false,
+      "evidence": "response.md (151 words) restates four of the doc's six sections: the Open item (\"is v1 partners-only, with one shared limit? I lean yes and leave mobile unlimited...\"), all four Decisions compressed to one line each (\"token bucket...; 100 rps sustained / burst 200 per API key...; log-only for a week...; fail open if Redis is down\"), one Assumption (\"mobile app authenticates per user and does not sit behind a single shared API key. If it does, 40k users share one bucket\" - near-verbatim from the doc), and the Implementation note about docs/design.md. The \"so you can overrule\" framing is a legitimate chat purpose, but the content is a compressed copy of the doc rather than a pointer plus what needs the user's call. Only the word count/overage sentence and \"I didn't edit it\" are new."
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 1,
+    "total": 8,
+    "pass_rate": 0.875
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Read": 1,
+      "Bash": 7
+    },
+    "total_tool_calls": 8,
+    "total_steps": 10,
+    "errors_encountered": 0,
+    "output_chars": 2312,
+    "transcript_chars": 2312,
+    "note": "No metrics.json present; counts estimated from transcript.md. Transcript shows three cut passes via scripts/symptoms.py (476 -> 388 -> 362 -> 348 words)."
+  },
+  "claims": [
+    {
+      "claim": "Document is 348 words",
+      "type": "factual",
+      "verified": true,
+      "evidence": "facts.json reports 348 words for project/docs/rate_limiting.md."
+    },
+    {
+      "claim": "The overage past the 300-word default is the Open item section",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The Open item section (heading + paragraph) is ~50 words; 348 minus that is ~298, consistent with the claim."
+    },
+    {
+      "claim": "docs/design.md proposes a per-IP in-process counter for export, contradicting NOTES.md",
+      "type": "factual",
+      "verified": true,
+      "evidence": "test-projects/ledgerd/docs/design.md line 17: \"this design proposes a simple per-IP counter in process memory as a starting point\". NOTES.md settled Redis + per-API-key, so the paragraph is stale."
+    },
+    {
+      "claim": "Mobile honors Retry-After; partners are unverified",
+      "type": "factual",
+      "verified": true,
+      "evidence": "NOTES.md: \"the mobile client already handles 429 by backing off.\" Nothing in the project says partners do."
+    },
+    {
+      "claim": "A Redis outage already breaks the balance cache",
+      "type": "factual",
+      "verified": false,
+      "evidence": "CLAUDE.md says \"Redis for caching\" and NOTES.md says the 30s cache TTL is load-bearing, so it is a reasonable inference, but no file states the balance cache specifically lives in Redis. Unverifiable from the project; plausible."
+    },
+    {
+      "claim": "Ran symptoms.py and three cut passes before delivering",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript steps 5-8 describe draft 1 at 476 words, symptoms.py runs, and --compare across passes down to 348. Final doc matches the stated 348."
+    },
+    {
+      "claim": "100 rps is 20x under the 2k rps incident",
+      "type": "factual",
+      "verified": true,
+      "evidence": "2000 / 100 = 20. NOTES.md records the 2k rps incident."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [
+      "100 rps / burst 200 is a guess; log-only week is meant to turn it into a measurement",
+      "Whether the mobile app authenticates per user or via one shared API key"
+    ],
+    "needs_review": [
+      "docs/design.md's per-IP in-process counter paragraph is stale; flagged, not edited"
+    ],
+    "workarounds": [
+      "Overage past the skill's 300-word default was explained in the chat reply instead of at the top of the document"
+    ]
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The chat reply does not restate the document's contents",
+        "reason": "The skill's own Mode 4 rule is 'report what changed and what you're unsure of', so a reply that lists the decisions 'so you can overrule' is arguably compliant with the skill while failing the assertion as written. Sharpen it to what the author actually wants, e.g. 'The chat reply gives the file location, length/overage, and what needs the user's decision, and does not enumerate the Decisions section.'"
+      },
+      {
+        "assertion": "The body is at or under roughly 350 words, or the top of the document says it exceeded the budget and why",
+        "reason": "The skill's budget is 300 words and it requires the overage to be stated at the top of the document. This run is 348 words with no note in the doc, and passes only because the assertion's threshold is 350. If the eval intends to test the skill's rule, use 300 and require the note in the document, not the chat reply."
+      },
+      {
+        "assertion": "The document opens with a prose preamble (no heading) that names product and engineering readers and says how each should read it",
+        "reason": "Passed on 'Product can stop after Decisions' alone; the eng reading path is implied. Consider requiring an explicit stopping point or reading instruction for each named reader so a one-sided preamble does not pass."
+      },
+      {
+        "reason": "No assertion checks that the doc flags the stale docs/design.md rate-limiting paragraph, which both runs found and which is the most concrete project-grounded finding. Also, nothing checks for a tick-list of assumptions or 'X breaks if Y' risks, which Mode 1 prescribes and which would discriminate skill from baseline."
+      }
+    ],
+    "overall": "The run is a clean Mode 1 spec: within budget, no scaffold headers, settled decisions recorded once, open questions in their own section. The single failure (chat reply restates the doc) is partly an assertion-wording problem. The budget assertion is looser than the skill's own rule and should be tightened."
+  }
+}

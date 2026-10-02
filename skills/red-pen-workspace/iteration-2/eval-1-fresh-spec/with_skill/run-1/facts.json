@@ -1,0 +1,39 @@
+{
+  "run": "iteration-2/eval-1-fresh-spec/with_skill/run-1",
+  "files": [
+    "project/docs/rate_limiting.md",
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 95,
+    "words_incl_code": 95,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 0,
+    "redpen_breadcrumb": false,
+    "first_sentence": "Written to docs/rate_limiting.md."
+  },
+  "project/docs/rate_limiting.md": {
+    "words": 337,
+    "words_incl_code": 337,
+    "headers": [
+      "Rate Limiting Plan",
+      "Open items",
+      "Decisions",
+      "Assumptions",
+      "Risks",
+      "Scope out"
+    ],
+    "scaffold_headers": [],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 0,
+    "redpen_breadcrumb": false,
+    "first_sentence": "# Rate Limiting Plan\n\nThis plan is for product, who confirm the partner-facing rules and own two open items, and for the engineer who builds it."
+  }
+}

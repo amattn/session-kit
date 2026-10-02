@@ -1,0 +1,99 @@
+{
+  "expectations": [
+    {
+      "text": "CLAUDE.md gains a Writing Conventions section marked with a `<!-- managed by /red-pen -->` breadcrumb",
+      "passed": false,
+      "evidence": "A `## Writing Conventions` section was added to project/CLAUDE.md, but there is no `<!-- managed by /red-pen -->` marker anywhere in the file (facts.json redpen_breadcrumb=false, grep count 0)."
+    },
+    {
+      "text": "The section covers all four output types (spec/plan, code comment, code/diff/commit, chat) with a one-line rule each",
+      "passed": false,
+      "evidence": "The CLAUDE.md section's bullets cover general style, terminology, commit subjects, docstrings/comments, and the Slack summary template. Neither spec/plan nor chat replies is addressed, in CLAUDE.md or in docs/WRITING.md (whose sections are General style, Terminology, Documentation, Code comments and docstrings, Commit messages, Pull requests, Slack summary output, Error and log messages). Two of the four required output types are missing."
+    },
+    {
+      "text": "The section states the reader default (an insider who knows the codebase and thread) or a reader roster",
+      "passed": false,
+      "evidence": "The CLAUDE.md section says nothing about who reads the output. docs/WRITING.md has one audience line ('README is for someone running tidewatch; `docs/` is for someone changing it') and notes the Slack summary is 'the most-read thing', but there is no default-reader statement and no roster."
+    },
+    {
+      "text": "The agent asks exactly one question about who reads the project's output, or proposes a roster and asks to confirm it",
+      "passed": false,
+      "evidence": "response.md contains zero question marks. The closing paragraph says 'adjust them in `docs/WRITING.md` if your team already does it differently' about units, Slack layout, and commit prefixes; nothing asks who the readers are and no roster is proposed."
+    },
+    {
+      "text": "The section is a reference card under roughly 250 words, not a tutorial",
+      "passed": true,
+      "evidence": "The `## Writing Conventions` section in CLAUDE.md is 101 words: a pointer to docs/WRITING.md plus five highlight bullets, which reads as a reference card. Note the substance was offloaded to docs/WRITING.md (809 words, 120 lines, 8 sections), which is closer to a full style guide; the assertion as written only constrains the CLAUDE.md section, so this passes on its literal terms."
+    }
+  ],
+  "summary": {
+    "passed": 1,
+    "failed": 4,
+    "total": 5,
+    "pass_rate": 0.2
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Bash": 5
+    },
+    "total_tool_calls": 5,
+    "total_steps": 5,
+    "errors_encountered": 0,
+    "output_chars": 0,
+    "transcript_chars": 0,
+    "note": "No metrics.json present; tool counts taken from transcript.md (five numbered steps, Bash only)."
+  },
+  "claims": [
+    {
+      "claim": "docs/WRITING.md is 120 lines with 8 sections.",
+      "type": "factual",
+      "verified": true,
+      "evidence": "wc -l gives 120; there are 8 `## ` headers under the H1."
+    },
+    {
+      "claim": "The project had only a CLAUDE.md and no source files yet.",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript step 1 reports find/ls showing a single 218-byte CLAUDE.md; consistent with the with_skill run's audit of the same fresh-project."
+    },
+    {
+      "claim": "Updated CLAUDE.md so future sessions apply them without being told.",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The appended section says 'Read it before writing any of those' and lists highlights; original Project and Key Files sections preserved."
+    },
+    {
+      "claim": "Meters vs. feet, the exact Slack layout, and commit prefixes are reasonable defaults rather than derived from code.",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Honest: no source existed to derive from. However the agent invented a concrete Slack message template, terminology table, log-line format, and PR structure without asking, which is a lot of unconfirmed policy for a bootstrap."
+    },
+    {
+      "claim": "No files in the original test-projects/fresh-project were touched.",
+      "type": "process",
+      "verified": false,
+      "evidence": "Work was done on a copy per the transcript; the original is not in the eval outputs, so unverifiable here."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": [],
+    "note": "No user_notes.md present."
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The section is a reference card under roughly 250 words, not a tutorial",
+        "reason": "The baseline passed this by writing a 101-word pointer in CLAUDE.md and putting an 809-word style guide in docs/WRITING.md. If the intent is that the conventions themselves stay compact, the assertion should cover the total conventions text the agent produced, or state that the rules must live in CLAUDE.md rather than a linked file."
+      },
+      {
+        "reason": "The baseline's most visible failure mode, invented project policy (Slack template, terminology table, log format, PR structure) with no question asked, is only indirectly caught by the 'exactly one question' assertion. An assertion like 'the agent does not invent project-specific conventions (formats, terms, prefixes) it could not derive from the repo' would name the behaviour directly."
+      },
+      {
+        "reason": "The chat reply had 10 bold-led bullets and 378 words for a one-sentence prompt (facts.json). No assertion checks the reply's own form, which is where the skill and baseline differ most sharply."
+      }
+    ],
+    "overall": "The assertion set cleanly separates skill from baseline (1/5 vs 4/5). The one baseline pass is a literal-terms pass that the eval author may not have intended; tightening the word-budget assertion to cover offloaded files would close it."
+  }
+}

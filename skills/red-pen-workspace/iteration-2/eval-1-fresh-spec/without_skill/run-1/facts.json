@@ -1,0 +1,52 @@
+{
+  "run": "iteration-2/eval-1-fresh-spec/without_skill/run-1",
+  "files": [
+    "project/docs/rate_limiting.md",
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 380,
+    "words_incl_code": 380,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 4,
+    "redpen_breadcrumb": false,
+    "first_sentence": "Written to `docs/rate_limiting.md`."
+  },
+  "project/docs/rate_limiting.md": {
+    "words": 1691,
+    "words_incl_code": 1712,
+    "headers": [
+      "Rate Limiting Plan",
+      "Why",
+      "What is already decided",
+      "Proposal",
+      "Algorithm: token bucket",
+      "Defaults",
+      "Response contract",
+      "Scope: which requests are limited",
+      "Where it sits",
+      "Redis details",
+      "Failure mode: fail open",
+      "Open decisions",
+      "1. Per-partner limits",
+      "2. Mobile app limit",
+      "Rollout",
+      "What product needs to decide or own",
+      "What engineering will build",
+      "Out of scope",
+      "Decisions to record in NOTES.md once approved"
+    ],
+    "scaffold_headers": [],
+    "openers": 3,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 9,
+    "redpen_breadcrumb": false,
+    "first_sentence": "# Rate Limiting Plan\n\n**Status:** proposal, ready for review\n**Audience:** product and engineering\n**Owner:** TBD\n\n## Why\n\nLast month one partner sent ~2k requests/sec and the mobile app got slow for "
+  }
+}

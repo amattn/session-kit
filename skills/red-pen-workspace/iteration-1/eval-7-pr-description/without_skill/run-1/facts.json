@@ -1,0 +1,25 @@
+{
+  "run": "iteration-1/eval-7-pr-description/without_skill",
+  "files": [
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 495,
+    "headers": [
+      "Webhook client: retry 5xx with exponential backoff",
+      "What",
+      "Why",
+      "Changes",
+      "Things to check in review",
+      "Not in this PR"
+    ],
+    "scaffold_headers": [],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 3,
+    "redpen_breadcrumb": false,
+    "first_sentence": "Here's the PR description."
+  }
+}

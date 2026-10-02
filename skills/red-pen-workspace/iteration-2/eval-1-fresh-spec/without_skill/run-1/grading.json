@@ -1,0 +1,143 @@
+{
+  "expectations": [
+    {
+      "text": "docs/rate_limiting.md is created",
+      "passed": true,
+      "evidence": "outputs/project/docs/rate_limiting.md exists, 150 lines / 10151 chars, 1691 words, 19 headers (facts.json)."
+    },
+    {
+      "text": "The document opens with a prose preamble (no heading) that names product and engineering readers and says how each should read it",
+      "passed": false,
+      "evidence": "Under the title is a metadata block, not prose: '**Status:** proposal, ready for review / **Audience:** product and engineering / **Owner:** TBD', followed immediately by '## Why'. It names the audience as a label but says nothing about how each reader should read or where to stop. The closest routing ('What product needs to decide or own', 'What engineering will build') is two headed sections near the end."
+    },
+    {
+      "text": "The Redis, 429 + Retry-After, and per-API-key decisions from NOTES.md are treated as settled, not re-raised as open choices",
+      "passed": true,
+      "evidence": "'## What is already decided': 'These were settled in September and are recorded in NOTES.md. This plan builds on them and does not reopen them.' followed by a three-row table. Open decisions section covers only per-partner limits and mobile. The design.md per-IP counter is flagged as stale under Out of scope."
+    },
+    {
+      "text": "Per-tenant quotas and the mobile-app limit appear as asks or open items in their own section, not inside the preamble",
+      "passed": true,
+      "evidence": "'## Open decisions' with '### 1. Per-partner limits' and '### 2. Mobile app limit', each introduced 'These are listed as open in NOTES.md.' Nothing of the kind appears in the opening block."
+    },
+    {
+      "text": "At least one decision is written in 'chose A over B because C' form with a revisit trigger",
+      "passed": false,
+      "evidence": "'Why token bucket over the alternatives:' gives A-over-B-because-C across three bullets but has no revisit trigger. 'Failure mode: fail open' gives a rationale with no revisit trigger. The only 'Revisit if ...' in the document (line 141, 'Limiting by endpoint cost ... Revisit if shadow data shows ...') is a scope exclusion with no 'because' and no chosen alternative. No single decision carries all of A, B, C and a revisit trigger."
+    },
+    {
+      "text": "Assumptions appear as a tick-list and at least one risk is written as a conditional ('X breaks if Y')",
+      "passed": false,
+      "evidence": "No Assumptions section and no tick-list ('- [ ]') anywhere in the file. Conditional risk language exists in prose ('Failing closed would turn a Redis blip into a full partner outage', 'If it does, the limiter moves to its own Redis instance') but the tick-list half is absent."
+    },
+    {
+      "text": "No Overview, Introduction, Background, or Next steps section under any name (a 'Why' section that is background counts)",
+      "passed": false,
+      "evidence": "'## Why' (lines 7-11) is background: 'Last month one partner sent ~2k requests/sec ... ledgerd has no protection against this today ... Rate limiting puts a ceiling ...'. The assertion explicitly counts a background 'Why' section. Additionally 'Decisions to record in NOTES.md once approved' and 'What engineering will build' are next-steps sections under other names."
+    },
+    {
+      "text": "The body is at or under 300 words, or the document's first line says it exceeded the budget and why (a note only in the chat reply fails)",
+      "passed": false,
+      "evidence": "facts.json: 1691 words (1712 incl. code), 5.6x the budget. First line is '# Rate Limiting Plan'; no over-budget note anywhere."
+    },
+    {
+      "text": "Every number in the document traces to NOTES.md, CLAUDE.md, or is labelled as a proposed default",
+      "passed": false,
+      "evidence": "Sourced: 2k rps, 40k users, 6 partners, three replicas, 30-second invariant. Labelled proposed: 100 rps / 500 burst ('These numbers are a starting point, not a measurement'), mobile 20 rps / burst 60 ('proposed'). Unsourced and unlabelled: Lua call timeout 'budget: 10ms' (line 86); override cache 'cached per key for 60s' (line 133); shadow mode '1 week' and partner notice '2 weeks before enforcement' (rollout table); 'a batch job that fires 300 requests in two seconds'; 'X-RateLimit-Remaining: 37'; effort estimates 'about a week', 'a day', 'a couple of days'; 'Comfortably above any legitimate partner traffic we have seen' asserts traffic data the record does not contain."
+    },
+    {
+      "text": "The chat reply names what needs the user's call and does not enumerate the document's decisions",
+      "passed": false,
+      "evidence": "response.md has a '**What it proposes.**' block with four bullets restating the document's decisions (token bucket via Lua, 100 rps/500 burst default, fail open, a week of shadow mode), then restates both open-question recommendations and the product-owned items. It does surface the open questions, but it enumerates the decisions, which the assertion forbids. 380 words, 4 bold leads (facts.json)."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 7,
+    "total": 10,
+    "pass_rate": 0.3
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Bash": 4
+    },
+    "total_tool_calls": 4,
+    "total_steps": 4,
+    "errors_encountered": 0,
+    "output_chars": 12361,
+    "transcript_chars": 2175,
+    "note": "transcript.md is an executor-written summary listing 4 Bash steps. output_chars = response.md (2210) + project/docs/rate_limiting.md (10151)."
+  },
+  "claims": [
+    {
+      "claim": "These were settled in September and are recorded in NOTES.md",
+      "type": "factual",
+      "verified": true,
+      "evidence": "NOTES.md decisions dated 2026-09-10 and 2026-09-12."
+    },
+    {
+      "claim": "An in-process counter would give each partner 3x the limit",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Derived from three replicas (NOTES.md/CLAUDE.md); arithmetic holds."
+    },
+    {
+      "claim": "100 rps is comfortably above any legitimate partner traffic we have seen outside of the incident",
+      "type": "factual",
+      "verified": false,
+      "evidence": "No per-partner traffic data exists in NOTES.md, CLAUDE.md or the project; the claim asserts observations the record does not contain."
+    },
+    {
+      "claim": "Keys expire after burst/rate seconds (5s at the proposed defaults)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "500/100 = 5; internally consistent with the proposed numbers."
+    },
+    {
+      "claim": "Queueing or smoothing was rejected in September because it hides the problem from partners",
+      "type": "factual",
+      "verified": true,
+      "evidence": "NOTES.md 429 decision: 'Rejected: silently queueing requests - hides the problem from partners.'"
+    },
+    {
+      "claim": "docs/design.md's per-IP in-process counter predates the September decisions and conflicts with them",
+      "type": "factual",
+      "verified": true,
+      "evidence": "design.md: 'The rate limiting approach for ledgerd has not yet been decided, so this design proposes a simple per-IP counter in process memory'."
+    },
+    {
+      "claim": "Rough estimate: items 1-4 about a week of engineering work, item 5 a day, item 6 a couple of days",
+      "type": "quality",
+      "verified": false,
+      "evidence": "Unverifiable; no codebase beyond webhook_client.py exists to size against."
+    },
+    {
+      "claim": "NOTES.md and docs/design.md not edited",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript step 3 and 'Files modified: none'; outputs contain only docs/rate_limiting.md."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": [],
+    "note": "No user_notes.md in outputs."
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The Redis, 429 + Retry-After, and per-API-key decisions from NOTES.md are treated as settled, not re-raised as open choices",
+        "reason": "Both runs pass this; the baseline even reproduces the NOTES.md rationale in a table. It is a floor, not a discriminator. If the goal is to test that settled decisions are pointed at rather than restated, add 'and are not restated with their rationale' - the baseline spends ~90 words re-explaining them."
+      },
+      {
+        "assertion": "Per-tenant quotas and the mobile-app limit appear as asks or open items in their own section, not inside the preamble",
+        "reason": "The baseline passes this while the skill run fails it, which is backwards relative to the skill's intent (the skill resolved one question into a decision with a revisit trigger, as the user asked). The assertion is rewarding the longer, less decisive output. See the with_skill grading for a suggested rewording."
+      },
+      {
+        "reason": "No assertion catches the baseline's two long trailing sections ('What engineering will build' numbered build list with effort estimates; 'Decisions to record in NOTES.md once approved'). They are the 'Next steps that restate the spec' anti-pattern under different names; the Overview/Background assertion only partially covers them via 'under any name'. Consider an explicit check for build lists / effort estimates / restated-decision lists at the tail."
+      }
+    ],
+    "overall": "Baseline 3/10. Assertions correctly fail the classic long-form spec (1691 words, metadata header instead of preamble, 'Why' background, unlabelled invented numbers, chat reply that re-summarises the doc). The one assertion the baseline passes that the skill run fails (open items) looks like an assertion-wording problem rather than a skill win for the baseline."
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "expectations": [
+    {
+      "text": "The first sentence is the answer with a lean",
+      "passed": true,
+      "evidence": "facts.json first_sentence: \"Session cookies, stored in Redis.\" Identical lead to the with-skill run; a committed pick."
+    },
+    {
+      "text": "The reply is under 150 words",
+      "passed": false,
+      "evidence": "facts.json words: 351 \u2014 more than double the limit."
+    },
+    {
+      "text": "No headers and at most one bold phrase",
+      "passed": false,
+      "evidence": "facts.json headers: [] (ok) but bold_leads: 4. Independent grep for '**...**' finds 4: 'You already have Redis shared across the three replicas.', 'Admin sessions need to be revocable.', 'Browsers handle cookies safely by default.', 'Partners don't send cookies, and that's fine.' Exceeds the one-bold limit."
+    },
+    {
+      "text": "The reason given ties to something in the project context (shared Redis, partners, the sticky-sessions rejection, the admin staff), not generic textbook trade-offs only",
+      "passed": true,
+      "evidence": "\"You already have Redis shared across the three replicas ... you've already solved it for the rate limiter\" (CLAUDE.md + NOTES.md 2026-09-10); \"The 2026-09-10 rate-limiter note rejected sticky sessions because partners are cookie-less. That's about partners; the admin panel is a different client\"; \"When someone leaves or a laptop is lost\" ties revocation to staff; quotes 'pick a default and we'll revisit' from NOTES.md. Thoroughly grounded."
+    },
+    {
+      "text": "Technical claims are correct (a wrong statement about SameSite, CSRF, or JWT revocation fails)",
+      "passed": true,
+      "evidence": "Checked each claim. (1) \"Stateless JWTs can't [log out now] without a denylist, and once you add a denylist you've rebuilt server-side sessions\": correct on revocation. (2) \"HttpOnly; Secure; SameSite=Lax keeps the credential out of reach of JS\": true (HttpOnly does this). (3) \"A JWT in localStorage is readable by any XSS\": correct. (4) \"a JWT in a cookie is just a session cookie with a bigger payload\": loose \u2014 a JWT-in-cookie is still stateless and keeps the revocation problem \u2014 but in context (XSS exposure) it is not wrong. (5) The concrete default (random 32-byte id, HttpOnly/Secure/SameSite=Lax, idle + absolute timeout, rotate on login, delete on logout) is standard good practice. (6) The 2026-09-10 attribution is accurate. CSRF is never named, so there is no wrong CSRF statement. The bold lead \"Browsers handle cookies safely by default\" is an overclaim (HttpOnly and Secure are not browser defaults) but the body immediately specifies the flags, so it does not rise to a wrong statement about SameSite/CSRF/revocation."
+    },
+    {
+      "text": "The reply ends with at most one question back and no menu of further offers",
+      "passed": true,
+      "evidence": "Ends with a single offer: \"If you want, I'll add this as a Key Design Decision in NOTES.md so it's on record next to the rate-limiter choices.\" Zero question marks in the response. One offer is not a menu, so this passes as written \u2014 though it is exactly the trailing-offer pattern the skill discourages."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 2,
+    "total": 6,
+    "pass_rate": 0.67
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Bash": 5
+    },
+    "total_tool_calls": 5,
+    "total_steps": 5,
+    "errors_encountered": 0,
+    "output_chars": 2061,
+    "transcript_chars": 2018,
+    "note": "Tool counts are approximate; the transcript is a prose summary. output_chars is response.md only."
+  },
+  "claims": [
+    {
+      "claim": "There's no admin panel anywhere in the repo or in NOTES.md \u2014 no routes, no auth code, no decision record",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript step 3 grep for admin|jwt|session|cookie|auth|login|token found only the sticky-sessions note, a generic 'session' in CLAUDE.md, and 'token bucket'. Independent read of CLAUDE.md/NOTES.md confirms."
+    },
+    {
+      "claim": "The 2026-09-10 rate-limiter note rejected sticky sessions because partners are cookie-less",
+      "type": "factual",
+      "verified": true,
+      "evidence": "NOTES.md: 'Rate limiter state lives in Redis (2026-09-10) ... Rejected: sticky sessions \u2014 partners don't send cookies.'"
+    },
+    {
+      "claim": "Browsers handle cookies safely by default",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Overclaim as a bold lead: HttpOnly and Secure must be set explicitly; only SameSite=Lax is a (Chromium) default. The body corrects this by listing the flags, so the net effect is not misleading, but the lead sentence alone is wrong."
+    },
+    {
+      "claim": "A JWT in a cookie is just a session cookie with a bigger payload",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Simplification: a JWT in a cookie shares the cookie's XSS/CSRF profile but remains stateless, so it keeps the revocation problem the previous bullet complained about. Not a SameSite/CSRF/revocation error, so it did not fail the assertion."
+    },
+    {
+      "claim": "Offered to record the decision in NOTES.md rather than editing it unprompted",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript step 5 and final line of transcript: 'Project files created or modified: none.'"
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The reply ends with at most one question back and no menu of further offers",
+        "reason": "This baseline ends with exactly one 'If you want, I'll...' offer and passes. If the skill's standard is 'no trailing offers', the assertion as worded cannot catch the most common single-offer sign-off."
+      },
+      {
+        "assertion": "Technical claims are correct (a wrong statement about SameSite, CSRF, or JWT revocation fails)",
+        "reason": "The baseline never mentions CSRF and recommends SameSite=Lax without saying why, so it passes by omission. The assertion catches wrong claims but not the absence of the one reason (CSRF) that justifies the SameSite flag."
+      }
+    ],
+    "overall": "Baseline is technically sound and well-grounded in the project \u2014 the content is arguably richer than the with-skill run (concrete default, timeouts, rotation) \u2014 but it fails on form: 351 words and four bold leads. The two failed assertions are exactly the ones the red-pen skill targets, which is good discrimination."
+  }
+}

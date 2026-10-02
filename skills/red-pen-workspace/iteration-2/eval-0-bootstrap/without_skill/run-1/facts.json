@@ -1,0 +1,60 @@
+{
+  "run": "iteration-2/eval-0-bootstrap/without_skill/run-1",
+  "files": [
+    "project/CLAUDE.md",
+    "project/docs/WRITING.md",
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 271,
+    "words_incl_code": 271,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 9,
+    "redpen_breadcrumb": false,
+    "first_sentence": "I set up writing conventions for tidewatch."
+  },
+  "project/CLAUDE.md": {
+    "words": 116,
+    "words_incl_code": 116,
+    "headers": [
+      "CLAUDE.md",
+      "Project",
+      "Key Files",
+      "Writing Conventions"
+    ],
+    "scaffold_headers": [],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 0,
+    "redpen_breadcrumb": false,
+    "first_sentence": "# CLAUDE.md\n\n## Project\n\ntidewatch \u2014 a small Python service that polls tide-gauge APIs and publishes a daily summary to Slack."
+  },
+  "project/docs/WRITING.md": {
+    "words": 691,
+    "words_incl_code": 691,
+    "headers": [
+      "Writing Conventions",
+      "Voice and tone",
+      "Terminology",
+      "Formatting",
+      "Code comments and docstrings",
+      "Commit messages",
+      "Log messages",
+      "Slack summaries",
+      "Checklist before merging prose"
+    ],
+    "scaffold_headers": [],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 0,
+    "redpen_breadcrumb": false,
+    "first_sentence": "# Writing Conventions\n\nThese rules apply to all prose in tidewatch: README and docs, code comments and\ndocstrings, commit messages, PR descriptions, log messages, and the Slack\nsummaries the service p"
+  }
+}

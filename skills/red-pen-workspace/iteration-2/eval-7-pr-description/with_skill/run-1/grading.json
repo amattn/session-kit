@@ -1,0 +1,110 @@
+{
+  "expectations": [
+    {
+      "text": "The description opens with one or two sentences naming the return-type change as the part needing the reviewer's judgment and the renames as mechanical",
+      "passed": true,
+      "evidence": "After the title line, the description opens: \"One thing needs your judgment: `send()` now returns a `DeliveryResult` instead of `bool`. The rest is the retry itself, its tests, and formatter-driven renames.\" Two sentences; return-type change named as the judgment item; renames characterized as formatter-driven (i.e. mechanical) and lumped with 'the rest'. The word 'mechanical' itself appears later (\"Mechanical, skip:\"), but the opening does the required separation."
+    },
+    {
+      "text": "The return-type change is surfaced as a deviation from the original ask, with the reason (callers need attempt counts)",
+      "passed": true,
+      "evidence": "Label \"Return type, not in the ask:\" followed by \"`send()` returns `DeliveryResult(status, attempts, last_error)` so the caller can log attempt counts.\" Deviation and reason both present, and it even offers the alternative (\"If you'd rather keep `bool`, the alternative is logging attempts inside the client\")."
+    },
+    {
+      "text": "No per-file change inventory",
+      "passed": true,
+      "evidence": "The description is organized by concern (retry / return type / risk / mechanical / tests), not file by file. Files are named inline to point the reviewer (\"One call site, `api/webhooks.py`\"; \"`_fmt` -> `_format_amount` in `transactions.py` and `balances.py`; import order in `api/__init__.py`\"), which is change-first, not a `file: what changed` list. Borderline: all six files from changes.md are mentioned somewhere."
+    },
+    {
+      "text": "The description is under roughly 150 words",
+      "passed": false,
+      "evidence": "facts.json words_incl_code = 214 (the metric the eval specifies; it includes the two-sentence chat wrapper after the code block). The code-block description body alone is 174 words by `wc -w` (the skill's own symptoms.py run in transcript step 6 reported 171). Either number is over 150 by a margin larger than 'roughly' covers (16% for the body, 43% incl. wrapper)."
+    },
+    {
+      "text": "No section headers at all, including renamed scaffolding (What/Why/Changes/Things to check)",
+      "passed": false,
+      "evidence": "No markdown `#` headers (facts.json headers = []), but the body is scaffolded into five labelled sections via standalone colon-terminated lines each introducing a bullet group: \"Retry:\", \"Return type, not in the ask:\", \"Risk:\", \"Mechanical, skip:\", \"Tests:\". These map directly onto What / Changes / Things to check / Unrelated / Tests. This is exactly the 'renamed scaffolding' the assertion forbids, just without `##` syntax. The skill's symptoms.py counted 0 headers for the same text, so the check was blind to it."
+    },
+    {
+      "text": "Every concrete number and claim traces to changes.md or the source file (an invented latency figure or invented test contents fails)",
+      "passed": false,
+      "evidence": "Numbers all trace: 3 attempts / 200ms / jitter / 4 tests / one call site (changes.md); 'up to 3 x 5s timeout plus backoff, versus 5s before' derives from `timeout: float = 5.0` in webhook_client.py and 3 attempts in changes.md; at-least-once + dedupe on event_id is the source-file comment; no test contents invented (\"4 new in `test_webhook_client.py` for the retry paths\"). One claim does not trace: \"Constants hardcoded, no config knob (NOTES: pick a default, revisit).\" changes.md says only '3 attempts, 200ms base, jitter' and nothing about whether they are configurable; the pre-change source has no retry code. The model inferred the implementation from the NOTES quote and stated it as fact. The transcript's provenance pass (step 7) checked 'every number' and let this non-numeric claim through. Strict reading of 'every ... claim' -> fail."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 3,
+    "total": 6,
+    "pass_rate": 0.5
+  },
+  "execution_metrics": {
+    "total_tool_calls": 7,
+    "output_chars": 3169,
+    "errors_encountered": 0,
+    "transcript_chars": 1786,
+    "response_chars": 1383,
+    "note": "Transcript is a summary, not a tool log; total_tool_calls is an estimate from the enumerated steps (Read SKILL.md; Bash ls; Bash cp+cat project files; Bash cat HELP/worked_example/symptoms --help; Bash write draft + run symptoms.py; Bash write outputs x2).",
+    "total_steps": 0
+  },
+  "claims": [
+    {
+      "claim": "Worst-case blocking is up to 3 x 5s timeout plus backoff, versus 5s before",
+      "type": "factual",
+      "verified": true,
+      "evidence": "webhook_client.py: `timeout: float = 5.0`; changes.md: 3 attempts, 200ms base. Derivable."
+    },
+    {
+      "claim": "Duplicate deliveries on retry are acceptable because delivery is at-least-once and partners dedupe on event_id",
+      "type": "factual",
+      "verified": true,
+      "evidence": "webhook_client.py header comment: 'Delivery is at-least-once; the partner dedupes on event_id.'"
+    },
+    {
+      "claim": "Constants hardcoded, no config knob",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Not stated in changes.md; the branch's webhook_client.py is not in the working tree. Inferred from NOTES.md 'pick a default' and presented as fact."
+    },
+    {
+      "claim": "symptoms.py reported 171 words, 0 headers, 0 bold leads, 0 openers",
+      "type": "process",
+      "verified": true,
+      "evidence": "Consistent with facts.json (headers [], bold_leads 0, openers 0); body word count 174 by wc -w is within tokenizer noise of 171. But the 0-headers result is misleading: the body has five colon-label section lines."
+    },
+    {
+      "claim": "Provenance check on every number was done; one overstated claim corrected",
+      "type": "quality",
+      "verified": false,
+      "evidence": "Numbers check out, but a non-numeric claim (hardcoded constants) went unchecked. The claimed correction ('cannot double-deliver' -> 'duplicates are acceptable') is reflected in the final text."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "No section headers at all, including renamed scaffolding (What/Why/Changes/Things to check)",
+        "reason": "facts.json reports headers=[] and scaffold_headers=[] for this run, yet the body is sectioned by standalone 'Label:' lines over bullet groups. The automated fact extraction (and the skill's symptoms.py) only detects `#` headers, so this assertion cannot be graded from facts.json and the skill's own self-check passes text that violates it. Define 'header' as any standalone line that labels the group below it, and update the detector."
+      },
+      {
+        "assertion": "The description is under roughly 150 words",
+        "reason": "words_incl_code counts the chat wrapper outside the code block (214) while the description body is 174. Have facts.json extract the fenced body separately so the assertion measures the artifact it names, and replace 'roughly' with a hard cap."
+      },
+      {
+        "assertion": "Every concrete number and claim traces to changes.md or the source file",
+        "reason": "Both runs asserted that the retry constants are hardcoded / not configurable, which changes.md does not say. The assertion's examples (latency, test contents) steer the grader toward numbers; add 'implementation details not in changes.md (e.g. whether constants are configurable)' as a named trap, or add a line to changes.md so the claim becomes checkable."
+      },
+      {
+        "assertion": "No per-file change inventory",
+        "reason": "Both runs name every file from changes.md somewhere, organized by concern rather than file. The assertion does not say whether naming files to direct the reviewer is allowed; specify 'not organized file-by-file' vs 'no file paths' so grading is consistent."
+      },
+      {
+        "reason": "No assertion covers the reader-facing reasoning both runs got right: citing the at-least-once/event_id dedupe comment as why retry is safe. That is the most discriminating evidence that the model read the source rather than just changes.md, and it goes unrewarded."
+      }
+    ],
+    "overall": "Content assertions 1, 2 and 6 are discriminating. Assertions 4 and 5 are undermined by what facts.json measures: it cannot see colon-label sections and it counts the chat wrapper as description. The with-skill run beat the baseline on structure and brevity but still failed length, used colon-label scaffolding its own symptoms check did not catch, and carried one unsourced implementation claim."
+  }
+}

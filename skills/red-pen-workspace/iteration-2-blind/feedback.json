@@ -1,0 +1,45 @@
+{
+  "reviews": [
+    {
+      "case": "eval-0-bootstrap",
+      "prefer": "Left",
+      "feedback": "the right is so long and wordy and really adds way to much."
+    },
+    {
+      "case": "eval-1-fresh-spec",
+      "prefer": "Right",
+      "feedback": "while the right may skimp on detail too much for non technical readers, it's fine for me.  left is just too much content to be useful."
+    },
+    {
+      "case": "eval-2-too-long",
+      "prefer": "Right",
+      "feedback": "the right is very easy to see that there are three reasons to go token bucket.  the left has better context about sliding window and fixed window tho.  this one is close.  i nearly selected both"
+    },
+    {
+      "case": "eval-3-edit-target",
+      "prefer": "Right",
+      "feedback": "neither of the replies are great. slight preference for the right, but the neither Left's long list of bullets or rights table is all that useful or actionable. i get that th etable is the evidece of what is done.  i don't mind it, but i just skim right past it.  same with the list.  i do like the example paragraph.  it gives a flavor without overwhelming the human maintainer with a ton of info\n\n  Right has a much better md output."
+    },
+    {
+      "case": "eval-4-code-comments",
+      "prefer": "Neither",
+      "feedback": "the left has a really important note about 429.  the right seems under-commented in the code output.  the right has better commit msg"
+    },
+    {
+      "case": "eval-5-chat-answer",
+      "prefer": "Both fine",
+      "feedback": "even though left it twice as long, the total lenght isn't detrimental and the left organization (such as bullet points) helps."
+    },
+    {
+      "case": "eval-6-stale-draft",
+      "prefer": "Left",
+      "feedback": "the right has too many bullet points.  that many and i just skim and don't read them."
+    },
+    {
+      "case": "eval-7-pr-description",
+      "prefer": "Right",
+      "feedback": "the consiceness of right is correct.  this is not prose.  PRs are more like documenations and records."
+    }
+  ],
+  "status": "complete"
+}

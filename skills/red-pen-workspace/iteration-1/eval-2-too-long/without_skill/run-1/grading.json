@@ -1,0 +1,96 @@
+{
+  "expectations": [
+    {
+      "text": "The new reply is under 150 words",
+      "passed": true,
+      "evidence": "facts.json response.words = 75. Down from 358 in draft_reply.md."
+    },
+    {
+      "text": "The first sentence states the recommendation with a reason",
+      "passed": false,
+      "evidence": "facts.json first_sentence = \"Token bucket, in Redis, keyed by API key.\" This states the recommendation plus two already-settled implementation details (per NOTES.md), but gives no reason. The reason ('Partners are bursty, so allow short bursts but cap the sustained rate') is the first sentence of the second paragraph."
+    },
+    {
+      "text": "No headers and no performative phrases (Great question, I hope this helps, Certainly)",
+      "passed": true,
+      "evidence": "facts.json headers = [], performative = [], openers = 0. Manual read confirms no markdown headers and none of the listed phrases. Closing line 'Want me to implement it?' is an offer, not one of the named performative phrases."
+    },
+    {
+      "text": "The reply does not explain why the previous reply was long and does not apologize",
+      "passed": true,
+      "evidence": "facts.json apology_or_meta = []. response.md makes no reference to the prior draft or its length and contains no apology."
+    },
+    {
+      "text": "The reply does not re-list all five algorithms",
+      "passed": true,
+      "evidence": "response.md names token bucket, fixed window, sliding window, and leaky bucket: four names, not five (sliding window log vs. counter are not distinguished). It does not re-list all five, so the assertion passes literally. Note that it comes close in spirit: paragraph two is a one-line-each survey of the rejected alternatives, which the user's 'too wordy' complaint was partly about."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 1,
+    "total": 5,
+    "pass_rate": 0.8
+  },
+  "claims": [
+    {
+      "claim": "leaky bucket queues requests, which you already rejected",
+      "type": "factual",
+      "verified": true,
+      "evidence": "NOTES.md 429 decision: 'Rejected: silently queueing requests \u2014 hides the problem from partners.'"
+    },
+    {
+      "claim": "Fixed window lets 2x through at the boundary",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Standard property; also stated in draft_reply.md."
+    },
+    {
+      "claim": "Default: 100 rps sustained, burst of 200",
+      "type": "factual",
+      "verified": false,
+      "evidence": "No source in NOTES.md, design.md, or draft_reply.md for these numbers. They are invented. The user did say 'pick a default and we'll revisit', so proposing one is reasonable, but the figures are not derived from anything in the project (the only traffic datum is the 2k rps incident, which is not referenced)."
+    },
+    {
+      "claim": "in Redis, keyed by API key",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Both are recorded decisions in NOTES.md (2026-09-10, 2026-09-12). Correct, but they restate settled decisions the reader already made, which the draft was criticized for."
+    },
+    {
+      "claim": "Did not record the choice in NOTES.md because the user has not confirmed it yet",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript step 5; NOTES.md unchanged."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The first sentence states the recommendation with a reason",
+        "reason": "Fails this run on a literal reading (reason is in paragraph two), same as the with-skill run. Consider 'first paragraph' or 'first two sentences' if the intent is 'answer first, reason immediately after'."
+      },
+      {
+        "assertion": "The reply does not re-list all five algorithms",
+        "reason": "This baseline names four of five with a one-liner each and still passes. The assertion's 'all five' threshold is too easy to clear; 'names at most one alternative' or 'does not survey the rejected options' would catch the survey-shaped second paragraph here."
+      },
+      {
+        "reason": "No assertion penalizes restating decisions already in NOTES.md. The baseline's first sentence restates Redis and per-API-key keying; the with-skill run cut both. This is the most visible skill-vs-baseline difference and nothing measures it."
+      }
+    ],
+    "overall": "The baseline passes 4/5 with the same single failure as the skill run, so the current assertions barely separate the two. The real differences (restating settled decisions, surveying rejected alternatives, invented default numbers vs. grounding in the 2k rps incident) are all uncovered."
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 0,
+    "transcript_chars": 0
+  }
+}

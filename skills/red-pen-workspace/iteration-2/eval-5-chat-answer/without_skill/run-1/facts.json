@@ -1,0 +1,19 @@
+{
+  "run": "iteration-2/eval-5-chat-answer/without_skill/run-1",
+  "files": [
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 351,
+    "words_incl_code": 351,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 2,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 4,
+    "redpen_breadcrumb": false,
+    "first_sentence": "Session cookies, stored in Redis."
+  }
+}

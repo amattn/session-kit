@@ -1,0 +1,98 @@
+{
+  "expectations": [
+    {
+      "text": "CLAUDE.md gains a Writing Conventions section marked with a `<!-- managed by /red-pen -->` breadcrumb",
+      "passed": false,
+      "evidence": "project/CLAUDE.md gains a '## Writing Conventions' section but has no '<!-- managed by /red-pen -->' comment anywhere. facts.json: redpen_breadcrumb=false for all files."
+    },
+    {
+      "text": "The section covers all four output types (spec/plan, code comment, code/diff/commit, chat) with a one-line rule each",
+      "passed": false,
+      "evidence": "CLAUDE.md section bullets cover voice, terminology, commit subjects, dates, docstrings. docs/WRITING.md covers comments/docstrings, commits, logs, Slack summaries. Neither file has any rule for spec/plan/design notes or for chat replies."
+    },
+    {
+      "text": "The section states the reader default or a reader roster",
+      "passed": false,
+      "evidence": "No reader default or roster in CLAUDE.md. The only audience mention is in docs/WRITING.md Slack section ('It is read on phones'), which is a device, not a reader, and is in the offloaded file. 'Address the reader as you' is a voice rule, not a reader statement."
+    },
+    {
+      "text": "The agent asks exactly one question about who reads the project's output, or proposes a roster and asks to confirm it",
+      "passed": false,
+      "evidence": "response.md contains zero question marks and no question about readers. Closing paragraph offers 'A couple of choices you may want to adjust' (docstring style, UTC) - not a reader question and not a roster proposal."
+    },
+    {
+      "text": "The section is under roughly 250 words excluding the roster table; nothing is offloaded to a second file",
+      "passed": false,
+      "evidence": "CLAUDE.md section is 82 words, but it explicitly offloads: 'All prose ... follows `docs/WRITING.md`. Read it before writing or editing any of these.' A new 691-word docs/WRITING.md was created to hold the conventions. Fails the 'nothing offloaded' half."
+    },
+    {
+      "text": "No project policy is invented that the repository cannot support (no Slack templates, terminology tables, or log formats conjured from a 6-line CLAUDE.md)",
+      "passed": false,
+      "evidence": "docs/WRITING.md invents exactly the forbidden items: a Terminology table ('tide gauge' not 'tide station, sensor'; 'station ID' not 'site code'), a Log messages format ('poll failed station=9414290 attempt=3 status=503'), and a Slack summary template ('Half Moon Bay  high 06:42 UTC  1.8 m', under 15 lines, 'Bold only the gauge names', mrkdwn). Also Google-style docstrings, TODO(name), 80-column wrap, one decimal for tide heights - none supported by the 6-line CLAUDE.md. Transcript step 3 admits it had 'no existing prose, docs, or code to infer conventions from'."
+    },
+    {
+      "text": "The chat reply is under 150 words with at most one bold lead",
+      "passed": false,
+      "evidence": "facts.json response.words=271 (wc -w agrees), bold_leads=9 (grep count of **...** spans = 9: 'Created docs/WRITING.md', 'Voice and tone', 'Terminology', etc.). Fails both halves."
+    }
+  ],
+  "summary": {
+    "passed": 0,
+    "failed": 7,
+    "total": 7,
+    "pass_rate": 0.0
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Bash": 5
+    },
+    "total_tool_calls": 5,
+    "total_steps": 6,
+    "errors_encountered": 0,
+    "output_chars": 6858,
+    "transcript_chars": 1470
+  },
+  "claims": [
+    {
+      "claim": "The project had only a CLAUDE.md, so there was nothing existing to derive conventions from",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript step 1: 'Found only one file: CLAUDE.md'. Consistent with the eval setup."
+    },
+    {
+      "claim": "I wrote a concrete set tailored to what the service does",
+      "type": "quality",
+      "verified": false,
+      "evidence": "The conventions are tailored to an imagined service: station IDs, gauge names, tide-height precision, log levels, Slack mrkdwn - none of which appear in the repo (src/ files are not even present). 'Tailored' here means invented."
+    },
+    {
+      "claim": "CLAUDE.md lists the five rules most likely to matter in day-to-day edits",
+      "type": "factual",
+      "verified": true,
+      "evidence": "CLAUDE.md section has exactly five bullets. Whether they are the 'most likely to matter' is unverifiable."
+    },
+    {
+      "claim": "Existing Project and Key Files sections preserved",
+      "type": "process",
+      "verified": true,
+      "evidence": "project/CLAUDE.md retains '## Project' and '## Key Files' content verbatim."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "No assertion checks that the pre-existing CLAUDE.md content (Project, Key Files) is preserved unchanged. This run rewrote CLAUDE.md via heredoc and happened to preserve it; a rewrite that dropped it would pass every assertion it currently fails for other reasons."
+      },
+      {
+        "assertion": "No project policy is invented that the repository cannot support",
+        "reason": "Strongly discriminating as written - the baseline produced exactly the listed anti-patterns. Keep it."
+      }
+    ],
+    "overall": "Baseline fails every assertion in the expected way: offloads to a 691-word docs/WRITING.md, invents terminology/log/Slack policy, no breadcrumb, no reader question, 271-word reply with 9 bold leads. The assertion set discriminates cleanly between skill and no-skill behaviour."
+  }
+}

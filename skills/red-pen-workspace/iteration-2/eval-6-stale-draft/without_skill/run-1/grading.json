@@ -1,0 +1,118 @@
+{
+  "expectations": [
+    {
+      "text": "The edited design.md has no Overview, Background, or Next steps scaffolding headers",
+      "passed": false,
+      "evidence": "No edited file exists. outputs/project contains only .gitkeep ('No project files were created or modified in this run. The task was a review; docs/design.md was left unchanged.'). The reply even recommends keeping the scaffolding: 'Reorder to Overview, Background, Approach, then the open decisions'."
+    },
+    {
+      "text": "Narration sentences (In this document we will cover...) are removed",
+      "passed": false,
+      "evidence": "File unchanged; the narration sentence is still at L5 of the original. The reply only recommends it ('L5: \"In this document we will cover...\" Delete; the headings already do this.'), and does not flag the companion narration 'This document describes the design for...'."
+    },
+    {
+      "text": "The claim that the database choice is still open is flagged to the user as contradicting the record (Postgres), not kept silently and not silently rewritten",
+      "passed": true,
+      "evidence": "response.md: 'L13, Storage \u2014 \"The database choice for ledgerd itself is also still open...\" Not open. `CLAUDE.md` states Postgres for storage, Redis for caching. Delete the sentence.' Flagged with the contradicting source; nothing was silently rewritten."
+    },
+    {
+      "text": "The claim that the rate limiting approach is undecided is flagged to the user as contradicting NOTES.md, not kept silently and not silently rewritten",
+      "passed": true,
+      "evidence": "response.md: 'L17, Rate limiting \u2014 \"The rate limiting approach for ledgerd has not yet been decided.\" It has, and the proposal here is wrong on every axis of what was decided' followed by the three NOTES.md decisions with dates (2026-09-10 Redis; 2026-09-12 per API key; 2026-09-12 429 + Retry-After)."
+    },
+    {
+      "text": "The rewritten rate-limiting text matches NOTES.md's three decisions (Redis state, 429 + Retry-After, per-API-key)",
+      "passed": false,
+      "evidence": "Nothing was rewritten; the file still proposes a per-IP in-process counter. The reply's suggested replacement ('export requests use the existing limiter (Redis-backed, keyed per API key, 429 + `Retry-After`)') would match, but it exists only as advice in chat, and the agent explicitly says 'I haven't changed the file.'"
+    },
+    {
+      "text": "The storage choice, which is genuinely open, remains an ask with a stated lean",
+      "passed": false,
+      "evidence": "File unchanged, so Storage is still the original balanced three-option menu with no lean. The reply narrows it ('\"Decide on storage\" should be narrowed to \"Postgres large objects vs S3\"') and observes the 24h URL is 'S3-shaped', but never states a lean; it closes by offering to leave 'Postgres LO vs S3' as an explicit open question."
+    },
+    {
+      "text": "No new open questions or assumptions are introduced beyond what the draft and the record contain",
+      "passed": false,
+      "evidence": "The reply manufactures several open questions absent from both the draft and NOTES.md/CLAUDE.md: 'whether exports count against the partner's normal quota or get a separate, lower one' (and calls it 'the only genuinely open one', displacing the record's actual open questions on per-tenant quotas and the mobile limit), a failure path ('what the partner sees if the job fails, and whether a failed export is retried'), CSV scope ('columns in the CSV, date-range or account filters, max rows, and whether a partner can have more than one export in flight'), and an event_id payload question. The file itself is unchanged, but the agent's output introduces these to the user."
+    },
+    {
+      "text": "The chat reply follows the editing-pass report shape: one line, symptom table, one pair, nothing else",
+      "passed": false,
+      "evidence": "response.md is a 663-word review under five bold section headings ('Stale / contradicts the record', 'Missing from the Approach', 'Prose to cut', 'One structural note') with 9 bold leads (facts.json), line-by-line bullets, no symptom table, no before/after pair, and a closing offer/question ('Want me to apply the stale-decision fixes...?')."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 6,
+    "total": 8,
+    "pass_rate": 0.25
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Bash": 8
+    },
+    "total_tool_calls": 8,
+    "total_steps": 6,
+    "errors_encountered": 0,
+    "output_chars": 4279,
+    "transcript_chars": 1934,
+    "note": "Counts estimated from the summarized transcript (no metrics.json); only Bash was used. output_chars = response.md (4166) + project/.gitkeep (113)."
+  },
+  "claims": [
+    {
+      "claim": "The draft says three things are undecided that the project has already decided",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Only two claims in the draft contradict the record (database choice L13; rate limiting L17). Storage is genuinely open. The count is overstated unless the Next-steps bullet 'Decide on rate limiting' is counted as a third, which is the same claim restated."
+    },
+    {
+      "claim": "The proposed limiter contradicts all three recorded rate-limiting decisions",
+      "type": "factual",
+      "verified": false,
+      "evidence": "It contradicts two (in-process vs Redis; per-IP vs per-API-key). On the third (429 + Retry-After) the draft is silent, which the reply itself concedes ('No response behavior specified'); silence is an omission, not a contradiction."
+    },
+    {
+      "claim": "CLAUDE.md states Postgres for storage, Redis for caching",
+      "type": "factual",
+      "verified": true,
+      "evidence": "CLAUDE.md L11: 'Postgres for storage, Redis for caching.'"
+    },
+    {
+      "claim": "webhook_client.py L3-4 documents at-least-once delivery with partner dedup on event_id; changes.md shows retries being added on the webhook-retry branch",
+      "type": "factual",
+      "verified": true,
+      "evidence": "src/webhook_client.py L3-4 and changes.md L3-5 match."
+    },
+    {
+      "claim": "There is no 'alternatives considered' section despite the narration promising one",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Original headers: Overview, Background, Storage, Rate limiting, Approach, Next steps."
+    },
+    {
+      "claim": "Did not modify docs/design.md",
+      "type": "process",
+      "verified": true,
+      "evidence": "outputs/project holds only .gitkeep stating the file was left unchanged."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [
+      "Agent did not know what 'red-pen' meant and treated it as a review request, ending with 'Want me to apply the stale-decision fixes...?'"
+    ],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The rewritten rate-limiting text matches NOTES.md's three decisions (Redis state, 429 + Retry-After, per-API-key)",
+        "reason": "The baseline proposed exactly matching replacement text in chat but did not write it. The assertion correctly fails this only because 'rewritten' implies the file; making it explicit ('in the edited docs/design.md') would prevent a lenient grader passing a chat-only suggestion."
+      },
+      {
+        "reason": "The baseline's reply, though the wrong shape, caught two things the skill run folded in silently: the local filesystem option is dead on its own caveat (both runs handled this) and the 24h expiring URL presupposes an S3-style signed URL, which is a storage decision in disguise. No assertion rewards or penalizes noticing that, and the skill run's edit kept the 24h URL unconditionally alongside an open storage choice."
+      }
+    ],
+    "overall": "The baseline, with no skill, correctly diagnosed both stale claims against the record but produced a review instead of an edit and invented several new open questions. The assertion set separates the two runs cleanly on the editing and shape outcomes."
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "eval_id": 5,
+  "eval_name": "chat-answer",
+  "prompt": "Setup: the agent is dropped into a copy of test-projects/ledgerd, a small FastAPI service. It reads CLAUDE.md and NOTES.md as a real session would. NOTES.md records three settled decisions (rate limiter state in Redis, 429 + Retry-After, keyed per API key), two open questions (per-tenant quotas, a higher mobile limit), one invariant (balances never older than 30s) and two user quotes ('partners are the noisy neighbors', 'pick a default and we'll revisit'). Nothing in the project mentions an admin panel or auth; the agent has to reason from what is there.\n\nUser's message: Should the admin panel use JWT or session cookies?",
+  "assertions": [
+    {
+      "text": "The first sentence is the answer with a lean",
+      "type": "content"
+    },
+    {
+      "text": "The reply is under 150 words",
+      "type": "content"
+    },
+    {
+      "text": "No headers and at most one bold phrase",
+      "type": "content"
+    },
+    {
+      "text": "The reason given ties to something in the project context (shared Redis, partners, the sticky-sessions rejection, the admin staff), not generic textbook trade-offs only",
+      "type": "content"
+    },
+    {
+      "text": "Technical claims are correct (a wrong statement about SameSite, CSRF, or JWT revocation fails)",
+      "type": "content"
+    },
+    {
+      "text": "The reply ends with at most one question back and no menu of further offers",
+      "type": "content"
+    }
+  ]
+}

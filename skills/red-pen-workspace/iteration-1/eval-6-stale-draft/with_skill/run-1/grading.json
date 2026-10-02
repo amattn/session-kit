@@ -1,0 +1,124 @@
+{
+  "expectations": [
+    {
+      "text": "The edited design.md has no Overview, Background, or Next steps scaffolding headers",
+      "passed": true,
+      "evidence": "outputs/project/docs/design.md headers are exactly: 'Transaction Export Design', 'Open', 'Decisions', 'Assumptions'. facts.json design_md.scaffold_headers = []. Original had Overview/Background/Next steps (3 of 7 headers); all three are gone."
+    },
+    {
+      "text": "Narration sentences (In this document we will cover...) are removed",
+      "passed": true,
+      "evidence": "Neither 'In this document we will cover' nor 'This document describes the design for' appears in the edited file; facts.json design_md.narration = false. Response itemizes 'Session narration, 2' as removed. Note: the new preamble opens 'This document is for the ledgerd owner deciding... Open decisions come first; everything after them is settled and one line each' which is an audience/reading-order preamble rather than a table-of-contents narration, so it does not reintroduce the symptom."
+    },
+    {
+      "text": "The claim that the database choice is still open is flagged to the user as contradicting NOTES.md (Postgres), not kept silently and not silently rewritten",
+      "passed": true,
+      "evidence": "response.md, 'Stale, 2 claims': \"The database choice for ledgerd itself is also still open\" (CLAUDE.md: Postgres). The claim is explicitly surfaced to the user with the contradicting source and the sentence is removed from the file (facts.json db_open_claim_kept = false). Minor: it cites CLAUDE.md rather than NOTES.md as the source, but NOTES.md's 'Three replicas, Postgres, Redis' says the same thing and the file preamble references both ('assumes the decisions in NOTES.md and the deploy in CLAUDE.md (3 replicas, Postgres, Redis)')."
+    },
+    {
+      "text": "The claim that the rate limiting approach is undecided is flagged to the user as contradicting NOTES.md (Redis, 429, per-key), not kept silently and not silently rewritten",
+      "passed": true,
+      "evidence": "response.md: \"The rate limiting approach has not yet been decided\" (NOTES.md has three decisions, 2026-09-10 and 09-12), and the draft's proposal contradicted every one of them: in-process not Redis, per-IP not per-key, no 429. Replaced the proposal with the record' plus a before/after quote of the section. Edited file: 'Export requests use the existing limiter: Redis-backed, keyed per API key, 429 + `Retry-After` (NOTES.md 2026-09-10, 2026-09-12).' facts.json rl_undecided_claim_kept = false."
+    },
+    {
+      "text": "The storage choice (Postgres large objects vs S3 vs filesystem), which is genuinely open, remains an ask in its own section with a lean",
+      "passed": true,
+      "evidence": "Edited file, '## Open' section, first bullet: 'Storage for export files: Postgres large objects or S3. Lean Postgres, because it is already in the deploy and S3 would be a new dependency; S3 if exports are large. What settles it: expected CSV size per export. Local filesystem is out: 3 replicas.' It is kept as an open ask with a stated lean and a deciding fact; the response says 'The lean is mine; overrule it.' Filesystem is eliminated with a justification from the record (3 replicas) rather than silently. Caveat: it sits as a bullet in a shared 'Open' section alongside a second ask (export rate-limit budget), not under a dedicated 'Storage' header; I read 'its own section' as 'the Open section, not folded into Decisions'."
+    },
+    {
+      "text": "The report to the user is organized by symptom, not by word count",
+      "passed": true,
+      "evidence": "response.md: 'What was wrong, by symptom:' followed by bullets 'Stale, 2 claims', 'No stance, 1 section', 'Scaffold headers, 3 of 7', 'Session narration, 2', 'Opener/hedge, 1', 'Missing preamble'. The word count (263 to 194) appears only in the first line as a summary figure; the structure is per-symptom."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "note": "No metrics.json; values from facts.json and transcript.md",
+    "tool_calls": {
+      "Read": 1,
+      "Bash": 5
+    },
+    "total_tool_calls": 6,
+    "total_steps": 7,
+    "errors_encountered": 0,
+    "response_words": 294,
+    "design_md_words": 194,
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "claims": [
+    {
+      "claim": "Edited docs/design.md in place (263 words to 194)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "facts.json project/docs/design.md.words = 194; transcript symptoms.py run on original reported 263."
+    },
+    {
+      "claim": "Scaffold headers, 3 of 7; narration 2; opener/hedge 1",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Original has 7 headers, 3 scaffold (Overview, Background, Next steps); two narration sentences ('This document describes', 'In this document we will cover'); one opener ('This is a reasonable default'). Transcript step 3 symptoms.py counts match."
+    },
+    {
+      "claim": "Nothing else in the project was touched",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript step 6: 'Verified via cmp that only docs/design.md differs from the original test project.' outputs/project contains only docs/design.md."
+    },
+    {
+      "claim": "Partner is notified by webhook (src/webhook_client.py, at-least-once)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Both transcripts report src/webhook_client.py exists and documents at-least-once delivery."
+    },
+    {
+      "claim": "Local filesystem is out: 3 replicas",
+      "type": "factual",
+      "verified": true,
+      "evidence": "NOTES.md: 'Three replicas'; original draft itself: 'does not work across replicas'."
+    },
+    {
+      "claim": "The one real residual question is whether exports share the partner's budget (new open item added by the run)",
+      "type": "quality",
+      "verified": false,
+      "evidence": "This open question does not appear in the draft or NOTES.md; it is the run's own invention. Defensible, but it is new content inserted into the user's document and labelled a lean ('Lean shared'), and nothing in the record supports or rejects it. Flag as unverifiable."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [
+      "Run assumed single reader = owner because CLAUDE.md has no reader roster (transcript step 4)."
+    ],
+    "needs_review": [
+      "Storage lean (Postgres LO) and the added 'exports share budget' open item are the run's own choices; the response invites the user to overrule."
+    ],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The storage choice ... remains an ask in its own section with a lean",
+        "reason": "'Its own section' is ambiguous: the skill's output format puts all open asks in one 'Open' section, so the storage ask shares a section with a second ask. Decide whether a shared Open section satisfies this or whether a dedicated header is required, and reword."
+      },
+      {
+        "assertion": "The claim that the database choice is still open is flagged ... as contradicting NOTES.md (Postgres)",
+        "reason": "The run cited CLAUDE.md, not NOTES.md, for Postgres (both say it). Either accept either source explicitly or require NOTES.md if that is the point."
+      },
+      {
+        "reason": "No assertion checks that the rewritten rate-limiting section in the file actually matches the record (Redis, per-API-key, 429 + Retry-After). A run that flags the contradiction and then deletes the section, or rewrites it wrong, would pass every assertion. This run got it right, but the eval does not verify it."
+      },
+      {
+        "reason": "No assertion guards against invented content. This run added a new open question ('whether exports count against the partner's /transactions budget') and a new Assumptions item that the draft never made; nothing in the eval distinguishes 'restated the user's draft' from 'added the model's own design decisions'. Consider an assertion that every open item and decision in the edited file traces to the draft or the record."
+      },
+      {
+        "assertion": "Narration sentences (In this document we will cover...) are removed",
+        "reason": "The facts.json narration check matches only specific phrases. The run's new preamble ('This document is for ... Open decisions come first; everything after them is settled') is arguably a new kind of meta sentence. If the skill intends a preamble, say so in the assertion so a grader does not have to guess."
+      }
+    ],
+    "overall": "All six pass with solid evidence, and the run is a clean demonstration of flag-and-edit. The assertions do not, however, verify correctness of the rewritten rate-limiting section or constrain added content, so a run that overreaches in the rewrite would score the same."
+  }
+}

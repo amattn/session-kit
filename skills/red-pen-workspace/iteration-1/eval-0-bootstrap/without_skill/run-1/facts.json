@@ -1,0 +1,57 @@
+{
+  "run": "iteration-1/eval-0-bootstrap/without_skill",
+  "files": [
+    "project/CLAUDE.md",
+    "project/docs/WRITING.md",
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 378,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 10,
+    "redpen_breadcrumb": false,
+    "first_sentence": "I set up writing conventions for tidewatch."
+  },
+  "project/CLAUDE.md": {
+    "words": 135,
+    "headers": [
+      "CLAUDE.md",
+      "Project",
+      "Key Files",
+      "Writing Conventions"
+    ],
+    "scaffold_headers": [],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 0,
+    "redpen_breadcrumb": false,
+    "first_sentence": "# CLAUDE.md\n\n## Project\n\ntidewatch \u2014 a small Python service that polls tide-gauge APIs and publishes a daily summary to Slack."
+  },
+  "project/docs/WRITING.md": {
+    "words": 809,
+    "headers": [
+      "Writing Conventions",
+      "General style",
+      "Terminology",
+      "Documentation (README, docs/)",
+      "Code comments and docstrings",
+      "Commit messages",
+      "Pull requests",
+      "Slack summary output",
+      "Error and log messages"
+    ],
+    "scaffold_headers": [],
+    "openers": 1,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 0,
+    "redpen_breadcrumb": false,
+    "first_sentence": "# Writing Conventions\n\nThese rules apply to everything written in this repo that a person will read:\ndocs, code comments, docstrings, commit messages, PR descriptions, and the\ntext tidewatch itself pu"
+  }
+}

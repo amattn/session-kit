@@ -1,0 +1,111 @@
+{
+  "expectations": [
+    {
+      "text": "The first sentence is the answer with a lean",
+      "passed": true,
+      "evidence": "facts.json first_sentence: 'Session cookies, with the session state in Redis.' Direct pick, no preamble."
+    },
+    {
+      "text": "The reply is under 150 words",
+      "passed": false,
+      "evidence": "facts.json words: 439, nearly three times the limit. Response has four reasoning bullets, a four-bullet config block, a closing question and an offer."
+    },
+    {
+      "text": "No headers and at most one bold phrase",
+      "passed": false,
+      "evidence": "facts.json headers: [] (ok) but bold_leads: 4. Manual read confirms four bold bullet leads: '**You already have Redis shared across the three replicas.**', '**Admin panel means high privilege and few users.**', '**It's a browser app.**', '**No refresh-token dance.**'. Four bold phrases exceeds the limit of one."
+    },
+    {
+      "text": "The reply does not restate the question and has no performative phrases",
+      "passed": true,
+      "evidence": "No 'You asked whether JWT or cookies' restatement; opens with the pick. facts.json performative: []. The openers count of 1 is the regex matching 'That's the one thing that normally makes...' mid-bullet, which is a content sentence, not a performative opener. Closing 'Want me to add this as a Key Design Decision in NOTES.md once you confirm?' is an offer, not a courtesy phrase like 'Happy to help'. Passed on the letter of the assertion; see feedback on the 'since you said pick one' mis-attribution."
+    },
+    {
+      "text": "The reason given ties to something in the project context (the mobile app, partners, admin staff, or existing infra), not generic textbook trade-offs only",
+      "passed": true,
+      "evidence": "'You already have Redis shared across the three replicas ... sticky sessions, which you've already rejected once' matches NOTES.md 'Rejected: sticky sessions \u2014 partners don't send cookies'. Also distinguishes the partner API (machine-to-machine) from the browser admin, and isolates the session keyspace from the 30s balance TTL invariant (NOTES.md line 9). Strongly grounded."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 2,
+    "total": 5,
+    "pass_rate": 0.6
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Bash": 4
+    },
+    "total_tool_calls": 4,
+    "total_steps": 5,
+    "errors_encountered": 0,
+    "note": "No metrics.json present; counts derived from transcript.md steps 1-5 (four Bash calls, one reasoning step).",
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "claims": [
+    {
+      "claim": "You already have Redis shared across the three replicas; sticky sessions were already rejected once",
+      "type": "factual",
+      "verified": true,
+      "evidence": "NOTES.md lines 20-22."
+    },
+    {
+      "claim": "Sticky sessions were rejected for partners because they are machine-to-machine without cookies",
+      "type": "factual",
+      "verified": true,
+      "evidence": "NOTES.md line 22: 'Rejected: sticky sessions \u2014 partners don't send cookies.'"
+    },
+    {
+      "claim": "There is a 30s balance TTL invariant that session storage must not touch",
+      "type": "factual",
+      "verified": true,
+      "evidence": "NOTES.md line 9: 'Never return a balance older than 30 seconds. Cache TTL is 30s and is load-bearing'."
+    },
+    {
+      "claim": "SameSite=Lax alone doesn't cover top-level POST navigations from other sites",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Incorrect. SameSite=Lax sends the cookie only on top-level navigations using safe methods (GET); a cross-site top-level POST does not carry a Lax cookie. The CSRF-token recommendation is still reasonable as defence in depth, but the stated justification is wrong."
+    },
+    {
+      "claim": "'since you said pick one'",
+      "type": "factual",
+      "verified": false,
+      "evidence": "The eval prompt does not say this. NOTES.md line 16 records the user preference 'pick a default and we'll revisit', so the sentiment is real, but it is attributed to the current message rather than to the notes."
+    },
+    {
+      "claim": "No admin panel, no auth code, no prior decision on auth anywhere in the repo",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript step 3 grep for admin|jwt|session|cookie|auth|login; with-skill transcript step 3 independently reached the same conclusion."
+    },
+    {
+      "claim": "No project files were created or modified",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript step 5; only response.md and transcript.md exist in outputs/."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": [],
+    "note": "No user_notes.md present."
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The reply does not restate the question and has no performative phrases",
+        "reason": "The checker's 'openers' regex (This is|That is|That's) fires on any mid-sentence 'That's', producing a false positive here (openers: 1 on a content sentence). Either restrict the regex to sentence-initial position or do not treat 'openers' as evidence for this assertion."
+      },
+      {
+        "reason": "No assertion covers technical accuracy. The baseline's SameSite=Lax claim is wrong and goes uncaught; length limits alone will not catch confident errors."
+      },
+      {
+        "reason": "The baseline is actually better grounded in project context than the skill run (cites the sticky-sessions rejection, the partner/admin split, and the 30s TTL invariant) and the assertion cannot distinguish 'grounded' from 'more grounded'. If the eval is meant to measure trimming without losing grounding, consider asserting that at least one named NOTES.md decision survives the cut."
+      }
+    ],
+    "overall": "Baseline fails exactly the two mechanical shape constraints (length, bold) and passes the content ones. Its grounding is excellent; its problem is volume, which is what the skill is for. The eval measures that correctly but has no guard against factual errors."
+  }
+}

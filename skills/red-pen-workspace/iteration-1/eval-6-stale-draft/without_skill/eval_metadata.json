@@ -1,0 +1,31 @@
+{
+  "eval_id": 6,
+  "eval_name": "stale-draft",
+  "prompt": "Setup: the agent is dropped into a copy of test-projects/ledgerd, a small FastAPI service. It reads CLAUDE.md and NOTES.md as a real session would. NOTES.md records three settled decisions (rate limiter state in Redis, 429 + Retry-After, keyed per API key), two open questions (per-tenant quotas, a higher mobile limit), one invariant (balances never older than 30s) and two user quotes ('partners are the noisy neighbors', 'pick a default and we'll revisit'). docs/design.md is a 263-word AI-style design doc with Overview/Background/Next steps headers, 'In this document we will cover' narration, and two claims that contradict the record: 'the database choice is still open' (CLAUDE.md says Postgres) and 'the rate limiting approach has not been decided' (NOTES.md has three decisions). The storage choice in it is genuinely open. The baseline agent has no skill and must guess what 'red-pen' means.\n\nUser's message: red-pen docs/design.md",
+  "assertions": [
+    {
+      "text": "The edited design.md has no Overview, Background, or Next steps scaffolding headers",
+      "type": "content"
+    },
+    {
+      "text": "Narration sentences (In this document we will cover...) are removed",
+      "type": "content"
+    },
+    {
+      "text": "The claim that the database choice is still open is flagged to the user as contradicting NOTES.md (Postgres), not kept silently and not silently rewritten",
+      "type": "content"
+    },
+    {
+      "text": "The claim that the rate limiting approach is undecided is flagged to the user as contradicting NOTES.md (Redis, 429, per-key), not kept silently and not silently rewritten",
+      "type": "content"
+    },
+    {
+      "text": "The storage choice (Postgres large objects vs S3 vs filesystem), which is genuinely open, remains an ask in its own section with a lean",
+      "type": "content"
+    },
+    {
+      "text": "The report to the user is organized by symptom, not by word count",
+      "type": "content"
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "expectations": [
+    {
+      "text": "The new reply is under 150 words",
+      "passed": true,
+      "evidence": "facts.json: words=105 (words_incl_code=105). Under 150."
+    },
+    {
+      "text": "The first paragraph names the pick and a reason tied to the project (the partner burst incident), not a generic trade-off",
+      "passed": true,
+      "evidence": "First paragraph: 'Token bucket. One bucket per API key in Redis, refilled at the sustained rate you allow, with bucket size as the burst cap; a partner at 2k rps drains its bucket and gets 429s until it refills.' Names the pick and ties the reason to the 2k rps partner incident from NOTES.md, not a generic trade-off list."
+    },
+    {
+      "text": "No headers and no performative phrases (Great question, I hope this helps, Certainly)",
+      "passed": true,
+      "evidence": "facts.json: headers=[], performative=[]. Manual read confirms no headings, no 'Great question', 'I hope this helps', 'Certainly'. (facts openers=1 is the bare 'Token bucket.' lead, which is the answer, not a performative opener.)"
+    },
+    {
+      "text": "The reply does not explain why the previous reply was long and does not apologize",
+      "passed": true,
+      "evidence": "facts.json: apology_or_meta=[]. The reply never references the prior draft, its length, or apologizes; it simply gives the shorter answer. Transcript step 7: 'No explanation of why the draft was long, per the rule.'"
+    },
+    {
+      "text": "The reply does not restate decisions NOTES.md already settles (Redis, 429, per-key) as if new",
+      "passed": true,
+      "evidence": "Redis, per-API-key, and 429 appear only as givens inside the mechanism description ('One bucket per API key in Redis ... gets 429s until it refills'), not as recommendations or as 'you'll need shared state, likely in Redis' the way draft_reply.md did. Nothing is presented as a new decision."
+    },
+    {
+      "text": "No default numbers are invented without a source or without being labelled as a proposal",
+      "passed": true,
+      "evidence": "No limit numbers are stated. The only figure is '2k rps', sourced from NOTES.md user quote. Closing: 'The remaining call is bucket size and refill rate. What does a well-behaved partner peak at? That's the number I need to propose a default.' Transcript step 7 confirms: 'Proposed no default limit because no number in the record supports one.'"
+    },
+    {
+      "text": "The reply does not close with an offer to do more ('want me to implement it?')",
+      "passed": true,
+      "evidence": "Closes with a question asking for the one missing input ('What does a well-behaved partner peak at?'), not an offer to implement or elaborate. No 'want me to', 'let me know', or 'happy to'."
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 0,
+    "total": 7,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "total_tool_calls": 7,
+    "output_chars": 2194,
+    "errors_encountered": 0,
+    "total_steps": 0,
+    "transcript_chars": 0
+  },
+  "claims": [
+    {
+      "claim": "2k rps comes from NOTES.md; three replicas from CLAUDE.md",
+      "type": "factual",
+      "verified": true,
+      "evidence": "NOTES.md user quote 'hammered us at 2k rps'; CLAUDE.md 'Deployed as three replicas'."
+    },
+    {
+      "claim": "No number in the record supports a default limit",
+      "type": "factual",
+      "verified": true,
+      "evidence": "grep of test-projects/ledgerd for rps/burst finds only the 2k rps quote in NOTES.md."
+    },
+    {
+      "claim": "Fixed window lets a partner send 2x the limit across a window boundary",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Standard, correct property of fixed-window counters; also stated in draft_reply.md."
+    },
+    {
+      "claim": "Redis/shared-state paragraph was cut because settled in NOTES.md 2026-09-10",
+      "type": "process",
+      "verified": true,
+      "evidence": "NOTES.md 'Rate limiter state lives in Redis (2026-09-10)'; response contains no shared-state justification."
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "reason": "No assertion checks whether the reply honours the user's recorded instruction 'pick a default and we'll revisit' / 'I don't want a config knob for everything'. The with_skill reply declines to pick a number and asks a question instead; the baseline picks invented numbers. Which behaviour the skill author wants is an important outcome the current assertions leave ungraded, and the 'no invented numbers' assertion pulls against the user quote."
+      },
+      {
+        "assertion": "The first paragraph names the pick and a reason tied to the project (the partner burst incident), not a generic trade-off",
+        "reason": "'First paragraph' is ambiguous when the reply leads with a one-line 'Token bucket.' followed by bullets (as the baseline does). Consider rewording to 'the pick and a project-tied reason appear before any generic algorithm comparison'."
+      },
+      {
+        "assertion": "The reply does not restate decisions NOTES.md already settles (Redis, 429, per-key) as if new",
+        "reason": "Passes for both runs easily; a reply that mentions Redis/429/per-key as background still passes. Consider tightening to 'does not justify or recommend Redis, 429, or per-key keying' so it fails only when the model re-argues them."
+      }
+    ],
+    "overall": "All seven pass and the evidence is substantive, but the baseline also passes six, so this eval currently discriminates on one assertion (invented default numbers). Adding an assertion about handling 'pick a default' and the open bucket-size question would separate the two runs more meaningfully."
+  }
+}

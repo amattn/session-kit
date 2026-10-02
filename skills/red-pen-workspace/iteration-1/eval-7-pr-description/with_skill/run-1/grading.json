@@ -1,0 +1,104 @@
+{
+  "expectations": [
+    {
+      "text": "The description opens with one sentence naming the return-type change as the part needing the reviewer's judgment and the renames as mechanical",
+      "passed": true,
+      "evidence": "After the one-line title, the description opens: \"One decision needs review: `send()` now returns a `DeliveryResult` instead of `bool`. The rest is the retry policy plus formatter-driven renames.\" The first sentence names the return-type change as the single item needing review; the renames are placed in 'the rest' as 'formatter-driven' and later labelled \"Mechanical, skip on review:\". Caveat: the split is delivered across two short sentences (30 words), not literally one, and the word 'mechanical' appears only in the later label."
+    },
+    {
+      "text": "The return-type change is surfaced as a deviation from the original ask, with the reason (callers need attempt counts)",
+      "passed": true,
+      "evidence": "Section label \"Return type (not in the ask):\" followed by \"`bool` -> `DeliveryResult(status, attempts, last_error)` so the caller can log attempt counts\". Both the deviation and the attempt-count reason are explicit, matching the note in changes.md."
+    },
+    {
+      "text": "The description does not list every file",
+      "passed": true,
+      "evidence": "Of the six files in changes.md, the description names four (api/webhooks.py, api/transactions.py, api/balances.py, api/__init__.py) and omits src/webhook_client.py and tests/test_webhook_client.py (transcript step 5: dropped the '4 tests added' line because the diff shows it). There is no file-inventory section; files appear only as locations of specific changes. Borderline: four of six files are still named."
+    },
+    {
+      "text": "The description is under roughly 150 words",
+      "passed": true,
+      "evidence": "The PR description is delivered inside a fenced code block; `wc -w` on the code block contents gives exactly 150 words (title included), matching the transcript's own symptoms.py count of 150. facts.json reports 33 words because check.py strips fenced code blocks, so that figure measures only the trailing stance line, not the description. 150 is at the edge of 'roughly 150' rather than clearly under it; passed on the 'roughly' tolerance."
+    },
+    {
+      "text": "No Overview or Summary headers",
+      "passed": true,
+      "evidence": "facts.json: headers [] and scaffold_headers []. The description uses no markdown headers at all; its three groupings are inline labels (\"Retry:\", \"Return type (not in the ask):\", \"Mechanical, skip on review:\")."
+    }
+  ],
+  "execution_metrics": {
+    "tool_calls": {
+      "Read": 1,
+      "Bash": 3
+    },
+    "total_tool_calls": 4,
+    "total_steps": 9,
+    "errors_encountered": 0,
+    "output_chars": 1118,
+    "transcript_chars": 1893,
+    "note": "No metrics.json; tool counts reconstructed from the transcript summary and are approximate."
+  },
+  "claims": [
+    {
+      "claim": "Delivery is already at-least-once and partners dedupe on `event_id`, so retry is safe",
+      "type": "factual",
+      "verified": true,
+      "evidence": "test-projects/ledgerd/src/webhook_client.py comment: 'Delivery is at-least-once; the partner dedupes on event_id.'"
+    },
+    {
+      "claim": "1 call site, api/webhooks.py, now reads .ok",
+      "type": "factual",
+      "verified": true,
+      "evidence": "changes.md: 'updated the one call site of send() to read .ok from the result.'"
+    },
+    {
+      "claim": "A partner stuck on 5xx holds send() for 3 round trips plus ~1.4s of backoff",
+      "type": "factual",
+      "verified": false,
+      "evidence": "With 3 attempts and a 200ms base there are at most two waits (200ms + 400ms = ~0.6s plus jitter); ~1.4s corresponds to three doublings (200+400+800), which only occurs if the client sleeps after the final failure. The diff is not available, so the figure is unverifiable and likely overstated. The line also omits that each round trip can take up to the 5s client timeout (worst case ~15s), which the baseline run did compute."
+    },
+    {
+      "claim": "Draft measured 150 words, 0 headers, 0 bold leads via scripts/symptoms.py",
+      "type": "process",
+      "verified": true,
+      "evidence": "Independent `wc -w` on the fenced code block in response.md gives 150; facts.json confirms no headers and 0 bold leads."
+    },
+    {
+      "claim": "No project files were created or modified",
+      "type": "process",
+      "verified": true,
+      "evidence": "outputs/ contains only response.md and transcript.md; no project/ directory present."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The description opens with one sentence naming the return-type change as the part needing the reviewer's judgment and the renames as mechanical",
+        "reason": "'One sentence' is ambiguous when the description carries a title line and when the judgment/mechanical split spans two short sentences, as it did here. Specify whether the title counts and whether the opening paragraph (not strictly one sentence) satisfies it, otherwise grading of the strongest run is a coin flip."
+      },
+      {
+        "assertion": "The description does not list every file",
+        "reason": "Weakly discriminating: this run named four of six files and passed only because it dropped the test file and the client file. Rephrase to the outcome actually wanted, e.g. 'no per-file change inventory; mechanical files are grouped under a skip-on-review label rather than itemized alongside the behavior change'."
+      },
+      {
+        "assertion": "The description is under roughly 150 words",
+        "reason": "check.py strips fenced code blocks before counting, so when the description is delivered in a code block (as the skill does) facts.json reports the wrapper (33 words), not the description (150). Either have check.py also report code-block word counts or state in the eval where the description must appear. Also decide whether exactly 150 counts as 'under roughly 150'."
+      },
+      {
+        "reason": "No assertion checks factual accuracy of the risk line. The '~1.4s of backoff' figure is not derivable from changes.md (two waits at 200ms base is ~0.6s) and the 5s-per-attempt timeout in the source is ignored. A 'checkable risk' that is wrong is worse than none; consider an assertion that every number in the description traces to changes.md or the source tree."
+      }
+    ],
+    "overall": "All five assertions pass, but two (file listing, no Overview/Summary headers) are satisfiable by weak outputs and the word-count check depends on a facts.json figure that excludes the code block. The notable uncaught issue is an unverifiable backoff figure in the risk line."
+  },
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  }
+}

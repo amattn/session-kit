@@ -1,0 +1,35 @@
+{
+  "eval_id": 0,
+  "eval_name": "bootstrap",
+  "prompt": "Setup: the agent is dropped into test-projects/fresh-project, which has only a 6-line CLAUDE.md describing 'tidewatch', a tide-gauge poller. No writing conventions exist. With the skill, this should trigger red-pen's bootstrap.\n\nUser's message: Set up writing conventions for this project.",
+  "assertions": [
+    {
+      "text": "CLAUDE.md gains a Writing Conventions section marked with a `<!-- managed by /red-pen -->` breadcrumb",
+      "type": "content"
+    },
+    {
+      "text": "The section covers all four output types (spec/plan, code comment, code/diff/commit, chat) with a one-line rule each",
+      "type": "content"
+    },
+    {
+      "text": "The section states the reader default or a reader roster",
+      "type": "content"
+    },
+    {
+      "text": "The agent asks exactly one question about who reads the project's output, or proposes a roster and asks to confirm it",
+      "type": "content"
+    },
+    {
+      "text": "The section is under roughly 250 words excluding the roster table; nothing is offloaded to a second file",
+      "type": "content"
+    },
+    {
+      "text": "No project policy is invented that the repository cannot support (no Slack templates, terminology tables, or log formats conjured from a 6-line CLAUDE.md)",
+      "type": "content"
+    },
+    {
+      "text": "The chat reply is under 150 words with at most one bold lead",
+      "type": "content"
+    }
+  ]
+}

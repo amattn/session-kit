@@ -1,0 +1,18 @@
+{
+  "run": "iteration-1/eval-5-chat-answer/without_skill",
+  "files": [
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 439,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 1,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 4,
+    "redpen_breadcrumb": false,
+    "first_sentence": "Session cookies, with the session state in Redis."
+  }
+}

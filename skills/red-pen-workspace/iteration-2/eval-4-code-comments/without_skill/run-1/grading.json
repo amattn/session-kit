@@ -1,0 +1,109 @@
+{
+  "expectations": [
+    {
+      "text": "send() retries up to 3 attempts on 5xx responses with backoff between attempts and returns without retrying on 4xx",
+      "passed": true,
+      "evidence": "src/webhook_client.py lines 29-44: `for attempt in range(1, MAX_ATTEMPTS + 1)`, `if resp.status_code < 500 or attempt == MAX_ATTEMPTS: return False` so 4xx returns on the first response, `_sleep_before_retry` between 5xx attempts. Grader simulation: [503,503,503] -> False, 3 calls, 2 sleeps; [400] and [429] -> False, 1 call; [503,200] -> True, 2 calls. (Also retries httpx.TransportError, beyond the ask, graded under assertion 7.)"
+    },
+    {
+      "text": "Every comment in the file describes what the code actually does (a comment that states fixed delays over jittered code fails)",
+      "passed": false,
+      "evidence": "The send() docstring (lines 22-28) says 'Retries up to MAX_ATTEMPTS times on 5xx and on transport errors'. MAX_ATTEMPTS = 3 and the loop makes 3 total attempts, i.e. at most 2 retries; a reader would expect up to 4 posts. The constant's own name ('attempts') makes the mismatch explicit. The `#` comments are accurate: 'Full jitter (0..cap) rather than a fixed delay' matches `random.uniform(0, cap)`; 'Fixed on purpose... rather than exposed as constructor knobs' matches module-level constants; the header's dedupe rationale matches the transport-error retry. Also minor: 'Returns True on a 2xx response' vs code `< 300`. The docstring is treated as a comment; if docstrings were excluded this would pass."
+    },
+    {
+      "text": "No comment restates what the adjacent code visibly does and none narrates the session",
+      "passed": false,
+      "evidence": "The docstring restates the loop below it: 'Retries up to MAX_ATTEMPTS times on 5xx and on transport errors (connect/read timeouts, connection reset), with exponential backoff and full jitter. Any 4xx fails immediately' is a prose rendering of lines 29-44 and _sleep_before_retry. The three `#` comments do not restate code and nothing narrates the session. Fails on the docstring alone."
+    },
+    {
+      "text": "Every comment present answers a why, an invariant, an external fact, or a deliberate omission",
+      "passed": true,
+      "evidence": "Line 6-7 comment = deliberate omission (no constructor knobs, cites NOTES.md). Header lines 13-16 = external fact plus why retry is safe (event_id dedupe). Lines 48-50 = why jitter (three replicas in lockstep). The docstring, though it restates mechanics, also carries a why ('the partner rejected the request and resending the same bytes will not change that'). Every comment block contains at least one qualifying answer."
+    },
+    {
+      "text": "No TODO or stub placeholders in delivered code",
+      "passed": true,
+      "evidence": "No TODO/FIXME/pass/NotImplemented in the file; facts.json todo = false. All methods fully implemented."
+    },
+    {
+      "text": "The commit subject is verb-led and under 72 characters; the body, if present, carries only a non-obvious decision and does not restate the diff",
+      "passed": false,
+      "evidence": "Subject 'Retry webhook delivery on 5xx with exponential backoff' is verb-led and 54 chars (passes). Body paragraph 1 restates the diff almost line by line: 'up to 3 attempts on 5xx responses and transport errors (timeouts, connection reset), backing off 200ms base, doubling, capped at 2s, with full jitter... Any 4xx fails immediately, including 429.' Paragraph 3 'Return type is unchanged (bool). Decision recorded in NOTES.md.' also restates. Only paragraph 2 (why retry is safe; constants per NOTES.md) is a non-obvious decision."
+    },
+    {
+      "text": "The diff is confined to webhook_client.py plus tests; NOTES.md, the constructor signature, and retry semantics beyond 5xx are untouched unless the reply surfaces the change as an ask with a reason",
+      "passed": false,
+      "evidence": "Two out-of-scope changes, neither surfaced as an ask. (1) NOTES.md was modified: a new 'Webhook delivery retries on 5xx and transport errors, not 4xx (2026-10-01)' entry was inserted (diff: +4 lines). The reply states it as done ('Added the decision under Key Design Decisions so the policy and its rationale are on record'), not as a question. (2) Retry semantics extended beyond 5xx: `except httpx.TransportError` retries timeouts/resets, which the user did not request. The reply reports this as a fact ('now retries on 5xx and on transport errors') with a safety rationale but never asks whether the user wants it. Constructor signature is unchanged. No tests were written."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 4,
+    "total": 7,
+    "pass_rate": 0.43
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Bash": 10
+    },
+    "total_tool_calls": 10,
+    "total_steps": 7,
+    "errors_encountered": 0,
+    "output_chars": 8987,
+    "transcript_chars": 2631,
+    "note": "tool_calls estimated from the summary transcript; output_chars includes the modified NOTES.md"
+  },
+  "claims": [
+    {
+      "claim": "Backoff is 200ms base, doubling, capped at 2s, with full jitter",
+      "type": "factual",
+      "verified": true,
+      "evidence": "`cap = min(MAX_BACKOFF_S, BASE_BACKOFF_S * (2 ** (attempt - 1)))`; `random.uniform(0, cap)`. Note the 2s cap can never bind with 3 attempts (max cap 0.4s), so MAX_BACKOFF_S is dead configuration; not stated anywhere."
+    },
+    {
+      "claim": "Ran 10 cases against a stubbed httpx, all pass",
+      "type": "process",
+      "verified": true,
+      "evidence": "transcript step 5 enumerates the cases; grader re-ran 9 equivalent cases including transport errors, all matched."
+    },
+    {
+      "claim": "changes.md describes a DeliveryResult return type and src/api/ call sites that don't exist in this tree",
+      "type": "factual",
+      "verified": true,
+      "evidence": "test-projects/ledgerd has no src/api/; the agent correctly treated changes.md as repo data rather than instructions."
+    },
+    {
+      "claim": "Rejected: honoring Retry-After on 429 \u2014 no partner sends it yet (written into NOTES.md)",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Nothing in the repo says whether partners send Retry-After. This is an invented fact recorded as a project decision in NOTES.md."
+    },
+    {
+      "claim": "Retrying is safe because delivery is at-least-once and partners dedupe on event_id",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Matches the pre-existing header comment in webhook_client.py."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The diff is confined to webhook_client.py plus tests; NOTES.md, the constructor signature, and retry semantics beyond 5xx are untouched unless the reply surfaces the change as an ask with a reason",
+        "reason": "Graded strictly, this fails on NOTES.md and on transport-error retry. The NOTES.md edit also introduced an unsourced fact ('no partner sends Retry-After') into institutional memory; no assertion checks that NOTES.md additions are sourced, which is a worse outcome than the scope creep itself."
+      },
+      {
+        "assertion": "Every comment in the file describes what the code actually does (a comment that states fixed delays over jittered code fails)",
+        "reason": "Whether a docstring counts as a comment decides two assertions for this run (2 and 3). The facts.json extractor omits docstrings. Make the eval explicit either way."
+      },
+      {
+        "reason": "Assertion 1 passes for both runs identically; it is a floor, not a discriminator. Fine to keep as a sanity gate, but it contributes no signal between skill and baseline."
+      }
+    ],
+    "overall": "Baseline produces correct code with reasonable rationale comments, but adds a mechanics-narrating docstring with an attempts/retries off-by-one, a commit body that restates the diff, and two unrequested scope changes (NOTES.md entry with an invented 'rejected' fact; transport-error retry) presented as done rather than asked. The assertions catch all of this."
+  }
+}

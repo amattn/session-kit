@@ -1,0 +1,103 @@
+{
+  "expectations": [
+    {
+      "text": "CLAUDE.md gains a Writing Conventions section marked with a `<!-- managed by /red-pen -->` breadcrumb",
+      "passed": true,
+      "evidence": "project/CLAUDE.md contains '## Writing Conventions' immediately followed by '<!-- managed by /red-pen -->'. facts.json: redpen_breadcrumb=true for project/CLAUDE.md. Existing Project and Key Files sections preserved verbatim."
+    },
+    {
+      "text": "The section covers all four output types (spec/plan, code comment, code/diff/commit, chat) with a one-line rule each",
+      "passed": true,
+      "evidence": "The mode table has exactly four rows: 'Spec / plan / design note', 'Code comment', 'Code / diff / commit', 'Chat', each a single table line. The spec row is dense (five sentences on one line) but is still one row/line."
+    },
+    {
+      "text": "The section states the reader default or a reader roster",
+      "passed": true,
+      "evidence": "Closing paragraph: 'Readers: an insider who knows this codebase and this thread, for code, comments, and chat. No roster yet; add rows (reader, knows, decides, stops at) if anyone outside engineering reads specs or the Slack summary wording.' States a default reader explicitly."
+    },
+    {
+      "text": "The agent asks exactly one question about who reads the project's output, or proposes a roster and asks to confirm it",
+      "passed": true,
+      "evidence": "response.md: 'One question: who reads what this project produces besides you?' Exactly one '?' in the reply (grep count = 1), and it is about readers. The agent states its lean (one reader, the engineer in the thread) and offers to add roster rows."
+    },
+    {
+      "text": "The section is under roughly 250 words excluding the roster table; nothing is offloaded to a second file",
+      "passed": false,
+      "evidence": "Nothing was offloaded (only CLAUDE.md changed; the only pointer is to /red-pen itself). But the section measures 289 words by wc -w from '## Writing Conventions' to end (transcript step 5 reports the same 289). There is no roster table to exclude; the 36-word 'Readers:' prose paragraph is the roster stand-in, and even excluding it the section is ~253 words. 289 is ~16% over the 250 budget, so the length half of the assertion is not met. Borderline, failed on strict reading."
+    },
+    {
+      "text": "No project policy is invented that the repository cannot support (no Slack templates, terminology tables, or log formats conjured from a 6-line CLAUDE.md)",
+      "passed": true,
+      "evidence": "The section contains only the skill's generic rules (mode table, shared core, reader default). No terminology table, no Slack message template, no log format, no docstring style. The only project-specific reference is 'the Slack summary wording', which the original CLAUDE.md supports ('publishes a daily summary to Slack'). Transcript step 4: 'Did not invent roster rows - no README/NOTES/org structure visible to propose from.'"
+    },
+    {
+      "text": "The chat reply is under 150 words with at most one bold lead",
+      "passed": false,
+      "evidence": "facts.json response.words=156 (wc -w agrees: 156); bold_leads=0. Bold-lead constraint met, but 156 > 150, so the word limit is exceeded. The third paragraph (usage pointers, ~35 words) pushed it over."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 2,
+    "total": 7,
+    "pass_rate": 0.71
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Read": 2,
+      "Bash": 8
+    },
+    "total_tool_calls": 10,
+    "total_steps": 6,
+    "errors_encountered": 0,
+    "output_chars": 2838,
+    "transcript_chars": 1479
+  },
+  "claims": [
+    {
+      "claim": "Nothing was there to keep; CLAUDE.md had no style or commit conventions",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Original CLAUDE.md (Project + Key Files only) is preserved verbatim above the new section; it had no conventions."
+    },
+    {
+      "claim": "symptoms.py on the section reported 289 words, 1 header, 1 bold lead, 0 openers/hedges/narration/restatement",
+      "type": "process",
+      "verified": true,
+      "evidence": "wc -w on the section gives 289; facts.json shows 1 bold lead, 0 openers, no performative phrases for project/CLAUDE.md."
+    },
+    {
+      "claim": "Section is approximately 250 words before the readers line",
+      "type": "factual",
+      "verified": true,
+      "evidence": "289 total minus the 36-word Readers paragraph = 253."
+    },
+    {
+      "claim": "Chat reply follows Mode 4 rules (answer first, one question back at most)",
+      "type": "quality",
+      "verified": false,
+      "evidence": "Answer-first and one-question are met, but the reply is 156 words against a 150-word cap the eval checks; the usage-pointer paragraph is not length-matched to the question."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The section is under roughly 250 words excluding the roster table; nothing is offloaded to a second file",
+        "reason": "'Roughly 250' is ambiguous at 289 words, and it is unclear whether the mode table (142 words here) counts. State a hard cap and whether the table is included, or the assertion will flip between graders."
+      },
+      {
+        "assertion": "The section covers all four output types ... with a one-line rule each",
+        "reason": "'One line' passes a 5-sentence table cell as long as it has no newline. If the intent is brevity, cap the rule length (e.g. under 40 words per row)."
+      },
+      {
+        "reason": "No assertion checks that the pre-existing CLAUDE.md content (Project, Key Files) is preserved unchanged. Both runs preserved it, but a bootstrap that rewrites the file could clobber it and still pass every assertion."
+      }
+    ],
+    "overall": "Assertions are discriminating overall (baseline scored 0/7). The two with-skill failures are both small length overruns (289 vs ~250 section words; 156 vs 150 reply words), which suggests the skill's budgets are being pushed by the usage-pointer paragraph and the dense spec row."
+  }
+}

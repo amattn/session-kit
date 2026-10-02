@@ -1,0 +1,85 @@
+{
+  "reviews": [
+    {
+      "run_id": "eval-0-bootstrap-with_skill-run-1",
+      "feedback": "pretty good.  this kind of bootstrap against an empty project makes sense and I'm glad the llm asked about the users/readers",
+      "timestamp": "2026-10-01T23:11:41.959Z"
+    },
+    {
+      "run_id": "eval-0-bootstrap-without_skill-run-1",
+      "feedback": "for a toy project like this, we really don't care about anything but the slack output.  This is exactly the kind of long output that makes AI generated text hard to read",
+      "timestamp": "2026-10-01T23:11:41.959Z"
+    },
+    {
+      "run_id": "eval-1-fresh-spec-with_skill-run-1",
+      "feedback": "I like the context you give back to the read about the assumptions you made and then the \"what you need to verify\". overall work to be done and what work hasn't been done.  it's concise and clear",
+      "timestamp": "2026-10-01T23:11:41.959Z"
+    },
+    {
+      "run_id": "eval-1-fresh-spec-without_skill-run-1",
+      "feedback": "\"It's what we're protecting, not what we're protecting against.\" that sentance does not make any sense and is the kind of extraneous statement that adding pain to the reader, rather than clarity.  \nThis bullet point is almost contradictory when I read it: - **Fail open if Redis is down.** A Redis outage shouldn't take down balance serving.\nit feels worse.  but the fact that I know which were generated with the skill and without it is probably biasing me.\n",
+      "timestamp": "2026-10-01T23:11:41.959Z"
+    },
+    {
+      "run_id": "eval-2-too-long-with_skill-run-1",
+      "feedback": "Token bucket would have been a fine two word answer except that Tokens is conflated with LLM tokens these days.  I had no trouble understanding as a Sr SW Engineer, but this would be jargony to anyone without that background.  not painful.",
+      "timestamp": "2026-10-01T23:11:41.959Z"
+    },
+    {
+      "run_id": "eval-2-too-long-without_skill-run-1",
+      "feedback": "except for the over eager \"want me to implement it?\"  this is a good answer.  a good amount of context and explination.  not painful",
+      "timestamp": "2026-10-01T23:11:41.959Z"
+    },
+    {
+      "run_id": "eval-3-edit-target-with_skill-run-1",
+      "feedback": "I think the edits were fine, but I just skimmed the output until the last paragraph",
+      "timestamp": "2026-10-01T23:11:41.959Z"
+    },
+    {
+      "run_id": "eval-3-edit-target-without_skill-run-1",
+      "feedback": "slightly harder to read.  also did a lot of skimming",
+      "timestamp": "2026-10-01T23:11:41.959Z"
+    },
+    {
+      "run_id": "eval-4-code-comments-with_skill-run-1",
+      "feedback": "looks ok",
+      "timestamp": "2026-10-01T23:11:41.959Z"
+    },
+    {
+      "run_id": "eval-4-code-comments-without_skill-run-1",
+      "feedback": "painful to read that commit msg",
+      "timestamp": "2026-10-01T23:11:41.959Z"
+    },
+    {
+      "run_id": "eval-5-chat-answer-with_skill-run-1",
+      "feedback": "reads well.  not painful",
+      "timestamp": "2026-10-01T23:11:41.959Z"
+    },
+    {
+      "run_id": "eval-5-chat-answer-without_skill-run-1",
+      "feedback": "that's too much detail and verbosity.  moderately painful",
+      "timestamp": "2026-10-01T23:11:41.959Z"
+    },
+    {
+      "run_id": "eval-6-stale-draft-with_skill-run-1",
+      "feedback": "great organization,  clear section purpose",
+      "timestamp": "2026-10-01T23:11:41.959Z"
+    },
+    {
+      "run_id": "eval-6-stale-draft-without_skill-run-1",
+      "feedback": "hard to parse anything here",
+      "timestamp": "2026-10-01T23:11:41.959Z"
+    },
+    {
+      "run_id": "eval-7-pr-description-with_skill-run-1",
+      "feedback": "pretty good",
+      "timestamp": "2026-10-01T23:11:41.959Z"
+    },
+    {
+      "run_id": "eval-7-pr-description-without_skill-run-1",
+      "feedback": "too verbose",
+      "timestamp": "2026-10-01T23:11:41.959Z"
+    }
+  ],
+  "status": "complete"
+}

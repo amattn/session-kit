@@ -1,0 +1,27 @@
+{
+  "eval_id": 2,
+  "eval_name": "too-long",
+  "prompt": "Setup: the agent is dropped into a copy of test-projects/ledgerd, a small FastAPI service. It reads CLAUDE.md and NOTES.md as a real session would. NOTES.md records three settled decisions (rate limiter state in Redis, 429 + Retry-After, keyed per API key), two open questions (per-tenant quotas, a higher mobile limit), one invariant (balances never older than 30s) and two user quotes ('partners are the noisy neighbors', 'pick a default and we'll revisit'). draft_reply.md in the project is a 358-word reply the agent supposedly gave earlier: headers, five algorithms, 'Great question', 'Next steps', 'I hope this helps'. The user is rejecting it.\n\nUser's message: I asked which rate limiting algorithm to use and you replied with draft_reply.md. too long, too wordy. try again.",
+  "assertions": [
+    {
+      "text": "The new reply is under 150 words",
+      "type": "content"
+    },
+    {
+      "text": "The first sentence states the recommendation with a reason",
+      "type": "content"
+    },
+    {
+      "text": "No headers and no performative phrases (Great question, I hope this helps, Certainly)",
+      "type": "content"
+    },
+    {
+      "text": "The reply does not explain why the previous reply was long and does not apologize",
+      "type": "content"
+    },
+    {
+      "text": "The reply does not re-list all five algorithms",
+      "type": "content"
+    }
+  ]
+}

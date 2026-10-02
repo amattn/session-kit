@@ -1,0 +1,42 @@
+{
+  "run": "iteration-1/eval-6-stale-draft/with_skill",
+  "files": [
+    "project/docs/design.md",
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 294,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 1,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 0,
+    "redpen_breadcrumb": false,
+    "first_sentence": "Edited `docs/design.md` in place (263 words to 194)."
+  },
+  "project/docs/design.md": {
+    "words": 194,
+    "headers": [
+      "Transaction Export Design",
+      "Open",
+      "Decisions",
+      "Assumptions"
+    ],
+    "scaffold_headers": [],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 0,
+    "redpen_breadcrumb": false,
+    "first_sentence": "# Transaction Export Design\n\nThis document is for the ledgerd owner deciding where export files are stored; it assumes the decisions in NOTES.md and the deploy in CLAUDE.md (3 replicas, Postgres, Redi"
+  },
+  "design_md": {
+    "scaffold_headers": [],
+    "narration": false,
+    "db_open_claim_kept": false,
+    "rl_undecided_claim_kept": false,
+    "storage_section": true
+  }
+}

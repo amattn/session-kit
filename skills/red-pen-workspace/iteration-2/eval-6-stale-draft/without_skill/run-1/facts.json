@@ -1,0 +1,19 @@
+{
+  "run": "iteration-2/eval-6-stale-draft/without_skill/run-1",
+  "files": [
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 663,
+    "words_incl_code": 663,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 1,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 9,
+    "redpen_breadcrumb": false,
+    "first_sentence": "**Red-pen review of `docs/design.md`**\n\nThe big problem is that this draft is stale."
+  }
+}

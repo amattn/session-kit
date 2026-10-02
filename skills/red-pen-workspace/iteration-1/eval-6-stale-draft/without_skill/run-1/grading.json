@@ -1,0 +1,116 @@
+{
+  "expectations": [
+    {
+      "text": "The edited design.md has no Overview, Background, or Next steps scaffolding headers",
+      "passed": false,
+      "evidence": "No edited file exists. outputs/project/ is absent; transcript: 'Did not modify docs/design.md; offered to apply the rewrite on request.' Response: 'I haven't edited the file \u2014 say the word and I'll apply the rewrite'. The original still has Overview, Background, Next steps."
+    },
+    {
+      "text": "Narration sentences (In this document we will cover...) are removed",
+      "passed": false,
+      "evidence": "File not edited. The response only recommends removal under 'Padding to cut' ('Line 5: In this document we will cover... table-of-contents-as-prose'); the sentence remains in design.md."
+    },
+    {
+      "text": "The claim that the database choice is still open is flagged to the user as contradicting NOTES.md (Postgres), not kept silently and not silently rewritten",
+      "passed": true,
+      "evidence": "response.md item 2: 'Line 13, \"The database choice for ledgerd itself is also still open\" \u2014 it isn't. CLAUDE.md and NOTES.md both state Postgres for storage, Redis for caching, three replicas. Delete the sentence'. Explicitly flagged with the source named; nothing was silently rewritten (nothing was rewritten at all)."
+    },
+    {
+      "text": "The claim that the rate limiting approach is undecided is flagged to the user as contradicting NOTES.md (Redis, 429, per-key), not kept silently and not silently rewritten",
+      "passed": true,
+      "evidence": "response.md item 1 under 'Blocking (contradicts recorded decisions)': 'Line 17, \"The rate limiting approach for ledgerd has not yet been decided\" \u2014 it has. NOTES.md records three decisions dated 2026-09-10 and 2026-09-12: State lives in Redis ... Keyed per API key, not per IP ... Rejections are 429 + Retry-After.' Also notes the draft's per-IP in-process proposal 'is the exact design that was rejected'."
+    },
+    {
+      "text": "The storage choice (Postgres large objects vs S3 vs filesystem), which is genuinely open, remains an ask in its own section with a lean",
+      "passed": false,
+      "evidence": "File not edited, so nothing 'remains' in any section in the required form. The response does give a lean in prose (item 3: rules out local FS, suggests 'S3 is the conventional answer ... Postgres large objects would put bulk CSV traffic on the primary') but tells the user to 'Pick one of the remaining two' rather than producing the section. The assertion is about the edited artifact."
+    },
+    {
+      "text": "The report to the user is organized by symptom, not by word count",
+      "passed": true,
+      "evidence": "response.md is grouped by kind of defect: 'Blocking (contradicts recorded decisions)', 'Should be in the doc and isn't', 'Padding to cut', 'Minor', each with numbered findings and line references. No word counts anywhere; organization is by problem type/severity, which satisfies 'not by word count' and is a symptom grouping."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 3,
+    "total": 6,
+    "pass_rate": 0.5
+  },
+  "execution_metrics": {
+    "note": "No metrics.json; values from facts.json and transcript.md",
+    "tool_calls": {
+      "Bash": 4
+    },
+    "total_tool_calls": 4,
+    "total_steps": 6,
+    "errors_encountered": 0,
+    "response_words": 851,
+    "bold_leads": 12,
+    "design_md_words": null,
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "claims": [
+    {
+      "claim": "Line 17 / Line 13 / Line 21 / lines 25-26 references",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Counted against the original design.md: line 13 = Storage paragraph, 17 = Rate limiting paragraph, 21 = Approach paragraph, 25-26 = first two Next steps bullets. All correct."
+    },
+    {
+      "claim": "CLAUDE.md and NOTES.md both state Postgres for storage, Redis for caching, three replicas",
+      "type": "factual",
+      "verified": true,
+      "evidence": "NOTES.md Project Context: 'Three replicas, Postgres, Redis.' Transcript step 2 reports CLAUDE.md says FastAPI + Postgres + Redis, 3 replicas."
+    },
+    {
+      "claim": "src/webhook_client.py says delivery is at-least-once and partners dedupe on event_id; changes.md describes retry-with-backoff on the webhook-retry branch",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript step 3 records both from reading the files; consistent with the with_skill transcript."
+    },
+    {
+      "claim": "Each replica would keep its own count (so the effective limit is 3x)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Follows from an in-process counter across three replicas (NOTES.md decision rationale: 'there are three replicas and the limit has to be shared')."
+    },
+    {
+      "claim": "I haven't edited the file",
+      "type": "process",
+      "verified": true,
+      "evidence": "No outputs/project directory; transcript 'Files modified in the project copy: None.'"
+    },
+    {
+      "claim": "Your own stated preference in NOTES.md is 'pick a default and we'll revisit'",
+      "type": "factual",
+      "verified": true,
+      "evidence": "NOTES.md 'From the user': 'I don't want a config knob for everything. pick a default and we'll revisit'. Note the response quotes this preference and then still declines to pick a default or edit."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [
+      "Executor chose not to edit and asked for permission; the eval prompt 'red-pen docs/design.md' expects an edit."
+    ],
+    "workarounds": [
+      "No skill available; review done unaided."
+    ]
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "The report to the user is organized by symptom, not by word count",
+        "reason": "This passes for a baseline report organized by severity (Blocking / Missing / Padding / Minor). If 'by symptom' means the skill's specific symptom taxonomy, the assertion should say so; as written it is only discriminating against word-count-ordered output, which neither run produced."
+      },
+      {
+        "reason": "The baseline's review is substantively strong (catches at-least-once/event_id semantics, concurrency cap vs the 2k rps incident, export scope, CSV format) and arguably more thorough than the with_skill rewrite, yet scores 3/6 solely because it did not write the file. That is the intended discrimination, but consider an explicit assertion 'the file was edited in place' so the three file-content failures are not conflated with a single root cause."
+      },
+      {
+        "reason": "Three of six assertions fail for the same reason (no edit). Pass rate therefore measures 'did it edit' more than 'did it edit well'; a run that edits badly but keeps the scaffold out could score the same 6/6 as a good one."
+      }
+    ],
+    "overall": "Baseline flags both stale claims correctly and organizes by defect type, but never edits the file, so every edited-file assertion fails. Discrimination from with_skill comes entirely from the edit-vs-review split."
+  }
+}

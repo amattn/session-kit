@@ -1,0 +1,153 @@
+{
+  "skill_name": "red-pen",
+  "evals": [
+    {
+      "id": 0,
+      "name": "bootstrap",
+      "prompt": "Set up writing conventions for this project.",
+      "files": [
+        "test-projects/fresh-project/*"
+      ],
+      "expected_output": "A Writing Conventions block in CLAUDE.md with the shared core, the mode table, and a reader roster or the insider default; one question about who reads the project's output.",
+      "expectations": [
+        "CLAUDE.md gains a Writing Conventions section marked with a `<!-- managed by /red-pen -->` breadcrumb",
+        "The section covers all four output types (spec/plan, code comment, code/diff/commit, chat) with a one-line rule each",
+        "The section states the reader default or a reader roster",
+        "The agent asks exactly one question about who reads the project's output, or proposes a roster and asks to confirm it",
+        "The section is under roughly 250 words excluding the roster table; nothing is offloaded to a second file",
+        "No project policy is invented that the repository cannot support (no Slack templates, terminology tables, or log formats conjured from a 6-line CLAUDE.md)",
+        "The chat reply is under 150 words with at most one bold lead"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "fresh-spec",
+      "prompt": "Write up a plan for adding rate limiting to the API. Product and eng will both read it. Put it in docs/rate_limiting.md.",
+      "files": [
+        "test-projects/ledgerd/*"
+      ],
+      "expected_output": "A short plan with a prose preamble naming both readers, decisions in chose/over/because form, no re-raising of the Redis, 429, or per-key decisions already in NOTES.md, asks (per-tenant quotas, mobile limit) in their own section, no Overview/Next steps headers, near the 300-word budget.",
+      "expectations": [
+        "docs/rate_limiting.md is created",
+        "The document opens with a prose preamble (no heading) that names product and engineering readers and says how each should read it",
+        "The Redis, 429 + Retry-After, and per-API-key decisions from NOTES.md are treated as settled, not re-raised as open choices",
+        "Per-tenant quotas and the mobile-app limit appear as asks or open items in their own section, not inside the preamble",
+        "At least one decision is written in 'chose A over B because C' form with a revisit trigger",
+        "Assumptions appear as a tick-list and at least one risk is written as a conditional ('X breaks if Y')",
+        "No Overview, Introduction, Background, or Next steps section under any name (a 'Why' section that is background counts)",
+        "The body is at or under 300 words, or the document's first line says it exceeded the budget and why (a note only in the chat reply fails)",
+        "Every number in the document traces to NOTES.md, CLAUDE.md, or is labelled as a proposed default",
+        "The chat reply names what needs the user's call and does not enumerate the document's decisions"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "too-long",
+      "prompt": "I asked which rate limiting algorithm to use and you replied with draft_reply.md. too long, too wordy. try again.",
+      "files": [
+        "test-projects/ledgerd/*"
+      ],
+      "expected_output": "A rewritten reply, answer first, a lean, well under 150 words, no explanation of why the first was long, no headers, no performative phrases.",
+      "expectations": [
+        "The new reply is under 150 words",
+        "The first paragraph names the pick and a reason tied to the project (the partner burst incident), not a generic trade-off",
+        "No headers and no performative phrases (Great question, I hope this helps, Certainly)",
+        "The reply does not explain why the previous reply was long and does not apologize",
+        "The reply does not restate decisions NOTES.md already settles (Redis, 429, per-key) as if new",
+        "No default numbers are invented without a source or without being labelled as a proposal",
+        "The reply does not close with an offer to do more ('want me to implement it?')"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "edit-target",
+      "prompt": "red-pen grid_section.md. The reader is product management.",
+      "files": [
+        "test-projects/edit-target/*"
+      ],
+      "expected_output": "An edited grid_section.md that keeps every rule, capability, and pointer but states the deliberate-replacement fact once or twice instead of ten times, drops 'This is / That is' openers and forward references, and a short report: one line, one before/after paragraph, a table of at most four symptom rows.",
+      "expectations": [
+        "An edited grid_section.md is written",
+        "All five subsections 6.1-6.5 remain and these rules survive: fill a 90-minute gap with two 45s, align to edges left by existing bookings, closeness-to-noon stays the ranking, the two adaptive-grid shapes, the duration/grid entanglement and its verification need",
+        "Counting paragraphs that assert edge-based ranking was deliberately replaced by closeness to noon: at most 2 (original: 7 paragraphs)",
+        "Sentences opening with 'This is', 'That is', or 'That's' number at most 2 (original: 9)",
+        "The Duration/Grid definition bullets and the three packing-mechanism bullets remain as lists, not collapsed into prose",
+        "No content is added that is not in the source section",
+        "The chat reply opens with one line (path and what was preserved), then a before/after symptom table, then one paragraph pair, and nothing else; under 200 words outside the pair",
+        "Word count is absent from the reply or appears last"
+      ],
+      "input_note": "grid_section.md is an illustration written in the style of an unedited AI requirements draft, for an advisory firm's booking tool."
+    },
+    {
+      "id": 4,
+      "name": "code-comments",
+      "prompt": "Add retry with exponential backoff to WebhookClient.send: 3 attempts on 5xx, fail fast on 4xx. Write the commit message too.",
+      "files": [
+        "test-projects/ledgerd/*"
+      ],
+      "expected_output": "A small diff to src/webhook_client.py with no comments that restate code or narrate the session, comment density matching the file, no TODO stubs, and a commit message with a verb-led subject under 72 chars and a body only if there is a non-obvious decision.",
+      "expectations": [
+        "send() retries up to 3 attempts on 5xx responses with backoff between attempts and returns without retrying on 4xx",
+        "Every comment in the file describes what the code actually does (a comment that states fixed delays over jittered code fails)",
+        "No comment restates what the adjacent code visibly does and none narrates the session",
+        "Every comment present answers a why, an invariant, an external fact, or a deliberate omission",
+        "No TODO or stub placeholders in delivered code",
+        "The commit subject is verb-led and under 72 characters; the body, if present, carries only a non-obvious decision and does not restate the diff",
+        "The diff is confined to webhook_client.py plus tests; NOTES.md, the constructor signature, and retry semantics beyond 5xx are untouched unless the reply surfaces the change as an ask with a reason"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "chat-answer",
+      "prompt": "Should the admin panel use JWT or session cookies?",
+      "files": [
+        "test-projects/ledgerd/*"
+      ],
+      "expected_output": "A reply whose first sentence is the answer with a lean, under 150 words, no headers, no restating the question, no 'Great question'.",
+      "expectations": [
+        "The first sentence is the answer with a lean",
+        "The reply is under 150 words",
+        "No headers and at most one bold phrase",
+        "The reason given ties to something in the project context (shared Redis, partners, the sticky-sessions rejection, the admin staff), not generic textbook trade-offs only",
+        "Technical claims are correct (a wrong statement about SameSite, CSRF, or JWT revocation fails)",
+        "The reply ends with at most one question back and no menu of further offers"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "stale-draft",
+      "prompt": "red-pen docs/design.md",
+      "files": [
+        "test-projects/ledgerd/*"
+      ],
+      "expected_output": "An edited design.md that drops the Overview/Background/Next steps scaffolding and narration, and that flags rather than silently keeps or silently fixes the two claims contradicting NOTES.md (database choice open; rate limiting approach undecided).",
+      "expectations": [
+        "The edited design.md has no Overview, Background, or Next steps scaffolding headers",
+        "Narration sentences (In this document we will cover...) are removed",
+        "The claim that the database choice is still open is flagged to the user as contradicting the record (Postgres), not kept silently and not silently rewritten",
+        "The claim that the rate limiting approach is undecided is flagged to the user as contradicting NOTES.md, not kept silently and not silently rewritten",
+        "The rewritten rate-limiting text matches NOTES.md's three decisions (Redis state, 429 + Retry-After, per-API-key)",
+        "The storage choice, which is genuinely open, remains an ask with a stated lean",
+        "No new open questions or assumptions are introduced beyond what the draft and the record contain",
+        "The chat reply follows the editing-pass report shape: one line, symptom table, one pair, nothing else"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "pr-description",
+      "prompt": "Write the PR description for the webhook-retry branch. changes.md summarizes what changed.",
+      "files": [
+        "test-projects/ledgerd/*"
+      ],
+      "expected_output": "A PR description that opens with one sentence saying the return-type change needs judgment and the renames are mechanical, surfaces the return-type change as a deviation from the ask with its reason, and does not list every file.",
+      "expectations": [
+        "The description opens with one or two sentences naming the return-type change as the part needing the reviewer's judgment and the renames as mechanical",
+        "The return-type change is surfaced as a deviation from the original ask, with the reason (callers need attempt counts)",
+        "No per-file change inventory",
+        "The description is under roughly 150 words",
+        "No section headers at all, including renamed scaffolding (What/Why/Changes/Things to check)",
+        "Every concrete number and claim traces to changes.md or the source file (an invented latency figure or invented test contents fails)"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "run": "iteration-1/eval-4-code-comments/with_skill",
+  "files": [
+    "project/src/webhook_client.py",
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 133,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 0,
+    "redpen_breadcrumb": false,
+    "first_sentence": "Done."
+  },
+  "webhook_client": {
+    "comments": [
+      "# Partners register one HTTPS endpoint each. Delivery is at-least-once; the",
+      "# partner dedupes on event_id.",
+      "# Transport errors (timeout, refused connection) are not retried; they raise.",
+      "# 4xx is our payload or their config; a retry can't change it.",
+      "# Jitter keeps the three replicas from retrying a partner in lockstep."
+    ],
+    "todo": false,
+    "has_backoff": true,
+    "mentions_4xx_or_5xx": true
+  }
+}

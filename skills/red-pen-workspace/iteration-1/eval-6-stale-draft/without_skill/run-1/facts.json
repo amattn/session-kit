@@ -1,0 +1,18 @@
+{
+  "run": "iteration-1/eval-6-stale-draft/without_skill",
+  "files": [
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 851,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 1,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 12,
+    "redpen_breadcrumb": false,
+    "first_sentence": "**Red pen: `docs/design.md`**\n\nThe big problem is that this draft is stale against `NOTES.md`."
+  }
+}

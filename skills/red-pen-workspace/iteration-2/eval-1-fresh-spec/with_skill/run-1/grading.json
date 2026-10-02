@@ -1,0 +1,140 @@
+{
+  "expectations": [
+    {
+      "text": "docs/rate_limiting.md is created",
+      "passed": true,
+      "evidence": "outputs/project/docs/rate_limiting.md exists, 33 lines / 1980 chars, with title, preamble and five sections (Open items, Decisions, Assumptions, Risks, Scope out). facts.json: 337 words."
+    },
+    {
+      "text": "The document opens with a prose preamble (no heading) that names product and engineering readers and says how each should read it",
+      "passed": true,
+      "evidence": "Line 3, directly under the H1 with no heading: 'This plan is for product, who confirm the partner-facing rules and own two open items, and for the engineer who builds it. Product can stop after Decisions; assumptions, risks, and scope are for the implementer.' Names both readers and gives each a stopping point."
+    },
+    {
+      "text": "The Redis, 429 + Retry-After, and per-API-key decisions from NOTES.md are treated as settled, not re-raised as open choices",
+      "passed": true,
+      "evidence": "Preamble: 'Three choices settled in NOTES.md (state in Redis, 429 with `Retry-After`, keyed per API key) are not re-argued.' The Open items section asks only about the limit value, mobile exemption, and Redis-down behavior. Decision 2 explicitly supersedes design.md's per-IP in-process counter in favour of the record."
+    },
+    {
+      "text": "Per-tenant quotas and the mobile-app limit appear as asks or open items in their own section, not inside the preamble",
+      "passed": false,
+      "evidence": "Mobile appears as Open item 2 ('Is the mobile app exempt?'). Per-tenant quotas does NOT appear as an ask or open item: it is resolved in Decisions ('One limit for all partners over per-tenant quotas, per \"pick a default and we'll revisit\". Revisit if a partner contract specifies a rate.') and listed under Scope out. Neither is in the preamble (the preamble only says product 'own two open items'). Converting an open question to a tell is defensible under the skill and NOTES.md ('Default is one limit for all partners'), but the assertion as written requires both to appear as asks/open items; strictly, only one does."
+    },
+    {
+      "text": "At least one decision is written in 'chose A over B because C' form with a revisit trigger",
+      "passed": true,
+      "evidence": "Decisions line 13: 'Token bucket (...) over sliding-window counter: one atomic Redis Lua call per request, no timestamp log. Revisit if a partner needs smoothed rather than capped throughput.' Also line 15: 'One limit for all partners over per-tenant quotas, per \"pick a default and we'll revisit\". Revisit if a partner contract specifies a rate.' A over B, reason, revisit trigger all present."
+    },
+    {
+      "text": "Assumptions appear as a tick-list and at least one risk is written as a conditional ('X breaks if Y')",
+      "passed": false,
+      "evidence": "Assumptions are a tick-list ('- [ ] Middleware can read the partner API key before the handler runs.' etc.). But the Risks section contains a single non-conditional line: 'Each request gains one Redis round trip; measure p99 latency before ship.' No risk is written as 'X breaks if Y'. The transcript (step 5/7) says the conditional-shaped risk about the available-funds screen was merged into Open item 2 and another risk was dropped, leaving no conditional risk. Half the assertion fails."
+    },
+    {
+      "text": "No Overview, Introduction, Background, or Next steps section under any name (a 'Why' section that is background counts)",
+      "passed": true,
+      "evidence": "facts.json headers: Rate Limiting Plan, Open items, Decisions, Assumptions, Risks, Scope out. scaffold_headers: []. No background or next-steps section."
+    },
+    {
+      "text": "The body is at or under 300 words, or the document's first line says it exceeded the budget and why (a note only in the chat reply fails)",
+      "passed": false,
+      "evidence": "facts.json: 337 words (the skill's own symptoms.py count, which includes title/headers/preamble; excluding title and headers alone it is still ~325). First line is '# Rate Limiting Plan' with no over-budget note; the chat reply has none either. Transcript step 7 shows the executor saw ~340 and decided 'no contested decision so no over-budget note added' - i.e. it knowingly shipped over budget without the note that the skill (SKILL.md line 93, rule 0 line 200) requires. Only if 'body' is read as excluding the 55-word preamble does it fall under 300 (~270); the skill and its script do not count that way."
+    },
+    {
+      "text": "Every number in the document traces to NOTES.md, CLAUDE.md, or is labelled as a proposed default",
+      "passed": true,
+      "evidence": "Numbers found: 'two open items' and 'Three choices' (match NOTES.md's two open questions / three decisions); 429 (NOTES); '2k rps' (NOTES user quote); '~40k daily users' (NOTES); 'three replicas' (NOTES/CLAUDE); '2x the busiest partner's normal p99' is prefixed 'I lean to ... measure first' inside an open item, i.e. explicitly a proposal not a default; '401' is an HTTP status identifier for unauthenticated requests, not a tunable quantity. No invented rate, TTL, timeout or duration appears. Marginal: '2x' is a lean rather than literally labelled 'proposed default', and 401 is not in the record."
+    },
+    {
+      "text": "The chat reply names what needs the user's call and does not enumerate the document's decisions",
+      "passed": true,
+      "evidence": "response.md: 'Three items need an answer before it's buildable ... the actual limit ..., whether the mobile app is exempt ..., and whether Redis being down allows or rejects.' plus the design.md contradiction flag. It does not list the Decisions section (token bucket, middleware placement, single limit, 401 ordering). 95 words, no headers, no bold leads (facts.json)."
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 3,
+    "total": 10,
+    "pass_rate": 0.7
+  },
+  "execution_metrics": {
+    "tool_calls": {
+      "Read": 1,
+      "Bash": 15
+    },
+    "total_tool_calls": 16,
+    "total_steps": 8,
+    "errors_encountered": 0,
+    "output_chars": 2575,
+    "transcript_chars": 1719,
+    "note": "transcript.md is an executor-written summary, not a raw tool log; tool_calls is an estimate from the 8 described steps (1 Read, ~15 Bash incl. 4 symptoms.py runs). output_chars = response.md (595) + project/docs/rate_limiting.md (1980)."
+  },
+  "claims": [
+    {
+      "claim": "docs/design.md proposes a per-IP in-process counter for export, contradicting the Redis and per-API-key decisions",
+      "type": "factual",
+      "verified": true,
+      "evidence": "test-projects/ledgerd/docs/design.md 'Rate limiting' section: 'this design proposes a simple per-IP counter in process memory as a starting point'."
+    },
+    {
+      "claim": "Redis is also the balance cache, so a Redis outage already degrades the app",
+      "type": "factual",
+      "verified": true,
+      "evidence": "CLAUDE.md: 'Redis for caching'; NOTES.md: 'Cache TTL is 30s and is load-bearing for the mobile app's available funds screen'."
+    },
+    {
+      "claim": "The record's only number: one partner at 2k rps slowed the mobile app",
+      "type": "factual",
+      "verified": true,
+      "evidence": "2k rps is the only rate figure in NOTES.md (other numbers there - 40k users, 6 partners, 30s, three replicas - are not rates). Slightly loose wording but accurate in context."
+    },
+    {
+      "claim": "Final ~340 words by the script's count; no contested decision so no over-budget note added",
+      "type": "process",
+      "verified": false,
+      "evidence": "Count verified (337). But the inference is wrong: the skill allows exceeding 300 ONLY for a contested decision, and otherwise the document is 'a draft, not a deliverable' (SKILL.md rule 0). With no contested decision the correct move was to cut to 300, not to ship 337 without a note."
+    },
+    {
+      "claim": "Mode selection: plan + two named readers -> Mode 1 Spec; content sorted into record/tell/ask",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript step 3 describes the triage; the document's structure (preamble, Open items, Decisions, Assumptions, Risks, Scope out) matches the Mode 1 shape in SKILL.md."
+    },
+    {
+      "claim": "NOTES.md not modified",
+      "type": "process",
+      "verified": true,
+      "evidence": "outputs contain only docs/rate_limiting.md under project/; transcript step 8 confirms."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": [],
+    "note": "No user_notes.md in outputs."
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Per-tenant quotas and the mobile-app limit appear as asks or open items in their own section, not inside the preamble",
+        "reason": "The with-skill run resolved per-tenant quotas as a decision with a revisit trigger, which NOTES.md ('Default is one limit for all partners') and the user quote ('pick a default and we'll revisit') both support and which the skill's tell-over-ask rule encourages. The assertion fails that defensible output. Consider: 'Neither appears in the preamble; each appears either in a dedicated open-items section or as an explicit decision with a revisit trigger.'"
+      },
+      {
+        "assertion": "The body is at or under 300 words, or the document's first line says it exceeded the budget and why",
+        "reason": "'Body' is ambiguous. The skill and symptoms.py count the whole file (337 here); excluding title, headers and preamble gives ~270. State the counting rule (e.g. 'as counted by symptoms.py / facts.json words') so the verdict is mechanical. Also worth a separate assertion that the executor did not knowingly ship over budget: the transcript shows it measured 337 and rationalised skipping the note."
+      },
+      {
+        "assertion": "Every number in the document traces to NOTES.md, CLAUDE.md, or is labelled as a proposed default",
+        "reason": "Clarify whether HTTP status codes (401) and multipliers inside a stated lean ('I lean to 2x ... measure first') count. I passed both as non-quantities / explicitly proposed, but a stricter reader could fail either."
+      },
+      {
+        "assertion": "Assumptions appear as a tick-list and at least one risk is written as a conditional ('X breaks if Y')",
+        "reason": "Compound assertion: this run satisfied the tick-list half and failed the conditional-risk half. Splitting it would show which Mode 1 rule the skill is not enforcing (here, the risks-as-conditionals rule, which the cut pass actively removed)."
+      },
+      {
+        "reason": "No assertion checks that the plan reconciles the stale docs/design.md per-IP counter with the record. Both runs caught it, so it is not discriminating today, but it is the one piece of record-awareness beyond NOTES.md that the fixture offers; worth an assertion so regressions are visible."
+      }
+    ],
+    "overall": "Assertions are mostly discriminating (baseline 3/10 vs skill 7/10). Two of the three with-skill failures are partly definitional (what 'body' means; whether an open question may be resolved into a decision), so tightening those two texts would make the eval more reliable. The genuine skill gaps surfaced: no conditional risk, and shipping over budget without the required first-line note."
+  }
+}

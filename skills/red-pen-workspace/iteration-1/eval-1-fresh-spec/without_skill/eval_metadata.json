@@ -1,0 +1,39 @@
+{
+  "eval_id": 1,
+  "eval_name": "fresh-spec",
+  "prompt": "Setup: the agent is dropped into a copy of test-projects/ledgerd, a small FastAPI service. It reads CLAUDE.md and NOTES.md as a real session would. NOTES.md records three settled decisions (rate limiter state in Redis, 429 + Retry-After, keyed per API key), two open questions (per-tenant quotas, a higher mobile limit), one invariant (balances never older than 30s) and two user quotes ('partners are the noisy neighbors', 'pick a default and we'll revisit'). The agent must write the plan to docs/rate_limiting.md and reply in chat.\n\nUser's message: Write up a plan for adding rate limiting to the API. Product and eng will both read it. Put it in docs/rate_limiting.md.",
+  "assertions": [
+    {
+      "text": "docs/rate_limiting.md is created",
+      "type": "content"
+    },
+    {
+      "text": "The document opens with a prose preamble (no heading) that names product and engineering readers and says how each should read it",
+      "type": "content"
+    },
+    {
+      "text": "The Redis, 429 + Retry-After, and per-API-key decisions from NOTES.md are treated as settled, not re-raised as open choices",
+      "type": "content"
+    },
+    {
+      "text": "Per-tenant quotas and the mobile-app limit appear as asks or open items in their own section, not inside the preamble",
+      "type": "content"
+    },
+    {
+      "text": "At least one decision is written in 'chose A over B because C' form with a revisit trigger",
+      "type": "content"
+    },
+    {
+      "text": "No Overview, Introduction, Background, or Next steps headers",
+      "type": "content"
+    },
+    {
+      "text": "The body is at or under roughly 350 words, or the top of the document says it exceeded the budget and why",
+      "type": "content"
+    },
+    {
+      "text": "The chat reply does not restate the document's contents",
+      "type": "content"
+    }
+  ]
+}

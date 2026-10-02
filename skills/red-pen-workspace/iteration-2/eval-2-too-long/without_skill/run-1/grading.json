@@ -1,0 +1,94 @@
+{
+  "expectations": [
+    {
+      "text": "The new reply is under 150 words",
+      "passed": true,
+      "evidence": "facts.json: words=100. Under 150."
+    },
+    {
+      "text": "The first paragraph names the pick and a reason tied to the project (the partner burst incident), not a generic trade-off",
+      "passed": true,
+      "evidence": "Lead is 'Token bucket.' alone; the project-tied reason is the immediately following first bullet: 'Partners are bursty (the 2k rps one). Token bucket lets short bursts through while holding the average rate'. Passed on intent (pick + 2k rps incident lead before anything generic), though literally the first paragraph is one line with no reason; see eval_feedback."
+    },
+    {
+      "text": "No headers and no performative phrases (Great question, I hope this helps, Certainly)",
+      "passed": true,
+      "evidence": "facts.json: headers=[], performative=[]. Manual read confirms no headings or performative phrases."
+    },
+    {
+      "text": "The reply does not explain why the previous reply was long and does not apologize",
+      "passed": true,
+      "evidence": "facts.json: apology_or_meta=[]. No reference to the previous reply, its length, or any apology."
+    },
+    {
+      "text": "The reply does not restate decisions NOTES.md already settles (Redis, 429, per-key) as if new",
+      "passed": true,
+      "evidence": "Bullet 2 explicitly frames them as settled: 'Fits what's already decided: one Lua script in Redis, keyed by API key, returns tokens-left so you can set Retry-After.' Bullet 1 notes 'you already rejected queueing in favor of 429'. Not presented as new."
+    },
+    {
+      "text": "No default numbers are invented without a source or without being labelled as a proposal",
+      "passed": false,
+      "evidence": "Bullet 3: 'Default, per \"pick one and revisit\": 100 rps sustained, burst 200, per key. Two numbers, no other knobs.' Neither 100 rps nor burst 200 appears anywhere in NOTES.md, CLAUDE.md, docs/design.md or README (grep confirms the only figure in the record is 2k rps). The numbers are labelled 'Default', stated declaratively, not as a proposal/guess/starting point. The user quote is also garbled ('pick one and revisit' vs NOTES.md 'pick a default and we'll revisit'). Borderline because citing the quote signals provisionality, but burden of proof is on the expectation."
+    },
+    {
+      "text": "The reply does not close with an offer to do more ('want me to implement it?')",
+      "passed": true,
+      "evidence": "Closes with 'If you'd rather not allow bursts at all, sliding window counter is the fallback.' No offer to implement or elaborate."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 1,
+    "total": 7,
+    "pass_rate": 0.86
+  },
+  "execution_metrics": {
+    "total_tool_calls": 4,
+    "output_chars": 1791,
+    "errors_encountered": 0,
+    "total_steps": 0,
+    "transcript_chars": 0
+  },
+  "claims": [
+    {
+      "claim": "100 rps sustained, burst 200 is the default",
+      "type": "factual",
+      "verified": false,
+      "evidence": "No source in the project record; invented by the model and presented as 'Default'."
+    },
+    {
+      "claim": "You already rejected queueing in favor of 429",
+      "type": "factual",
+      "verified": true,
+      "evidence": "NOTES.md 2026-09-12: 'Rejected: silently queueing requests'. Slight stretch to map onto leaky-bucket queueing, but the rejection is real."
+    },
+    {
+      "claim": "User said 'pick one and revisit'",
+      "type": "factual",
+      "verified": false,
+      "evidence": "NOTES.md records 'pick a default and we'll revisit'. Misquote."
+    },
+    {
+      "claim": "Lua script returns tokens-left so you can set Retry-After",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Consistent with NOTES.md 429 + Retry-After decision; a Lua token-bucket script can return remaining tokens/refill time."
+    }
+  ],
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "No default numbers are invented without a source or without being labelled as a proposal",
+        "reason": "The baseline's 'Default, per \"pick one and revisit\": 100 rps ...' is a genuine edge case: it cites the user's instruction but never marks the numbers as a guess. The assertion should state explicitly whether invoking the user's 'pick a default' quote counts as labelling, or require wording like 'proposal', 'starting point', or 'guess'."
+      },
+      {
+        "assertion": "The first paragraph names the pick and a reason tied to the project (the partner burst incident), not a generic trade-off",
+        "reason": "Baseline leads with a one-line 'Token bucket.' paragraph followed by bullets; the literal first paragraph contains no reason. Reword to 'pick and project-tied reason appear before any generic comparison' so the assertion is unambiguous."
+      },
+      {
+        "reason": "No assertion checks fidelity of quotes attributed to the user. The baseline misquoted NOTES.md ('pick one and revisit'); that went uncaught by the existing assertions."
+      }
+    ],
+    "overall": "Baseline passes 6/7 with no skill, so most assertions here measure what the model already does on a 'too long, try again' prompt. The invented-default-numbers assertion is the only discriminator and its wording leaves the baseline's case ambiguous."
+  }
+}

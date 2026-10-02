@@ -1,0 +1,31 @@
+{
+  "run": "iteration-2/eval-4-code-comments/with_skill/run-1",
+  "files": [
+    "project/src/webhook_client.py",
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 134,
+    "words_incl_code": 212,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 0,
+    "redpen_breadcrumb": false,
+    "first_sentence": "Done in `src/webhook_client.py` (+11 lines)."
+  },
+  "webhook_client": {
+    "comments": [
+      "# Partners register one HTTPS endpoint each. Delivery is at-least-once; the",
+      "# partner dedupes on event_id.",
+      "# 5xx is the partner's outage; 4xx means they rejected this payload,",
+      "# and an identical resend gets the same answer."
+    ],
+    "todo": false,
+    "has_backoff": true,
+    "mentions_4xx_or_5xx": true
+  }
+}

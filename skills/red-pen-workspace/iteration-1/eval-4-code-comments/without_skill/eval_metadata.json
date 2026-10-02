@@ -1,0 +1,35 @@
+{
+  "eval_id": 4,
+  "eval_name": "code-comments",
+  "prompt": "Setup: the agent is dropped into a copy of test-projects/ledgerd, a small FastAPI service. It reads CLAUDE.md and NOTES.md as a real session would. NOTES.md records three settled decisions (rate limiter state in Redis, 429 + Retry-After, keyed per API key), two open questions (per-tenant quotas, a higher mobile limit), one invariant (balances never older than 30s) and two user quotes ('partners are the noisy neighbors', 'pick a default and we'll revisit'). src/webhook_client.py is 14 lines with one two-line why-comment and a bare send() that posts once. The agent must add the retry and write (not run) a commit message.\n\nUser's message: Add retry with exponential backoff to WebhookClient.send: 3 attempts on 5xx, fail fast on 4xx. Write the commit message too.",
+  "assertions": [
+    {
+      "text": "send() retries up to 3 attempts on 5xx responses with increasing delay and returns without retrying on 4xx",
+      "type": "content"
+    },
+    {
+      "text": "No comment restates what the adjacent code visibly does",
+      "type": "content"
+    },
+    {
+      "text": "No comment narrates the session (added per request, updated to, as asked)",
+      "type": "content"
+    },
+    {
+      "text": "Every comment present answers a why, an invariant, an external fact, or a deliberate omission",
+      "type": "content"
+    },
+    {
+      "text": "No TODO or stub placeholders in delivered code",
+      "type": "content"
+    },
+    {
+      "text": "The commit subject is verb-led and under 72 characters; a body is present only for a non-obvious decision and does not list files",
+      "type": "content"
+    },
+    {
+      "text": "The diff is confined to webhook_client.py plus tests, with no unrelated refactors or renames",
+      "type": "content"
+    }
+  ]
+}

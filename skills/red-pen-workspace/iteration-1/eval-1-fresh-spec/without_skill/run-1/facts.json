@@ -1,0 +1,46 @@
+{
+  "run": "iteration-1/eval-1-fresh-spec/without_skill",
+  "files": [
+    "project/docs/rate_limiting.md",
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 258,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 1,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 4,
+    "redpen_breadcrumb": false,
+    "first_sentence": "Written to `docs/rate_limiting.md`."
+  },
+  "project/docs/rate_limiting.md": {
+    "words": 1070,
+    "headers": [
+      "Rate Limiting Plan",
+      "Why",
+      "What is already decided",
+      "Proposal",
+      "Who gets limited",
+      "The limit",
+      "Algorithm: token bucket",
+      "Implementation",
+      "Interaction with the 30-second balance invariant",
+      "Rollout",
+      "What we'll watch",
+      "For product",
+      "For eng",
+      "Follow-ups (not in v1)",
+      "Decisions this plan makes"
+    ],
+    "scaffold_headers": [],
+    "openers": 1,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 10,
+    "redpen_breadcrumb": false,
+    "first_sentence": "# Rate Limiting Plan\n\nStatus: proposal."
+  }
+}

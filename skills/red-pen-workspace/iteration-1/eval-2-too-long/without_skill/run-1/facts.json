@@ -1,0 +1,18 @@
+{
+  "run": "iteration-1/eval-2-too-long/without_skill",
+  "files": [
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 75,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 0,
+    "redpen_breadcrumb": false,
+    "first_sentence": "Token bucket, in Redis, keyed by API key."
+  }
+}

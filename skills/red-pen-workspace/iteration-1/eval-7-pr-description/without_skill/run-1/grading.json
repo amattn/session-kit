@@ -1,0 +1,113 @@
+{
+  "expectations": [
+    {
+      "text": "The description opens with one sentence naming the return-type change as the part needing the reviewer's judgment and the renames as mechanical",
+      "passed": false,
+      "evidence": "The reply opens with meta-commentary (\"Here's the PR description. One caveat up front: the working tree I have only contains the pre-change src/webhook_client.py...\"). The description itself opens under \"## What\" with the retry behavior: \"`WebhookClient.send()` now retries partner deliveries that fail with a 5xx response...\". The return-type change is the second paragraph, is not framed as the item needing judgment, and the renames are not identified as mechanical until the 'Incidental, no behavior change' sub-list in ## Changes."
+    },
+    {
+      "text": "The return-type change is surfaced as a deviation from the original ask, with the reason (callers need attempt counts)",
+      "passed": true,
+      "evidence": "## Why: \"The return-type change was not in the original ask (\\\"add retry to the webhook client\\\"). It's here because a bare `bool` can't tell the caller how many attempts a delivery took or what the final error was, and we want that in the logs...\" Deviation and attempt-count reason both present."
+    },
+    {
+      "text": "The description does not list every file",
+      "passed": false,
+      "evidence": "## Changes itemizes all six files from changes.md: src/webhook_client.py, src/api/webhooks.py, tests/test_webhook_client.py, src/api/transactions.py, src/api/balances.py, src/api/__init__.py."
+    },
+    {
+      "text": "The description is under roughly 150 words",
+      "passed": false,
+      "evidence": "facts.json: 495 words for the whole reply. The description body between the --- separators alone is 411 words (`wc -w`), roughly 2.7x the limit."
+    },
+    {
+      "text": "No Overview or Summary headers",
+      "passed": true,
+      "evidence": "facts.json headers: ['Webhook client: retry 5xx with exponential backoff', 'What', 'Why', 'Changes', 'Things to check in review', 'Not in this PR']; scaffold_headers []. Literally no 'Overview' or 'Summary' header, so this passes, although 'What'/'Why'/'Changes' is the same generic scaffold under different names."
+    }
+  ],
+  "execution_metrics": {
+    "tool_calls": {
+      "Bash": 3,
+      "SubagentHandback": 1
+    },
+    "total_tool_calls": 4,
+    "total_steps": 5,
+    "errors_encountered": 0,
+    "output_chars": 3259,
+    "transcript_chars": 1535,
+    "note": "No metrics.json; tool counts reconstructed from the transcript summary and are approximate."
+  },
+  "claims": [
+    {
+      "claim": "The working tree only contains the pre-change src/webhook_client.py; src/api/* and tests/ are absent",
+      "type": "factual",
+      "verified": true,
+      "evidence": "test-projects/ledgerd contains only changes.md, CLAUDE.md, docs/design.md, draft_reply.md, NOTES.md, README.md, src/webhook_client.py (pre-change, returns bool)."
+    },
+    {
+      "claim": "4 new tests covering retry behavior (5xx retried, 4xx fails fast, attempt counting, exhaustion)",
+      "type": "factual",
+      "verified": false,
+      "evidence": "changes.md says only 'added 4 tests for retry behavior'; the four named cases are invented, the test file was not available, and this item is not marked as 'confirm' despite the opening caveat promising such marks."
+    },
+    {
+      "claim": "Partner endpoints occasionally return transient 5xx errors, and a single failed POST meant the event was lost until something else re-delivered it",
+      "type": "factual",
+      "verified": false,
+      "evidence": "No input (changes.md, NOTES.md, source, docs) states this; it is an invented motivation presented as fact in ## Why."
+    },
+    {
+      "claim": "A dead partner endpoint can hold send() for ~15s",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Source: httpx.Client(timeout=5.0); 3 attempts x 5s + ~0.6s backoff is ~15.6s. Arithmetic consistent with available inputs."
+    },
+    {
+      "claim": "Delivery is at-least-once with partners deduping on event_id",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Comment in src/webhook_client.py."
+    },
+    {
+      "claim": "Per NOTES.md, we picked a default and will revisit (retry parameters not configurable)",
+      "type": "factual",
+      "verified": false,
+      "evidence": "NOTES.md has the user quote 'I don't want a config knob for everything. pick a default and we'll revisit', but it is recorded under the rate-limiter work, not retry; applying it to retry parameters is an extrapolation, not something NOTES.md states."
+    },
+    {
+      "claim": "Connection errors/timeouts (httpx.TransportError) may not be covered by '5xx only'",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The client uses httpx; changes.md describes retry on 5xx only, so the gap is a legitimate, checkable review question."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [
+      "Executor noted in the reply that the actual diff was unavailable and the description was written from changes.md plus the pre-change source."
+    ],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "No Overview or Summary headers",
+        "reason": "Trivially satisfied: this 495-word, six-header baseline passes because its scaffold is named What/Why/Changes instead of Overview/Summary. Tighten to 'no markdown section headers' or 'no generic scaffold headers (What, Why, Overview, Summary, Changes, Background)' so the assertion actually separates the two runs."
+      },
+      {
+        "reason": "No assertion covers fabricated specifics. The baseline invented the content of the four tests and a motivating incident (lost events on transient 5xx) that appears nowhere in the inputs, and presented both as fact in the PR description. An assertion like 'every concrete claim traces to changes.md or the source tree' would catch this."
+      },
+      {
+        "reason": "No assertion covers meta-commentary in the reply. The baseline opens with a paragraph about the executor's working tree ('the working tree I have only contains...') before the description, which a reviewer-facing PR description should never carry. check.py's apology_or_meta regex did not catch it."
+      }
+    ],
+    "overall": "Two of five assertions pass; the 'No Overview or Summary headers' pass is a false positive in spirit, since the output uses an equivalent What/Why/Changes scaffold. The uncaught problems are invented details (test cases, motivation) stated as fact."
+  },
+  "summary": {
+    "passed": 2,
+    "failed": 3,
+    "total": 5,
+    "pass_rate": 0.4
+  }
+}

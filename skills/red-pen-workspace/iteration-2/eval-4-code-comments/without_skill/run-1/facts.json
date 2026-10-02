@@ -1,0 +1,61 @@
+{
+  "run": "iteration-2/eval-4-code-comments/without_skill/run-1",
+  "files": [
+    "project/NOTES.md",
+    "project/src/webhook_client.py",
+    "response.md",
+    "transcript.md"
+  ],
+  "response": {
+    "words": 285,
+    "words_incl_code": 377,
+    "headers": [],
+    "scaffold_headers": [],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 4,
+    "redpen_breadcrumb": false,
+    "first_sentence": "Done."
+  },
+  "project/NOTES.md": {
+    "words": 317,
+    "words_incl_code": 317,
+    "headers": [
+      "NOTES.md \u2014 ledgerd",
+      "Project Context",
+      "Invariants & Critical Requirements",
+      "Important Concepts & Insights",
+      "From the user",
+      "Key Design Decisions",
+      "Rate limiter state lives in Redis (2026-09-10)",
+      "Rate-limited responses are 429 with Retry-After (2026-09-12)",
+      "Rate limit keyed per API key, not per IP (2026-09-12)",
+      "Webhook delivery retries on 5xx and transport errors, not 4xx (2026-10-01)",
+      "Open Questions"
+    ],
+    "scaffold_headers": [],
+    "openers": 0,
+    "performative": [],
+    "apology_or_meta": [],
+    "bold_leads": 1,
+    "redpen_breadcrumb": false,
+    "first_sentence": "# NOTES.md \u2014 ledgerd\n\n## Project Context\n\nledgerd serves balances and transaction history to the mobile app (~40k daily users) and to 6 partner integrations over HTTP."
+  },
+  "webhook_client": {
+    "comments": [
+      "# Retry policy. Fixed on purpose (see NOTES.md: \"pick a default and we'll",
+      "# revisit\") rather than exposed as constructor knobs.",
+      "# Partners register one HTTPS endpoint each. Delivery is at-least-once; the",
+      "# partner dedupes on event_id. That dedupe is what makes retrying safe: a",
+      "# request that timed out may have already been received, and resending it is",
+      "# harmless.",
+      "# Full jitter (0..cap) rather than a fixed delay so that the three",
+      "# replicas retrying the same flapping partner don't line up their",
+      "# requests and land on it in lockstep."
+    ],
+    "todo": false,
+    "has_backoff": true,
+    "mentions_4xx_or_5xx": true
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "expectations": [
+    {
+      "text": "send() retries up to 3 attempts on 5xx responses with increasing delay and returns without retrying on 4xx",
+      "passed": true,
+      "evidence": "src/webhook_client.py: `for attempt in range(_MAX_ATTEMPTS)` (3); `if resp.status_code < 500: return resp.status_code < 300` returns on any 4xx before sleeping; sleep is `0.2 * 2**attempt + uniform(0, 0.2)` so delay 1 is in [0.2,0.4] and delay 2 in [0.4,0.6]. Grader exercised the file with a stub httpx: [503,503,200] -> True, 3 calls, sleeps [0.314, 0.566]; [503,503,503] -> False, 3 calls; [503,400] -> False, 2 calls, 1 sleep; [404] -> False, 1 call, no sleep."
+    },
+    {
+      "text": "No comment restates what the adjacent code visibly does",
+      "passed": true,
+      "evidence": "Three new comments: 'Transport errors ... are not retried; they raise.' (describes an absence -- there is no try/except to restate), '4xx is our payload or their config; a retry can't change it.' (reason, not a paraphrase of `< 500`), 'Jitter keeps the three replicas from retrying a partner in lockstep.' (reason for the uniform() term). Pre-existing header comment unchanged. Minor nit: the 4xx comment sits on a branch that also handles 2xx/3xx, but it is not a restatement."
+    },
+    {
+      "text": "No comment narrates the session (added per request, updated to, as asked)",
+      "passed": true,
+      "evidence": "facts.json lists all 5 comment lines; none contain 'added', 'per request', 'updated', 'as asked' or similar. Transcript step 5 records that a draft comment 'propagate as before' was cut as session narration before delivery."
+    },
+    {
+      "text": "Every comment present answers a why, an invariant, an external fact, or a deliberate omission",
+      "passed": true,
+      "evidence": "Header: external fact (partner endpoints, at-least-once, dedupe). 'Transport errors ... not retried; they raise': deliberate omission. '4xx is our payload or their config; a retry can't change it': why. 'Jitter keeps the three replicas from retrying a partner in lockstep': why, grounded in the project's three-replica deployment (NOTES.md/CLAUDE.md). No unit/value annotations on the constants."
+    },
+    {
+      "text": "No TODO or stub placeholders in delivered code",
+      "passed": true,
+      "evidence": "grep for TODO/FIXME/XXX/NotImplemented/bare `pass` over with_skill/outputs/project returns nothing; facts.json `todo: false`. Loop body is complete and returns False after exhaustion."
+    },
+    {
+      "text": "The commit subject is verb-led and under 72 characters; a body is present only for a non-obvious decision and does not list files",
+      "passed": true,
+      "evidence": "Subject 'Add retry to webhook client: exponential backoff on 5xx' is 55 chars, imperative verb-led. Body carries two non-obvious decisions (transport errors deliberately not retried; no constructor knobs, per NOTES.md 'pick a default') and names no files. Weakness: the 'Mechanics:' bullets (3 attempts, 200ms base, doubling, jitter) restate what the diff shows, and 'Mechanics:/Design:' section labels are scaffolding inside a commit body."
+    },
+    {
+      "text": "The diff is confined to webhook_client.py plus tests, with no unrelated refactors or renames",
+      "passed": true,
+      "evidence": "outputs/project contains only src/webhook_client.py; transcript: 'Project files modified: src/webhook_client.py only.' diff vs original: adds imports, two module constants, and the loop inside send(); __init__, close(), class name, method signatures, and the header comment are untouched. No tests were added (repo had none; response says so)."
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 0,
+    "total": 7,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "note": "no metrics.json in outputs; counts from transcript",
+    "total_steps": 8,
+    "errors_encountered": 0,
+    "project_files_changed": 1,
+    "total_tool_calls": 0,
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "claims": [
+    {
+      "claim": "One file touched, src/webhook_client.py",
+      "type": "factual",
+      "verified": true,
+      "evidence": "outputs/project holds only that file; transcript confirms."
+    },
+    {
+      "claim": "Checked with a stubbed httpx: 200 -> 1 call; 503,503,200 -> True in 3; 503x3 -> False; 503,400 -> False in 2",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript step 6 describes the stub run; grader reproduced identical results with an independent stub."
+    },
+    {
+      "claim": "Timeouts and refused connections still raise rather than retry",
+      "type": "factual",
+      "verified": true,
+      "evidence": "No try/except around post(); grader stub: ConnectError propagates after 1 call."
+    },
+    {
+      "claim": "Worst case per send() goes from 5s to ~16s",
+      "type": "factual",
+      "verified": true,
+      "evidence": "3 x 5s timeout + sleeps (0.2+0.4 base, up to 0.4 jitter) ~= 16s."
+    },
+    {
+      "claim": "No tests added; the repo has none and no test deps",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Original test-projects/ledgerd has no tests/ directory and no requirements/pyproject."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [
+      "Response asks whether transport errors (timeouts, refused connections) should also be retried; implementer leans yes."
+    ],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "send() retries up to 3 attempts on 5xx responses with increasing delay and returns without retrying on 4xx",
+        "reason": "'Increasing delay' is ambiguous for full-jitter backoff (uniform(0, cap)), where individual sampled delays can shrink even though the cap doubles. The baseline run hit exactly this. State whether the assertion wants a monotonically increasing sleep or an exponentially growing cap."
+      },
+      {
+        "assertion": "The commit subject is verb-led and under 72 characters; a body is present only for a non-obvious decision and does not list files",
+        "reason": "The with-skill body passed while restating mechanics the diff already shows (3 attempts, 200ms, doubling). If the skill's intent is 'body only for the non-obvious', add 'and does not restate the diff' or the assertion will keep passing padded bodies."
+      },
+      {
+        "reason": "No assertion checks that comments are factually consistent with the code they describe. The baseline's 'delays are 0.2s, 0.4s (plus jitter)' misdescribes its own full-jitter _backoff(); a correctness check on comment content would catch this class of error more directly than the why/what distinction does."
+      },
+      {
+        "reason": "No assertion checks that the implementation stays within the asked scope (5xx only). Both runs reasoned about transport errors; the baseline silently widened the retry policy and added a constructor parameter. Scope creep in behavior is a different failure from scope creep in files touched."
+      }
+    ],
+    "overall": "The comment assertions discriminated well here (baseline failed on a what-comment that was also wrong). The backoff assertion and the commit-body assertion each have a loophole worth closing."
+  }
+}
