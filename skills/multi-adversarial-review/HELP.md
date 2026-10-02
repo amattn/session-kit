@@ -12,8 +12,9 @@
 | `/mar with Claude, Codex, and GLM 5.3` | The reviewer order you name |
 | `/mar to review HEAD against <base>` | Point reviewers at a commit range; the chain is cumulative, prior findings are committed and visible |
 | `/mar review <note> as a spec` | Spec target: principle fit, coherence, viability, open vs mechanical, readiness |
+| `/mar review <doc> as copy for <readers>` | Copy target: one reviewer per named reader reports where they stopped, what they reread, what they already knew; findings quote the sentence and name a kind |
 
-Targets: `code`, `plan`, `code-vs-plan`, `spec`. Dispositions: `accepted-fixed`, `accepted-deferred`, `rejected` (with evidence), `unclear-blocked`, `no-findings` (must name residual risk), `route-failed`, `contested`.
+Targets: `code`, `plan`, `code-vs-plan`, `spec`, `copy`. Dispositions: `accepted-fixed`, `accepted-deferred`, `rejected` (with evidence), `unclear-blocked`, `no-findings` (must name residual risk), `route-failed`, `contested`.
 
 **Example:**
 ```

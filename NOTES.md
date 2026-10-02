@@ -44,7 +44,7 @@ session-kit is a suite of Claude Code skill plugins for making AI-assisted devel
 | 8 | /stable-label | **Implemented** | EX_7 |
 | 9 | /red-pen | **Implemented** | WRITING_DIRECTIVES.md |
 | 10 | /planner (name TBD) | Planned | plet-style planning |
-| 11 | /multi-adversarial-review (alias: mar) | **Implemented** | vog_kit |
+| 11 | /multi-adversarial-review (alias: mar) | **Implemented**; `copy` target added 2026-10-02 | vog_kit |
 
 ---
 
@@ -587,6 +587,21 @@ Same 8 cases, skill v0.2.0, 67 assertions. Graders: 84% vs 48%. Blind side-by-si
 - **From the graders, fixed:** the 300-word budget's escape clause was too cheap (a 415-word doc passed by saying so); the bootstrap block left a dangling "Readers:" line when there was no roster; a reply asked a question although the record says "pick a default and we'll revisit".
 - **From the graders, open:** graders still disagree with the user on pr-description (3/7 on length and a per-file list; the user preferred it). Several assertions do not discriminate (code-comments 8/8 vs 7/8, too-long 9/9 vs 8/9). Invented or unsupported claims still appear in both configurations.
 - **Skill at v0.2.1.** These changes are untested; a fourth iteration would confirm them.
+
+### /multi-adversarial-review gains a `copy` target (2026-10-02)
+
+The review method the user uses most for code, applied to prose. Follows the port decision that /red-pen's review would be a MAR target rather than its own doctrine.
+
+- **Lenses are the readers.** One reviewer per named reader, blind to each other within a stage, each reporting where they stopped, what they reread, what they did not understand, and what they already knew. Chose readers over topical lenses (clarity, concision, structure) because every finding in this project's evals that mattered was tied to a reader.
+- **Two non-reader lenses:** record (stale and unsourced claims; this is the invented-content class the evals kept missing) and fidelity (nothing lost when reviewing an edit).
+- **A named reader is a route precondition.** No reader, `route-failed: reader-undefined`. Mirrors the spec target's authority coverage gate.
+- **`over-cut` is a finding kind and Strong is a required section.** Both guard against the failure the user caught in the dogfood, where compression rules over-cut edited text. A reviewer told only to find cuts behaves like a reviewer told only to find bugs.
+- **Reviewers never change meaning.** A fix that would alter a rule or a decision is a `meaning` finding, deferred to the owner. Same split as spec mode's editor versus maintainer.
+- **`copy` versus `spec`:** spec reviews what the text proposes, copy reviews whether readers can use it. Both can apply to one file; spec first.
+- **Rejections feed back.** A rejected cut is recorded as a one-line override in the project's writing conventions, which is /red-pen's calibration rule.
+- **Cross-family reviewers for prose is a hypothesis.** The evidence so far supports independent-context readers; the reference says so and asks the lead to record which ran.
+- **Review output has its own budget** (about 300 words before findings), since a wordy review of a wordy document fails its own test.
+- **Not yet run.** No copy review has been executed with this target.
 
 ### /red-pen Surface by Stakes (2026-10-01)
 

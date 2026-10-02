@@ -1,6 +1,6 @@
 ---
 name: red-pen
-version: 0.2.1
+version: 0.2.2
 description: "Writing directives for every output type — spec/plan, code comments, code and diffs, chat. Makes AI-generated text less painful to read by substituting explicit constraints (word budgets, a named reader, mandatory prioritization, a cut pass) for the editing cost that generated text never pays. Use when the user asks to 'red-pen', 'red pen this', 'tighten this', 'cut this down', 'too long', 'too wordy', 'less fluff', 'stop narrating', 'this reads like AI', 'edit this', 'set up writing conventions', or 'writing directives'. Also apply these rules always-on, without invocation, before writing any spec, plan, design note, code comment, diff, commit message, or chat reply — decide the output type first, then write to its rules. Also trigger the bootstrap flow when setting up a project's AGENTS.md and/or CLAUDE.md if no writing conventions are defined yet."
 user-invocable: true
 allowed-tools: Bash(${CLAUDE_SKILL_DIR}/scripts/*)
@@ -273,6 +273,10 @@ When the user points /red-pen at something ("red-pen this", `/red-pen docs/desig
    - A symptom table of at most four rows, the ones that moved most. It is evidence, and readers skim it, so keep it short and put it after the pair. `${CLAUDE_SKILL_DIR}/scripts/symptoms.py --compare before.md after.md` gives the literal counts; you add what it cannot see (stale claims, cross-section restatement, argument before rule, paraphrased restatement).
    - Nothing else. No narration of each cut, no word count unless the reader asked. Under 150 words outside the pair. `references/worked_example.md` is the shape.
 4. Do not add anything the original lacked unless the mode requires it (a Mode 1 doc with no preamble gets one; it does not get an Overview).
+
+### Independent review
+
+The author of a document cannot see what its reader does not know. For a document that matters (a spec others will ratify, a README, anything with several audiences), an editing pass by the author is not a review. If the project has /multi-adversarial-review, use its `copy` target: one independent reviewer per named reader, findings that quote the sentence and name the symptom, and a disposition for each. This skill supplies the vocabulary that review uses: the symptom list, the reader roster, and the writing conventions. A cut the owner rejects there becomes a project override here.
 
 ### When the user says "too long" or "too wordy"
 

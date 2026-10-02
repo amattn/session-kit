@@ -5,6 +5,12 @@ All notable changes to session-kit. Versions track the plugin version in `.claud
 ## [Unreleased]
 
 ### Added
+- `/multi-adversarial-review` v0.2.0: `copy` target for reviewing documents as writing
+  - `references/copy-review.md`: named readers as the lenses, plus record and fidelity lenses
+  - Finding kinds drawn from /red-pen's symptom list, with `over-cut` as a finding
+  - Output contract: overall, strong, needs work, fidelity, judgment and mechanical, readiness per reader
+  - Reviewers never change meaning; a `meaning` finding goes to the owner
+  - `/red-pen` v0.2.2 points to it for independent review
 - `/multi-adversarial-review` v0.1.0 (alias `/mar`): ported from vog_kit, Claude copy
   - Doctrine, routes, disposition panel, and spec-review references carried over; Vog-specific lines generalized to examples
   - session-kit is canonical from here; vog_kit mirrors. Codex variant stays in vog_kit for a later port

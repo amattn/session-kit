@@ -120,6 +120,10 @@ Run the skill-creator trigger optimization loop on each skill's description to i
 
 Claude copy ported as `skills/multi-adversarial-review` v0.1.0 (alias `mar` via description trigger). Vog-specifics generalized to examples, HELP.md, README, CHANGELOG. session-kit canonical; vog_kit README now points here. Follow-ups: Codex variant; a `copy` target for /red-pen (readers as lenses, Strong/fidelity contract); evals in degraded same-host mode.
 
-### 19. Planner skill
+### 19. `copy` target for /multi-adversarial-review ✓
+
+Added as `references/copy-review.md` with hooks in SKILL.md and HELP.md; /red-pen points to it. /multi-adversarial-review v0.2.0, /red-pen v0.2.2. Not yet run: the first real copy review is the test, and vog_kit's mirror needs the same change.
+
+### 20. Planner skill
 
 New skill for plet-style planning. Name TBD. Candidate for its spec template: a numbered open-items section (owner, item, lean) that readers answer with /fast-chat codes and /stable-label IDs — deliberately kept out of /red-pen. Deferred until /red-pen evals (#16) are done.

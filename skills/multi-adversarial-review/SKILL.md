@@ -1,7 +1,7 @@
 ---
 name: multi-adversarial-review
-version: 0.1.0
-description: "Sequential multi-model adversarial review. A lead commits a stable code, plan, or specification state; independent reviewer models inspect it one at a time; after each pass the lead verifies, fixes, revises, or defers the findings and commits the outcome before the next model reviews. Use when the user says 'mar', 'run mar', 'multi-adversarial-review', asks for a Claude/Codex/GLM review chain, cross-model review commits, adversarial plan review, spec or design-note review through project design principles, or a repeated review-disposition-commit gate. Do not use for ordinary one-pass code review, same-model subagent review, simultaneous panel discussion, or review synthesis with no lead response between passes."
+version: 0.2.0
+description: "Sequential multi-model adversarial review. A lead commits a stable code, plan, or specification state; independent reviewer models inspect it one at a time; after each pass the lead verifies, fixes, revises, or defers the findings and commits the outcome before the next model reviews. Use when the user says 'mar', 'run mar', 'multi-adversarial-review', asks for a Claude/Codex/GLM review chain, cross-model review commits, adversarial plan review, spec or design-note review through project design principles, copy review of a document with its readers as the lenses, or a repeated review-disposition-commit gate. Do not use for ordinary one-pass code review, same-model subagent review, simultaneous panel discussion, or review synthesis with no lead response between passes."
 user-invocable: true
 ---
 
@@ -37,7 +37,8 @@ routes get recorded as failures. Read
 [`references/disposition-panel.md`](references/disposition-panel.md) only when a
 contested finding trips the panel gate (§ Pushback). For `spec` targets, read
 [`references/spec-review.md`](references/spec-review.md) before constructing
-prompts or dispositioning findings.
+prompts or dispositioning findings. For `copy` targets, read
+[`references/copy-review.md`](references/copy-review.md) the same way.
 
 For background and prior art, read the survey this skill was built from,
 `multi-adversarial-review-prior-art.md` in [vog_kit](https://github.com/amattn/vog_kit),
@@ -87,6 +88,9 @@ Therefore, when Claude is the implementer:
 - In `spec` mode, complete the authority coverage gate in
   `references/spec-review.md` before crediting a reviewer stage. Partial-canon
   review is `route-failed`, not a completed review with a caveat.
+- In `copy` mode, name the readers before launching. A copy review with no
+  named reader is `route-failed: reader-undefined`
+  (`references/copy-review.md`).
 
 ## Targets
 
@@ -98,12 +102,20 @@ Choose one target mode from the request and local context.
 | `plan` | A proposed plan/cut/order needs stress-testing before implementation. | Are dependencies, sizing, order, and assumptions sound? |
 | `code-vs-plan` | Code claims to implement a prior plan. | Did the implementation actually follow the plan and avoid hidden scope changes? |
 | `spec` | A design spec, RFC, protocol, or normative design note (a Vog VDN, for example) needs review. | Is the proposed meaning principled, coherent, viable, honestly scoped, and ready for maintainer ratification? |
+| `copy` | A document for human readers (README, guide, release notes, the prose of a plan or spec) needs review as writing. | Can each named reader find what they need, trust it, and stop early, without a rule being lost? |
 
 For `spec`, `references/spec-review.md` defines the compact
 overall/strong/needs-work/viability/open/mechanical/readiness output and, when
 the project has durable design principles, makes alignment with them the primary
 lens. Select `spec` automatically for a project's design-note type (a Vog VDN,
 for example); never force it into `plan`.
+
+For `copy`, `references/copy-review.md` makes the document's named readers the
+lenses and defines the overall/strong/needs-work/fidelity/judgment/readiness
+output. `copy` reviews whether readers can use the text; `spec` reviews what the
+text proposes. A design note that needs both gets `spec` first, then `copy` on
+the settled text. Reviewers never change meaning: a fix that would alter a rule
+or a decision is a `meaning` finding for the owner.
 
 For `code` and `code-vs-plan`, every model-stage review outcome normally becomes
 its own disposition commit. For a single-model `plan` review, fold findings into
@@ -112,7 +124,9 @@ review commits. For a multi-model `plan` chain, keep the central invariant:
 commit the plan disposition after each model stage before the next model reviews.
 For a multi-model `spec` chain, commit the stable artifact and durable review
 ledger after each stage. The lead may revise confirmed document defects or mark
-design work OPEN; only the maintainer ratifies semantic choices.
+design work OPEN; only the maintainer ratifies semantic choices. A `copy` chain
+follows the same rule: commit the edited artifact and its disposition record
+after each stage.
 
 ## Chain
 
@@ -163,7 +177,9 @@ green checks would catch a break; architecture/boundaries/coupling; simplicity
 and accidental scope growth; security/privacy/data-loss/concurrency/reliability.
 For `spec`, replace these with the reference's principle-fit, coherence,
 status-honesty, evidence, viability, and canon-cascade lenses; preserve positive
-strengths as well as adversarial findings.
+strengths as well as adversarial findings. For `copy`, the lenses are the named
+readers, one reviewer each, plus the record and fidelity lenses from the
+reference.
 
 Within a stage, reviewers should not see each other's output until every lens
 has finished. Cross-lens agreement is a priority signal, not proof. Deduplicate
@@ -181,8 +197,8 @@ worktree. It may read, search, inspect diffs, and run non-writing diagnostics
 when safe. It may include proposed tests or patches in its output as text, but
 those patches are not applied or observed.
 
-Default for `plan` and `spec`, where empirical execution usually does not add
-evidence. If the route exposes a general shell, this mode is hard-enforced only
+Default for `plan`, `spec`, and `copy`, where empirical execution usually does
+not add evidence. If the route exposes a general shell, this mode is hard-enforced only
 when the harness or sandbox actually denies writes; a prompt that says
 read-only is not an OS write barrier (`references/routes.md` § Sandbox
 Topology — including the post-run write-audit scope).
@@ -281,6 +297,11 @@ or `mechanical`. `accepted-fixed` means the document was corrected;
 `accepted-deferred` means real design work stays OPEN with its tradeoff,
 dependency, authority/owner, and future home. Mechanical cleanup never closes a
 design item.
+
+In `copy` mode, tag accepted findings as `cut`, `reorder`, `stale`,
+`provenance`, `gloss`, `meaning`, or `mechanical`. A `meaning` finding is
+`accepted-deferred` to the owner, never fixed by the editor. A `rejected` cut
+is a normal outcome; record the reason where the next pass will read it.
 
 `contested` is its own terminal state, **not** a marker on a resolved
 disposition: a panel ran a guarded finding to the cap and picked no side, so it
@@ -424,7 +445,9 @@ For `spec`, also report the compact assessment required by
 `references/spec-review.md`: overall judgment and high-level principle fit,
 strong, needs work, viability, open design, mechanical follow-through, and
 readiness by topic. Do not substitute the commit audit trail for the design
-assessment.
+assessment. For `copy`, report the assessment required by
+`references/copy-review.md`: overall by reader, strong, needs work, fidelity
+when reviewing an edit, judgment versus mechanical, and readiness per reader.
 
 Do not average reviewer opinions. Model agreement is a reason to verify first,
 not proof. One confirmed defect from the last reviewer requires the same response
@@ -445,8 +468,9 @@ discipline as one from the first.
 /fast-chat                   → the maintainer's ruling on a contested finding,
                                as lettered options rather than prose
 
-/red-pen                     → a future `copy` target: prose reviewed the same
-                               way, with readers as the lenses
+/red-pen                     → the `copy` target's vocabulary: its symptom list,
+                               reader roster, and writing conventions are what
+                               a copy reviewer reads and cites
 ```
 
 /multi-adversarial-review is the gate the other skills feed. /notes gives it somewhere durable to record each disposition, /stable-label makes every finding and ruling addressable, and /fast-chat keeps the maintainer's rulings fast. Without it, a review is one model's opinion of its own work; with it, every stage inspects a committed state and leaves an auditable trail.

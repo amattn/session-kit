@@ -175,7 +175,7 @@ Best for: spec-driven projects, requirements tracking, any project with cross-re
 
 ### `/multi-adversarial-review` — Sequential Multi-Model Review
 
-A model reviewing its own work shares its own blind spots. `/multi-adversarial-review` breaks the author/reviewer monoculture: a lead commits a stable state, then reviewer models from different families inspect it one at a time. Reviewers are read-only and must back every finding with evidence. After each pass the lead verifies each finding against source, fixes it, defers it with a home, or rejects it with a reason, and commits that disposition before the next model reviews the new state. "No findings" is a valid outcome, but it must name the residual risk. Targets: code, plan, code-vs-plan, and spec. Short name: `/mar`.
+A model reviewing its own work shares its own blind spots. `/multi-adversarial-review` breaks the author/reviewer monoculture: a lead commits a stable state, then reviewer models from different families inspect it one at a time. Reviewers are read-only and must back every finding with evidence. After each pass the lead verifies each finding against source, fixes it, defers it with a home, or rejects it with a reason, and commits that disposition before the next model reviews the new state. "No findings" is a valid outcome, but it must name the residual risk. Targets: code, plan, code-vs-plan, spec, and copy. Short name: `/mar`.
 
 Why it matters: review as a one-shot opinion gets averaged or ignored. Review as a sequential gate with a committed disposition between stages produces an audit trail, lets each reviewer build on the last one's confirmed findings, and forces the author to answer every finding instead of the ones it likes.
 
@@ -483,6 +483,7 @@ You: (later) grep REQ_7
 - `/mar with Claude, Codex, and GLM 5.3` uses the order you name
 - `/mar to review HEAD against <base>` points reviewers at a range
 - `/mar review <note> as a spec` runs the spec target with its output contract
+- `/mar review <doc> as copy for <readers>` reviews a document as writing, with its named readers as the lenses
 
 Each stage: reviewer reads a stable commit, you disposition every finding (`accepted-fixed`, `accepted-deferred`, `rejected` with evidence, `unclear-blocked`, `no-findings` with residual risk, `route-failed`, `contested`), you commit, the next reviewer reads the new commit.
 
@@ -568,7 +569,7 @@ Agent: Added FOO_4 to FEEDBACK_FOO.md:
                      (stable commit, disposition, commit, next model)
 ```
 
-The skills are independent — install any subset, or use `/start` to bootstrap a coordinated set in one pass. They're designed to complement each other: `/warmup` ensures `/notes` loads every session, `/stable-label` gives `/notes` entries greppable IDs, `/fast-chat` speeds up the decisions `/notes` captures, `/dictation` keeps voice input from garbling the whole conversation, `/red-pen` keeps the prose that remains worth reading, `/multi-adversarial-review` puts committed work in front of a model that did not write it, and `/feedback-foo` turns recurring friction into tracked observations and named disciplines.
+The skills are independent — install any subset, or use `/start` to bootstrap a coordinated set in one pass. They're designed to complement each other: `/warmup` ensures `/notes` loads every session, `/stable-label` gives `/notes` entries greppable IDs, `/fast-chat` speeds up the decisions `/notes` captures, `/dictation` keeps voice input from garbling the whole conversation, `/red-pen` keeps the prose that remains worth reading, `/multi-adversarial-review` puts committed work in front of a model that did not write it (prose included, using `/red-pen`'s vocabulary), and `/feedback-foo` turns recurring friction into tracked observations and named disciplines.
 
 ## Origin
 
