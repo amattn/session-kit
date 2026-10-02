@@ -15,6 +15,7 @@ Extracted from patterns discovered during 500+ sessions of AI-assisted developme
 | `/red-pen` | Writing directives. Makes AI-generated text less painful to read by substituting explicit constraints (word budgets, a named reader, a mandatory cut pass) for the editing cost generated text never pays. Separate rules for specs, code comments, code, and chat. |
 | `/notes` | Institutional memory. Captures decisions, rationale, and conventions in NOTES.md so future sessions don't re-litigate settled questions. |
 | `/stable-label` | Greppable stable references. Gives every referenceable thing an append-only ID (`REQ_3`, `DEC_14`) that never renumbers and always resolves to exactly one definition. |
+| `/multi-adversarial-review` | Sequential multi-model review. A lead commits a stable state, independent reviewer models inspect it one at a time, and the lead dispositions every finding and commits before the next model reviews. Read-only reviewers, evidence-backed findings, an auditable trail. (Also invocable as `/mar`.) |
 | `/feedback-foo` | Process improvement — pattern detection, observation tracking, and discipline creation. FOO = Feedback, Observation, Oversight. Proactively notices recurring patterns, tracks process observations with a resolution lifecycle, and helps formalize workflows as named disciplines. (Also invocable as `/foo`, `/feedback`, or `/observation`. Renamed from `/sharpen`.) |
 
 ## Install
@@ -171,6 +172,16 @@ Why it matters: without stable IDs, cross-references are fragile text that break
 What it adds over baseline Claude: convention enforcement is the biggest win — without the skill, Claude invents ad-hoc formats (kebab-case, dashes, zero-padding) that vary per session. The skill ensures consistent `XXX_N` format every time. Lifecycle operations are the second major differentiator: splits get provenance notes, merges keep tombstone redirects so every ID stays greppable, promotions get bidirectional cross-references, and crosscutting concerns get domain-specific faceted IDs instead of just prose. The baseline handles simple operations fine but loses ID traceability during lifecycle changes.
 
 Best for: spec-driven projects, requirements tracking, any project with cross-referenced documents where you need to trace a decision from origin to implementation.
+
+### `/multi-adversarial-review` — Sequential Multi-Model Review
+
+A model reviewing its own work shares its own blind spots. `/multi-adversarial-review` breaks the author/reviewer monoculture: a lead commits a stable state, then reviewer models from different families inspect it one at a time. Reviewers are read-only and must back every finding with evidence. After each pass the lead verifies each finding against source, fixes it, defers it with a home, or rejects it with a reason, and commits that disposition before the next model reviews the new state. "No findings" is a valid outcome, but it must name the residual risk. Targets: code, plan, code-vs-plan, and spec. Short name: `/mar`.
+
+Why it matters: review as a one-shot opinion gets averaged or ignored. Review as a sequential gate with a committed disposition between stages produces an audit trail, lets each reviewer build on the last one's confirmed findings, and forces the author to answer every finding instead of the ones it likes.
+
+What it adds over baseline Claude: the discipline, not the critique. Baseline Claude will review code when asked and often finds real issues. The skill adds the parts that make review trustworthy: cross-model reviewers routed out of the host, read-only capability modes with write audits, disposition states with evidence, the commit-between-stages rule, stall and route-failure handling, and a bounded panel for contested findings. The spec target adds an output contract (overall, strong, needs work, viability, open vs mechanical, readiness) that keeps design review from collapsing into prose.
+
+Best for: implementation gates before merge, stress-testing a plan before building it, design-note and spec review against a project's principles, any project where the same model writes and reviews.
 
 ### `/feedback-foo` — Process Improvement
 
@@ -463,6 +474,35 @@ You: (later) grep REQ_7
        middleware.py:   # Implements DEC_12 to satisfy REQ_7
 ```
 
+### `/multi-adversarial-review`
+
+**Setup:** Nothing to bootstrap. You need at least one reviewer route that is not the host model: `codex exec` for Codex, Pi (or cn / OpenCode) for GLM or another non-family model. The skill's `references/routes.md` carries the launch recipes. If your project defines its own review cadence in AGENTS.md or an iteration spec, that wins.
+
+**Ongoing:** Invoke it when work is committed and ready for a gate:
+- `/mar` runs the default chain with the available non-host models, strongest finder last
+- `/mar with Claude, Codex, and GLM 5.3` uses the order you name
+- `/mar to review HEAD against <base>` points reviewers at a range
+- `/mar review <note> as a spec` runs the spec target with its output contract
+
+Each stage: reviewer reads a stable commit, you disposition every finding (`accepted-fixed`, `accepted-deferred`, `rejected` with evidence, `unclear-blocked`, `no-findings` with residual risk, `route-failed`, `contested`), you commit, the next reviewer reads the new commit.
+
+**Example:**
+```
+You: /mar to review HEAD against main
+Agent: Baseline 3f2a1c9 is stable. Launching GLM through Pi in a disposable
+       worktree, no writes to the primary checkout.
+       GLM: 3 findings. Verified against source:
+       - F1 retry loop swallows TransportError — accepted-fixed, test added
+       - F2 "unused import" — rejected, used in the type annotation
+       - F3 backoff cap unbounded — accepted-deferred, tracked as RSK_4
+       Committed 8b77e02. Launching Codex against 8b77e02 ...
+
+       Review chain
+       - 3f2a1c9: stable baseline
+       - 8b77e02: after GLM disposition - 1 fixed, 1 rejected, 1 deferred
+       - c41d9aa: after Codex disposition - no findings; residual risk: RSK_4
+```
+
 ### `/feedback-foo`
 
 **Setup:** Run `/feedback-foo` (or `/foo`, `/feedback`, `/observation`) in your project. It creates FEEDBACK_FOO.md (a tracker for process observations with open/resolved lifecycle) and adds a Self-Improvement directive to CLAUDE.md telling the agent to notice and surface patterns proactively.
@@ -522,15 +562,21 @@ Agent: Added FOO_4 to FEEDBACK_FOO.md:
 
 /feedback-foo     → detects patterns, tracks observations, creates disciplines
                      (FOO = Feedback, Observation, Oversight)
+
+/multi-adversarial-review
+                  → gates committed work behind independent reviewers
+                     (stable commit, disposition, commit, next model)
 ```
 
-The skills are independent — install any subset, or use `/start` to bootstrap a coordinated set in one pass. They're designed to complement each other: `/warmup` ensures `/notes` loads every session, `/stable-label` gives `/notes` entries greppable IDs, `/fast-chat` speeds up the decisions `/notes` captures, `/dictation` keeps voice input from garbling the whole conversation, `/red-pen` keeps the prose that remains worth reading, and `/feedback-foo` turns recurring friction into tracked observations and named disciplines.
+The skills are independent — install any subset, or use `/start` to bootstrap a coordinated set in one pass. They're designed to complement each other: `/warmup` ensures `/notes` loads every session, `/stable-label` gives `/notes` entries greppable IDs, `/fast-chat` speeds up the decisions `/notes` captures, `/dictation` keeps voice input from garbling the whole conversation, `/red-pen` keeps the prose that remains worth reading, `/multi-adversarial-review` puts committed work in front of a model that did not write it, and `/feedback-foo` turns recurring friction into tracked observations and named disciplines.
 
 ## Origin
 
 Developed and battle-tested during [plet-skills](https://github.com/amattn/plet-skills) development (8+ parts, hundreds of sessions). Extracted as a standalone suite for use in any Claude Code project.
 
 `/fast-chat` was strongly inspired by [snarktank's Ralph skills](https://github.com/snarktank/ralph).
+
+`/multi-adversarial-review` was developed in [vog_kit](https://github.com/amattn/vog_kit) while building the Vog language and is now maintained here; vog_kit carries the Codex-host variant and the prior-art survey it was built from.
 
 `/red-pen` was inspired by Ayman Nadeem's [Plan Mode Is Dead](https://www.aymannadeem.com/artificial/intelligence,/developer/tools/2026/09/24/plan-mode-is-dead.html).
 

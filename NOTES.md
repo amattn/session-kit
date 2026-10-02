@@ -2,7 +2,7 @@
 
 ## Project Context
 
-session-kit is a suite of Claude Code skill plugins for making AI-assisted development sessions reliable and productive across time. Extracted from patterns discovered during hundreds of sessions of plet-skills development. 7 skills total: `/notes`, `/warmup`, `/stable-label`, `/fast-chat`, `/dictation`, `/foo`, `/red-pen`.
+session-kit is a suite of Claude Code skill plugins for making AI-assisted development sessions reliable and productive across time. Extracted from patterns discovered during hundreds of sessions of plet-skills development. 8 skills total: `/notes`, `/warmup`, `/stable-label`, `/fast-chat`, `/dictation`, `/foo`, `/red-pen`, `/multi-adversarial-review`.
 
 **Origin:** Extracted from patterns discovered during plet-skills development (`../plet-skills/`).
 
@@ -23,6 +23,7 @@ session-kit is a suite of Claude Code skill plugins for making AI-assisted devel
 - "i love that b rhymes, makes it memorable but maybe too cute?" → decided it's a feature, not a bug
 - "i'm not worried about long. the claude code ui is awesome at autocomplete" — length of slash commands is not a concern; clarity and descriptiveness win
 - "feedback foo is the least useful of the session kit tools in practice. the most useful are stable label, fast chat, and then small gap and then notes. and then a big gap and the rest." (2026-10-01) — ranking after months of real use. Pattern: the top three each produce a concrete artifact or format (IDs, codes, NOTES.md entries); the bottom tier is process/meta skills whose value is invisible when they work.
+- "the baseline tends to be too wordy in general. that's part of the pain. i will ask for more detail if i need it." (2026-10-02) — after the blind review. Wordiness itself is the pain, not only unscannable length; the default is less, and detail is on request. Added to /red-pen's shared core.
 - Fenced code blocks in README should be one command per block — GUI clients allow easy copy-paste of a whole fenced area, so combining unrelated commands in one block forces users to manually select
 
 ---
@@ -43,6 +44,7 @@ session-kit is a suite of Claude Code skill plugins for making AI-assisted devel
 | 8 | /stable-label | **Implemented** | EX_7 |
 | 9 | /red-pen | **Implemented** | WRITING_DIRECTIVES.md |
 | 10 | /planner (name TBD) | Planned | plet-style planning |
+| 11 | /multi-adversarial-review (alias: mar) | **Implemented** | vog_kit |
 
 ---
 
@@ -535,6 +537,43 @@ User: "how else can we improve the skill? can we give the skill personas? like '
 - **Worked example** (`references/worked_example.md`): a before/after pair with its symptom table and the two rejected vog cuts as the counter-example.
 - **Calibration overrides**: a rejected cut is recorded in the Writing Conventions block as a one-line override.
 - **Personas, qualified.** Chose per-step reader frames (copy desk chief for the cut pass, decision-maker with four minutes for Mode 1, colleague at the next desk for Mode 4, the 2am maintainer already in Mode 2) over a global "you are a professional editor." Rejected the global persona: role prompts move tone and fluency, not accuracy, and fluency is the failure the skill exists to catch. Today's evidence: what the user accepted was checkable counts; what they rejected was judgment. Recorded in What Does NOT Go.
+
+### /multi-adversarial-review joins session-kit (2026-10-01)
+
+User: "I'd be open to adding mar to session-kit. It's up there with stable labels and fast chat as a 'most used'." MAR is the sequential multi-model review chain from vog_kit (`vog_kit/.claude/skills/multi-adversarial-review`, alias `mar`): a lead commits a stable state, independent reviewer families inspect it one at a time, the lead dispositions and commits between stages.
+
+- **Port the Claude copy as-is, generalize the Vog-specific lines to examples** (chose over a rewrite: it is the user's most-used review method, so the doctrine ports faithfully; only frontmatter, Quick Reference, Vog mentions, and the prior-art pointer change). Rejected for now: adding a `copy` target for /red-pen in the same cut - design work, not porting; it comes after the port settles (red-pen's review mode will be a MAR target rather than its own doctrine).
+- **Name:** `skills/multi-adversarial-review/` primary, "mar" as a description trigger. The /foo lesson: an opaque alias needs a self-documenting primary. Rejected: `skills/mar/` primary; a stub directory like vog_kit's.
+- **session-kit becomes canonical.** vog_kit's copy mirrors it from now on, the way fast-chat already flows session-kit to vog_kit. Rejected: two sources of truth for a skill edited often.
+- **Codex variant deferred.** User: "ignore codex for now. that would be a future porting effort." Claude copy only; README notes the Codex version lives in vog_kit.
+- **Prior art stays a pointer** (11,757 words in vog_kit), not a copy.
+
+### /red-pen eval iteration 1 (2026-10-01)
+
+8 cases, with-skill vs no-skill, same model. Pass rate 90% vs 48% over 48 assertions; +17s and +17k tokens per task. Workspace: `skills/red-pen-workspace/iteration-1`.
+
+- **The premise question answered for these prompts:** the always-on rules prevented the symptoms at generation time. fresh-spec with skill: 348 words, preamble, asks in their own section, settled decisions left settled. Baseline: 1,070 words with the anti-patterns under renamed headers.
+- **User review (feedback.json):** every with-skill output "not painful" or better; every baseline "too verbose", "painful", or "hard to parse". On the baseline bootstrap: "This is exactly the kind of long output that makes AI generated text hard to read." On the with-skill fresh spec: "it's concise and clear." User flagged their own bias: "the fact that I know which were generated with the skill and without it is probably biasing me."
+- **Two substantive notes.** edit-target with skill: "I just skimmed the output until the last paragraph" - the reply was 825 words of prose with the before/after pair at the end. Fix: a fixed report shape (one line, symptom table, one pair, nothing else, under 200 words outside the pair). too-long with skill: "Token bucket" is jargon to a non-engineer "but this would be jargony to anyone without that background." Fix: gloss a term once when a named reader may not share it.
+- **Three skill failures were self-inflicted:** bootstrap block over its own 250-word budget once the roster is added (budget now excludes the roster table); over-budget note went in chat instead of the document (rule now says the document's first line); edit report led with word count (fixed by the report shape).
+- **Uncaught failure class: invented content**, in both configurations (a ~1.4s backoff figure, an open question not in the source, invented test contents). Added "a claim with no source" to the symptom list and a provenance check to the cut pass; iteration 2 asserts it.
+- **too-long does not discriminate** (4/5 both). Sharpened toward what differed: the baseline restated settled decisions, invented default numbers, and closed with "want me to implement it?".
+- **Baselines were often deeper but undisciplined**: better project grounding on chat-answer (with a SameSite factual error), more reader-facing flags on edit-target, a deeper review of stale-draft (but no edit), six tests on code-comments (with a comment that misdescribed its own backoff). Depth is not the skill's job; discipline is.
+- **Iteration 2 review is blind:** configurations shown as A/B with a key held back, per the user's bias note.
+
+### /red-pen eval iteration 2, blind (2026-10-02)
+
+Same 8 cases, updated skill, sharpened assertions. Graders: 78% vs 42% over 59 assertions (iteration 1 was 90% vs 48% on easier assertions). User review was blind and side-by-side, left/right randomized per case, key sealed until submit (`iteration-2-blind/`).
+
+- **Blind preference: skill 5, baseline 1, neither 1, both fine 1.** Skill preferred on bootstrap ("the right is so long and wordy"), fresh-spec ("left is just too much content to be useful"), edit-target (slight), stale-draft ("too many bullet points ... i just skim"), pr-description ("the conciseness of right is correct"). The earlier unblinded result held up without the labels.
+- **Baseline won too-long**, narrowly: "very easy to see that there are three reasons to go token bucket." The skill run wrote the same reasons as prose. "Formatting is rare" was over-applied; parallel items get a list. Rule rewritten, with a ceiling: past about five bullets the reader skims.
+- **Neither on code-comments.** The baseline surfaced that 429 is the one 4xx that arguably deserves a retry; the skill run followed the wording silently and was "under-commented." Two fixes: Surface by Stakes' tell now covers a case the ask's wording covers but its intent may not; Mode 2 says sparse is not silent.
+- **Both fine on chat-answer** though the baseline was twice as long: "the total length isn't detrimental and the organization (such as bullet points) helps." Bullets rescued it, but the user's follow-up corrects the reading: "the baseline tends to be too wordy in general. that's part of the pain." Scannable is necessary, shorter is still better.
+- **Edit report:** "neither Left's long list of bullets or Right's table is all that useful or actionable ... i just skim right past it ... i do like the example paragraph. it gives a flavor without overwhelming the human maintainer." Report shape reordered: one line, then the pair, then a table of at most four rows.
+- **Graders and the user disagreed on pr-description.** Graders failed the skill run (3/6) for colon-label lines as "renamed scaffolding"; the user preferred it: "this is not prose. PRs are more like documentation and records." The assertion was wrong, not the output. Mode 3 now says so.
+- **Lesson on the method:** the assertion pass rate tracks rule-compliance; the blind preference tracks pain. They agreed on 5 of 8 and diverged exactly where a rule was over-applied (prose over bullets, sparse over informative). Preference is the measure; assertions are the regression net.
+- **Retained artifacts:** the edit-target runs from iterations 1 and 2 are not kept. The committed benchmarks cover the other seven cases: 92% vs 49% for iteration 1, 79% vs 41% for iteration 2. The case reruns in iteration 3.
+- **Still uncaught:** invented content persists in both configurations (an invented NOTES.md fact in the baseline; "constants hardcoded" claimed in the skill PR description). The provenance check checked numbers, not claims.
 
 ### /red-pen Surface by Stakes (2026-10-01)
 

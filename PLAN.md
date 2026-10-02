@@ -2,7 +2,7 @@
 
 ## Current Status
 
-7 skills implemented. 6 eval'd (findings applied to 5; /foo needed none). /red-pen v0.1.0 built, evals pending.
+8 skills implemented. 7 eval'd: findings applied to 5 of the original 6 (/foo needed none); /red-pen has two eval iterations and is at v0.2.0, with a third pending to confirm the latest fixes. /multi-adversarial-review is ported from vog_kit and not yet eval'd.
 
 ## Completed
 
@@ -104,16 +104,22 @@ Incorporated `WRITING_DIRECTIVES.md` as a new always-on skill, `/red-pen` v0.1.0
 
 ## Next Steps
 
-### 19. Eval: /red-pen
+### 19. Eval: /red-pen (iterations 1 and 2 done)
+
+Iteration 2 blind result: skill preferred 5 of 8, baseline 1, neither 1, both fine 1; graders 78% vs 42%. Fixes applied as v0.2.0. Remaining: iteration 3 to confirm the bullets, 429-style tell, and report-shape fixes; fix the pr-description and "too long" assertions; widen the provenance check from numbers to claims.
 
 Prerequisite done: `scripts/symptoms.py` gives the eval a mechanical before/after measure; `references/worked_example.md` is the reference pair.
 
-Create `skills/red-pen-workspace/evals/evals.json` with skill-creator guidance, run with-skill vs baseline, apply findings. Inputs must be unedited generated text, not mature specs (see NOTES: premise test). Judge by preference on paired before/after paragraphs, reported by symptom counts, never by word count. Candidates: a fresh spec request for a product reader (does it open with a preamble, state each fact once, pace by stakes?), a `/red-pen <file>` editing pass on `test-projects/edit-target/grid_section.md`, a "too long" follow-up, a code change (does it narrate in comments?), a bootstrap on a project that already has a commit style. The open question the eval must answer: do the always-on rules prevent the symptoms at generation time, or only let the editing pass remove them afterward?
+Create `skills/red-pen-workspace/evals/evals.json` with skill-creator guidance, run with-skill vs baseline, apply findings. Inputs must be fresh generated drafts, not mature specs (see NOTES: premise test). Judge by preference on paired before/after paragraphs, reported by symptom counts, never by word count. Candidates: a fresh spec request for a product reader (does it open with a preamble, state each fact once, pace by stakes?), a `/red-pen <file>` editing pass on `test-projects/edit-target/grid_section.md`, a "too long" follow-up, a code change (does it narrate in comments?), a bootstrap on a project that already has a commit style. The open question the eval must answer: do the always-on rules prevent the symptoms at generation time, or only let the editing pass remove them afterward?
 
 ### Description optimization
 
 Run the skill-creator trigger optimization loop on each skill's description to improve triggering accuracy.
 
-### 18. Planner skill
+### 18. Port /multi-adversarial-review from vog_kit ✓
+
+Claude copy ported as `skills/multi-adversarial-review` v0.1.0 (alias `mar` via description trigger). Vog-specifics generalized to examples, HELP.md, README, CHANGELOG. session-kit canonical; vog_kit README now points here. Follow-ups: Codex variant; a `copy` target for /red-pen (readers as lenses, Strong/fidelity contract); evals in degraded same-host mode.
+
+### 19. Planner skill
 
 New skill for plet-style planning. Name TBD. Candidate for its spec template: a numbered open-items section (owner, item, lean) that readers answer with /fast-chat codes and /stable-label IDs — deliberately kept out of /red-pen. Deferred until /red-pen evals (#16) are done.

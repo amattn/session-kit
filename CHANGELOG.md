@@ -5,6 +5,10 @@ All notable changes to session-kit. Versions track the plugin version in `.claud
 ## [Unreleased]
 
 ### Added
+- `/multi-adversarial-review` v0.1.0 (alias `/mar`): ported from vog_kit, Claude copy
+  - Doctrine, routes, disposition panel, and spec-review references carried over; Vog-specific lines generalized to examples
+  - session-kit is canonical from here; vog_kit mirrors. Codex variant stays in vog_kit for a later port
+  - HELP.md, README entries, How They Fit Together, Origin attribution
 - `/red-pen` v0.1.0: writing directives for every output type, incorporated from `WRITING_DIRECTIVES.md`
   - Always-on: decide the output type (spec/plan, code comment, code/diff, chat), write to its rules, run a cut pass
   - `/red-pen <target>` edits a file or section against the rules and reports what was cut
@@ -18,6 +22,7 @@ All notable changes to session-kit. Versions track the plugin version in `.claud
   - Self-edit loop: any output over its mode's budget is drafted, measured, cut, then delivered
   - `references/worked_example.md`: a before/after pair with its symptom table
   - Rejected cuts are recorded as project overrides; reader frames per step, no global persona
+  - v0.2.0 after two eval iterations (blind preference 5 of 8 for the skill): parallel items get a list with a five-bullet ceiling; a literal-reading edge case is a tell; sparse comments are not silent; PR descriptions are records; edit report leads with the before/after pair and a four-row table; provenance check in the cut pass
 
 ## [0.9.0] — 2026-05-27
 
