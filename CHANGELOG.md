@@ -22,6 +22,7 @@ All notable changes to session-kit. Versions track the plugin version in `.claud
   - Self-edit loop: any output over its mode's budget is drafted, measured, cut, then delivered
   - `references/worked_example.md`: a before/after pair with its symptom table
   - Rejected cuts are recorded as project overrides; reader frames per step, no global persona
+  - v0.2.1 after a third iteration (blind preference 6 of 8): the cost of a recommendation gets its own line; bold bullet labels; a lead-in sentence for the before/after pair; open items do not justify running over budget; worked example replaced with a text unrelated to the eval inputs
   - v0.2.0 after two eval iterations (blind preference 5 of 8 for the skill): parallel items get a list with a five-bullet ceiling; a literal-reading edge case is a tell; sparse comments are not silent; PR descriptions are records; edit report leads with the before/after pair and a four-row table; provenance check in the cut pass
 
 ## [0.9.0] — 2026-05-27

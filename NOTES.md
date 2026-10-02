@@ -534,7 +534,7 @@ User: "how else can we improve the skill? can we give the skill personas? like '
 
 - **Symptom script** (`scripts/symptoms.py`): the prose-to-tooling escalation from the 2026-03-14 decision, first use in session-kit. Counts what the judged-convincing table counted: restated phrases (5-word shingles recurring across sentences), "This is / That is" openers, bold leads, sentence-length headers, dated status markers, forward references, hedges, em-dash density, section-length spread. `--compare` prints the delta. Path-based `allowed-tools` per the portability decision. Known blind spots, stated in the skill: stale claims, cross-section restatement, argument in front of a rule.
 - **Self-edit loop**: anything over its mode's budget is a draft; measure, cut, deliver. This is the only in-skill answer to the open question (prevent vs. remove); the eval still has to test it.
-- **Worked example** (`references/worked_example.md`): a before/after pair with its symptom table and the two rejected vog cuts as the counter-example.
+- **Worked example** (`references/worked_example.md`): a before/after pair with its symptom table and the two rejected vog cuts as the counter-example. (Replaced on 2026-10-02 with a text unrelated to any eval input.)
 - **Calibration overrides**: a rejected cut is recorded in the Writing Conventions block as a one-line override.
 - **Personas, qualified.** Chose per-step reader frames (copy desk chief for the cut pass, decision-maker with four minutes for Mode 1, colleague at the next desk for Mode 4, the 2am maintainer already in Mode 2) over a global "you are a professional editor." Rejected the global persona: role prompts move tone and fluency, not accuracy, and fluency is the failure the skill exists to catch. Today's evidence: what the user accepted was checkable counts; what they rejected was judgment. Recorded in What Does NOT Go.
 
@@ -574,6 +574,19 @@ Same 8 cases, updated skill, sharpened assertions. Graders: 78% vs 42% over 59 a
 - **Lesson on the method:** the assertion pass rate tracks rule-compliance; the blind preference tracks pain. They agreed on 5 of 8 and diverged exactly where a rule was over-applied (prose over bullets, sparse over informative). Preference is the measure; assertions are the regression net.
 - **Retained artifacts:** the edit-target runs from iterations 1 and 2 are not kept. The committed benchmarks cover the other seven cases: 92% vs 49% for iteration 1, 79% vs 41% for iteration 2. The case reruns in iteration 3.
 - **Still uncaught:** invented content persists in both configurations (an invented NOTES.md fact in the baseline; "constants hardcoded" claimed in the skill PR description). The provenance check checked numbers, not claims.
+
+### /red-pen eval iteration 3, blind (2026-10-02)
+
+Same 8 cases, skill v0.2.0, 67 assertions. Graders: 84% vs 48%. Blind side-by-side preference: skill 6, baseline 1, both fine 1 (iteration 2 was 5 / 1 / 1 neither / 1 both fine). Cost fell to +2s and +11k tokens per task. Workspace: `iteration-3/`, `iteration-3-blind/`.
+
+- **The iteration 2 fixes held.** code-comments went from "neither" to the skill: the 429 edge is now surfaced in the reply and in a comment. too-long went from a baseline win to "both fine". pr-description, stale-draft, bootstrap, fresh-spec, and edit-target were preferred with the skill.
+- **Baseline won chat-answer.** User: "the 'cost' is buried in the bullets. easy to miss. the left bold formatting is helpful as well." The skill run tacked the CSRF cost onto the end of a reason; the baseline gave it its own line and bold bullet labels. Two rules added: the cost gets its own line; bold the label of each bullet. "Bold almost never" was over-applied the same way "formatting is rare" was.
+- **Edit report needs a lead-in.** User, on a bare "Before (§6.3 ...):" line: "that line has no context. there should be a 'here is an example of the audience-focused style change applied:' or similar." The pair is now introduced by a sentence saying what it is.
+- **"Too wordy" is still the baseline's failure**: "right is still waaaay too wordy" on edit-target, where the baseline made the file longer.
+- **Eval leaking into itself:** the with-skill edit-target run took a number for its report from the skill's worked example, which described the same section as the eval input. The worked example is now a different text (a cache TTL block) and also shows the report shape.
+- **From the graders, fixed:** the 300-word budget's escape clause was too cheap (a 415-word doc passed by saying so); the bootstrap block left a dangling "Readers:" line when there was no roster; a reply asked a question although the record says "pick a default and we'll revisit".
+- **From the graders, open:** graders still disagree with the user on pr-description (3/7 on length and a per-file list; the user preferred it). Several assertions do not discriminate (code-comments 8/8 vs 7/8, too-long 9/9 vs 8/9). Invented or unsupported claims still appear in both configurations.
+- **Skill at v0.2.1.** These changes are untested; a fourth iteration would confirm them.
 
 ### /red-pen Surface by Stakes (2026-10-01)
 

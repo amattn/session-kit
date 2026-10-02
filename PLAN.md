@@ -2,7 +2,7 @@
 
 ## Current Status
 
-8 skills implemented. 7 eval'd: findings applied to 5 of the original 6 (/foo needed none); /red-pen has two eval iterations and is at v0.2.0, with a third pending to confirm the latest fixes. /multi-adversarial-review is ported from vog_kit and not yet eval'd.
+8 skills implemented. 7 eval'd: findings applied to 5 of the original 6 (/foo needed none); /red-pen has three eval iterations and is at v0.2.1. /multi-adversarial-review is ported from vog_kit and not yet eval'd.
 
 ## Completed
 
@@ -104,9 +104,9 @@ Incorporated `WRITING_DIRECTIVES.md` as a new always-on skill, `/red-pen` v0.1.0
 
 ## Next Steps
 
-### 19. Eval: /red-pen (iterations 1 and 2 done)
+### 19. Eval: /red-pen (iterations 1 to 3 done)
 
-Iteration 2 blind result: skill preferred 5 of 8, baseline 1, neither 1, both fine 1; graders 78% vs 42%. Fixes applied as v0.2.0. Remaining: iteration 3 to confirm the bullets, 429-style tell, and report-shape fixes; fix the pr-description and "too long" assertions; widen the provenance check from numbers to claims.
+Iteration 3 blind result: skill preferred 6 of 8, baseline 1, both fine 1; graders 84% vs 48%. Fixes applied as v0.2.1 (cost on its own line, bold bullet labels, lead-in for the before/after pair, tighter budget escape, new worked example). Remaining, optional: an iteration 4 to confirm v0.2.1; replace the non-discriminating assertions; reconcile the pr-description assertions with the user's preference.
 
 Prerequisite done: `scripts/symptoms.py` gives the eval a mechanical before/after measure; `references/worked_example.md` is the reference pair.
 

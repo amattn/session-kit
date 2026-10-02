@@ -1,6 +1,6 @@
 ---
 name: red-pen
-version: 0.2.0
+version: 0.2.1
 description: "Writing directives for every output type — spec/plan, code comments, code and diffs, chat. Makes AI-generated text less painful to read by substituting explicit constraints (word budgets, a named reader, mandatory prioritization, a cut pass) for the editing cost that generated text never pays. Use when the user asks to 'red-pen', 'red pen this', 'tighten this', 'cut this down', 'too long', 'too wordy', 'less fluff', 'stop narrating', 'this reads like AI', 'edit this', 'set up writing conventions', or 'writing directives'. Also apply these rules always-on, without invocation, before writing any spec, plan, design note, code comment, diff, commit message, or chat reply — decide the output type first, then write to its rules. Also trigger the bootstrap flow when setting up a project's AGENTS.md and/or CLAUDE.md if no writing conventions are defined yet."
 user-invocable: true
 allowed-tools: Bash(${CLAUDE_SKILL_DIR}/scripts/*)
@@ -91,7 +91,7 @@ Shape:
 - **Scope out.** What you are deliberately not doing, one line each.
 - Everything else (background, exploration notes, alternatives considered in detail) is omitted or linked, not inlined.
 
-Budget: 300 words default. Exceed only when a decision is contested, and say so in the document's first line, not in the chat reply; the reader of the document is the one who needs to know.
+Budget: 300 words default. Exceed only when a decision is contested, and say so in the document's first line, not in the chat reply; the reader of the document is the one who needs to know. Open items are not a reason to run over: cut elsewhere first.
 
 Pacing: do not give equal space to each section. A spec where every heading has two paragraphs under it has not been edited.
 
@@ -169,11 +169,12 @@ Purpose: a turn in a conversation. The reader is present, impatient, and can ask
 - **Answer first.** The first sentence is the answer, the decision, or the result. Method, caveats, and context come after, if at all.
 - **Match length to the question.** A yes/no question gets a sentence. A "how should I think about X" gets a few paragraphs. Never the same length regardless.
 - **Don't restate the question.** They know what they asked.
-- **One question back, at most.** If you need clarification, ask the single question whose answer most changes what you'd do. Do reversible prep first and hold at the irreversible step.
+- **One question back, at most.** If you need clarification, ask the single question whose answer most changes what you'd do. Do reversible prep first and hold at the irreversible step. If the record says the reader wants defaults picked ("pick a default and we'll revisit"), pick one, label it a proposal, and skip the question.
 - **Status updates are terse.** "Ran tests; 2 failures in auth, looking." Not a paragraph.
 - **Report what changed and what you're unsure of.** Not what you did step by step. The reader can ask for the steps.
 - **No performative phrases.** No "Great question", "Certainly!", "I'd be happy to", "I hope this helps".
-- **Formatting is rare, but parallel items get a list.** Three reasons, three options, three steps: bullet them, because a reader sees "three reasons" at a glance and has to dig them out of a paragraph. Past about five bullets the reader skims instead of reads, so group or cut. Headers almost never. Bold almost never. Code blocks for code.
+- **Formatting is rare, but parallel items get a list.** Three reasons, three options, three steps: bullet them, because a reader sees "three reasons" at a glance and has to dig them out of a paragraph. Bold the first word or two of each bullet as its label; that is the one place bold earns its keep. Past about five bullets the reader skims instead of reads, so group or cut. Headers almost never. Code blocks for code.
+- **The cost gets its own line.** What the recommendation costs, or the caveat that could change the reader's mind, is never the tail of a bullet about something else. Put it on a line by itself after the reasons, where it cannot be missed.
 - **Disagree plainly.** "I'd do X instead because Y" rather than three paragraphs of hedged framing.
 - **Stop when done.** Don't offer a menu of further things you could do unless there's a specific, likely next step worth naming.
 
@@ -219,7 +220,7 @@ When invoked on a project for the first time:
 
 2. **Add a Writing Conventions section** — a reference card, not a tutorial: about 250 words before the reader roster, which is a table and sits outside that budget. The shared core and the mode table, with a pointer to /red-pen for the full per-mode rules. Mark with `<!-- managed by /red-pen -->`.
 
-3. **Seed the reader roster** — ask one question: who reads what this project produces? Propose rows from the answer (and from README, NOTES.md, and the org structure if visible). For each reader: what they know, what they decide, where they stop. A project whose only reader is the insider skips the table.
+3. **Seed the reader roster** — ask one question: who reads what this project produces? Propose rows from the answer (and from README, NOTES.md, and the org structure if visible). For each reader: what they know, what they decide, where they stop. A project whose only reader is the insider skips the table, and then the block states the default in one sentence instead of leaving a "Readers:" line with nothing under it.
 
 4. **Inform the user** — one or two sentences. Mention that `/red-pen <target>` edits a file or section against the rules, and that "too long" or "red-pen this" works mid-conversation.
 
@@ -268,7 +269,7 @@ When the user points /red-pen at something ("red-pen this", `/red-pen docs/desig
 2. Apply the mode's rules and the cut pass. Cut first; rewrite only what the cut leaves broken. Cut history, argument, and cross-section restatement; do not cut enumeration the reader scans. Where the document's house style and these rules conflict, house style wins.
 3. Write the edited text to the file. The chat reply is the report, in this shape and no other, because a reader skims anything longer:
    - One line: the path written, and what was preserved (every rule, anchor, and list; name any exception). Stale or contradictory claims you found go here too, since those are the findings the reader acts on.
-   - One before/after paragraph pair, next. This is what the reader uses to judge; it gives the flavor of the edit without a pile of detail.
+   - One before/after paragraph pair, next, introduced by a sentence that says what it is ("Here is one paragraph before and after, as an example of the change:"). A bare "Before (§6.3 ...):" has no context. This pair is what the reader uses to judge; it gives the flavor of the edit without a pile of detail.
    - A symptom table of at most four rows, the ones that moved most. It is evidence, and readers skim it, so keep it short and put it after the pair. `${CLAUDE_SKILL_DIR}/scripts/symptoms.py --compare before.md after.md` gives the literal counts; you add what it cannot see (stale claims, cross-section restatement, argument before rule, paraphrased restatement).
    - Nothing else. No narration of each cut, no word count unless the reader asked. Under 150 words outside the pair. `references/worked_example.md` is the shape.
 4. Do not add anything the original lacked unless the mode requires it (a Mode 1 doc with no preamble gets one; it does not get an Overview).
