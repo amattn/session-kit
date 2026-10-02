@@ -3,7 +3,7 @@
 **Setup:** Run `/red-pen` in your project. It adds a Writing Conventions section to CLAUDE.md: the shared core (know the reader, omit what they know, pace by uncertainty, checkable over fluent) a one-line rule of thumb per output type — spec/plan, code comment, code/diff/commit, chat — and a reader roster (who reads this project's output, what they know, what they decide, where they stop reading).
 
 **Ongoing:** Always-on — no invocation needed. Before writing anything, the agent decides which output type it is producing, writes to that type's rules, and runs a cut pass before delivering. Your side:
-- Say `red-pen this` or `/red-pen <file>` to edit a file or section against the rules — you get the edited text plus one line on what was cut
+- Say `red-pen this` or `/red-pen <file>` to edit a file or section against the rules — the file is edited and you get a short report: what was found, one before/after paragraph, and a small symptom table
 - Say `too long` or `too wordy` — the agent re-runs the cut pass on its last output and resends, no explanation
 - Ask for a plan, spec, or design note — it opens with a preamble saying who it's for and how to read it, then what it needs from you, not an overview
 - Override a default for the project (a bigger spec budget, a different reader) — it's recorded in the Writing Conventions block, and so is any cut you reject, so the next pass starts calibrated
@@ -12,12 +12,17 @@
 **Example — editing a target:**
 ```
 You: /red-pen docs/caching-design.md
-Agent: [returns the edited doc]
+Agent: Wrote docs/caching-design.md. Every rule and anchor is preserved.
+       One stale claim found: the doc calls the cache backend undecided,
+       and NOTES.md settled it.
 
-       Cut 210 of 480 words: an Overview section narrating the codebase,
-       two paragraphs of alternatives already rejected in NOTES.md, and a
-       Next Steps list that restated the spec. Added the missing preamble —
-       the doc never said who it was for or what you need to decide.
+       Here is one paragraph before and after, as an example of the change:
+       [the before paragraph]
+       [the after paragraph]
+
+       | Symptom                          | Before  | After |
+       | The same rule stated             | 4 times | once  |
+       | Overview and Next Steps sections | 2       | 0     |
 ```
 
 **Example — always-on, a plan request:**

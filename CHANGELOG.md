@@ -7,6 +7,8 @@ All notable changes to session-kit. Versions track the plugin version in `.claud
 ### Changed
 - README: skill table links to each How to Use entry; R/O and the reviewer tool names glossed; rename history cut from the table (first `copy` review, stage 1)
 - `/notes` v0.1.3: HELP.md lists the suggested sections in the current order
+- README (copy review, stage 2): intro says "hundreds of sessions"; Install says what installing activates; setup claim qualified; /fast-chat and /red-pen examples match their skills; routes reference linked; one command per fence in option 3
+- `/red-pen` v0.2.3: HELP.md example shows the current report shape
 
 ### Added
 - `/multi-adversarial-review` v0.2.0: `copy` target for reviewing documents as writing

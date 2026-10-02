@@ -2,7 +2,7 @@
 
 A suite of Claude Code and OpenCode skill plugins for making AI-assisted development sessions reliable and productive across time.
 
-Extracted from patterns discovered during 500+ sessions of AI-assisted development. Each skill addresses a specific friction point that compounds over time — lost context, slow decision-making, garbled input, unedited output, fragile cross-references. Works with both Claude Code and OpenCode.
+Extracted from patterns discovered during hundreds of sessions of AI-assisted development. Each skill addresses a specific friction point that compounds over time — lost context, slow decision-making, garbled input, unedited output, fragile cross-references. Works with both Claude Code and OpenCode.
 
 ## Skills
 
@@ -12,13 +12,15 @@ Extracted from patterns discovered during 500+ sessions of AI-assisted developme
 | [`/warmup`](#warmup) | Session bootstrap and compaction recovery. Ensures skills, disciplines, and key files load reliably and survive context compaction. |
 | [`/fast-chat`](#fast-chat) | Structured interaction patterns. Numbered questions, lettered options, batch answer codes (`1A, 2B, 3 let's discuss pros/cons`), and a review prompt that always ends with R (show recommendations) and O (approve). Always-on communication style that makes decisions faster. |
 | [`/dictation`](#dictation) | Project-specific correction table. Originally designed for voice-to-text errors, but also useful for recurring typos and emergent shorthand — any systematic input pattern where the user means something other than what they literally typed. |
-| [`/red-pen`](#red-pen) | Writing directives. Makes AI-generated text less painful to read by substituting explicit constraints (word budgets, a named reader, a mandatory cut pass) for the editing cost generated text never pays. Separate rules for specs, code comments, code, and chat. |
+| [`/red-pen`](#red-pen) | Writing directives. Makes AI-generated text less painful to read with explicit constraints: word budgets, a named reader, a mandatory cut pass. Separate rules for specs, code comments, code, and chat. |
 | [`/notes`](#notes) | Institutional memory. Captures decisions, rationale, and conventions in NOTES.md so future sessions don't re-litigate settled questions. |
 | [`/stable-label`](#stable-label) | Greppable stable references. Gives every referenceable thing an append-only ID (`REQ_3`, `DEC_14`) that never renumbers and always resolves to exactly one definition. |
 | [`/multi-adversarial-review`](#multi-adversarial-review) | Sequential multi-model review. A lead commits a stable state, independent reviewer models inspect it one at a time, and the lead dispositions every finding and commits before the next model reviews. Read-only reviewers, evidence-backed findings, an auditable trail. (Also invocable as `/mar`.) |
 | [`/feedback-foo`](#feedback-foo) | Process improvement — pattern detection, observation tracking, and discipline creation. FOO = Feedback, Observation, Oversight. Proactively notices recurring patterns, tracks process observations with a resolution lifecycle, and helps formalize workflows as named disciplines. (Also invocable as `/foo`, `/feedback`, or `/observation`.) |
 
 ## Install
+
+Installing activates nothing by itself. A skill sets itself up in a project the first time you invoke it there. `/multi-adversarial-review` also needs a second coding-agent command-line tool to act as the outside reviewer (see its entry under How to Use).
 
 ### Option 1: Claude Code Marketplace
 
@@ -44,6 +46,9 @@ Copy the skills into your project for per-project use:
 
 ```bash
 mkdir -p .claude/skills
+```
+
+```bash
 cp -r /path/to/session-kit/skills/* .claude/skills/
 ```
 
@@ -165,7 +170,7 @@ Best for: multi-session projects, design-heavy work with many decisions, teams w
 
 ### `/stable-label` — Greppable Stable References
 
-Gives every referenceable thing an append-only ID using the `XXX_N` convention (`REQ_3`, `DEC_14`). IDs never renumber, never get reused, and always resolve to exactly one definition. `grep REQ_3` returns the definition and every reference across the entire project.
+Gives every referenceable thing an append-only ID using the `XXX_N` convention (`REQ_3`, `DEC_14`). IDs never renumber, never get reused, and always resolve to exactly one definition. A project-wide search such as `grep -rn REQ_3 .` returns the definition and every reference.
 
 Why it matters: without stable IDs, cross-references are fragile text that breaks when things get renamed. With them, any ID is a permanent, greppable anchor — in docs, in code comments, in docstrings, anywhere text lives. Both humans and agents can trace a requirement from spec to implementation in seconds.
 
@@ -195,7 +200,7 @@ Best for: long-running projects with evolving workflows, teams noticing the same
 
 ## How to Use
 
-Each skill has a one-time **setup** (first invocation creates project files) and an **ongoing** usage pattern.
+Most skills have a one-time **setup** (the first invocation creates project files) and an **ongoing** usage pattern. `/multi-adversarial-review` has no setup step.
 
 For new projects, run `/start` first to bootstrap everything at once. The per-skill setups below are still available — `/start` just runs them for you with smart defaults.
 
@@ -305,10 +310,14 @@ Agent: [fixes typo, re-presents section]
    O. Ok, approve
 
 You: R
-Agent: 1. Add a note about edge cases
-       2. Keep the current examples
+Agent: 1. Edge case handling
+          A. Add a note about edge cases
+          B. Skip for now
+       2. Examples section
+          A. Expand with more examples
+          B. Keep as-is
 
-You: do 1, O
+You: 1A, 2B, O
 ```
 
 **Example — batch decisions:**
@@ -366,7 +375,7 @@ Agent: Got it. Want me to add "pleet → plet" to the correction table?
 **Setup:** Run `/red-pen` in your project. It adds a Writing Conventions section to CLAUDE.md: the shared core (know the reader, omit what they know, pace by uncertainty, checkable over fluent) a one-line rule of thumb per output type — spec/plan, code comment, code/diff/commit, chat — and a reader roster (who reads this project's output, what they know, what they decide, where they stop reading).
 
 **Ongoing:** Always-on — no invocation needed. Before writing anything, the agent decides which output type it is producing, writes to that type's rules, and runs a cut pass before delivering. Your side:
-- Say `red-pen this` or `/red-pen <file>` to edit a file or section against the rules — you get the edited text plus one line on what was cut
+- Say `red-pen this` or `/red-pen <file>` to edit a file or section against the rules — the file is edited and you get a short report: what was found, one before/after paragraph, and a small symptom table
 - Say `too long` or `too wordy` — the agent re-runs the cut pass on its last output and resends, no explanation
 - Ask for a plan, spec, or design note — it opens with a preamble saying who it's for and how to read it, then what it needs from you, not an overview
 - Override a default for the project (a bigger spec budget, a different reader) — it's recorded in the Writing Conventions block, and so is any cut you reject, so the next pass starts calibrated
@@ -375,12 +384,17 @@ Agent: Got it. Want me to add "pleet → plet" to the correction table?
 **Example — editing a target:**
 ```
 You: /red-pen docs/caching-design.md
-Agent: [returns the edited doc]
+Agent: Wrote docs/caching-design.md. Every rule and anchor is preserved.
+       One stale claim found: the doc calls the cache backend undecided,
+       and NOTES.md settled it.
 
-       Cut 210 of 480 words: an Overview section narrating the codebase,
-       two paragraphs of alternatives already rejected in NOTES.md, and a
-       Next Steps list that restated the spec. Added the missing preamble —
-       the doc never said who it was for or what you need to decide.
+       Here is one paragraph before and after, as an example of the change:
+       [the before paragraph]
+       [the after paragraph]
+
+       | Symptom                          | Before  | After |
+       | The same rule stated             | 4 times | once  |
+       | Overview and Next Steps sections | 2       | 0     |
 ```
 
 **Example — always-on, a plan request:**
@@ -476,7 +490,7 @@ You: (later) grep REQ_7
 
 ### `/multi-adversarial-review`
 
-**Setup:** Nothing to bootstrap. You need at least one reviewer route that is not the host model: `codex exec` for Codex, Pi, Continue's `cn`, or OpenCode (three coding-agent command-line tools; any one will do) for GLM or another non-family model. The skill's `references/routes.md` carries the launch recipes. If your project defines its own review cadence in AGENTS.md or an iteration spec, that wins.
+**Setup:** Nothing to bootstrap. You need at least one reviewer route that is not the host model: `codex exec` for Codex, Pi, Continue's `cn`, or OpenCode (three coding-agent command-line tools; any one will do) for GLM or another non-family model. The launch recipes are in [`references/routes.md`](skills/multi-adversarial-review/references/routes.md). If your project defines its own review cadence in AGENTS.md or an iteration spec, that wins.
 
 **Ongoing:** Invoke it when work is committed and ready for a gate:
 - `/mar` runs the default chain with the available non-host models, strongest finder last
@@ -485,7 +499,7 @@ You: (later) grep REQ_7
 - `/mar review <note> as a spec` runs the spec target with its output contract
 - `/mar review <doc> as copy for <readers>` reviews a document as writing, with its named readers as the lenses
 
-Each stage: reviewer reads a stable commit, you disposition every finding (`accepted-fixed`, `accepted-deferred`, `rejected` with evidence, `unclear-blocked`, `no-findings` with residual risk, `route-failed`, `contested`), you commit, the next reviewer reads the new commit.
+Each stage: the reviewer reads a stable commit, the lead (your agent, with you ruling on anything contested) dispositions every finding (`accepted-fixed`, `accepted-deferred`, `rejected` with evidence, `unclear-blocked`, `no-findings` with residual risk, `route-failed`, `contested`) and commits, and the next reviewer reads the new commit.
 
 **Example:**
 ```
