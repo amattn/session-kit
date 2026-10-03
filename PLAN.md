@@ -124,9 +124,9 @@ Rebased onto the May changes (/start, OpenCode, /warmup scaffolding). Plugin 0.1
 
 ## Next Steps
 
-### Planner skill
+### Planner skill (on hold)
 
-New skill for plet-style planning. Name TBD. Candidate for its spec template: a numbered open-items section (owner, item, lean) that readers answer with /fast-chat codes and /stable-label IDs — deliberately kept out of /red-pen. Deferred until /red-pen evals (#16) are done.
+On hold at the owner's request, to be rethought. Recorded constraints and the plet survey are in NOTES.md.
 
 ### Description optimization
 
