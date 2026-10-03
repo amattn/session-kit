@@ -24,6 +24,7 @@ session-kit is a suite of Claude Code skill plugins for making AI-assisted devel
 - "i'm not worried about long. the claude code ui is awesome at autocomplete" — length of slash commands is not a concern; clarity and descriptiveness win
 - "feedback foo is the least useful of the session kit tools in practice. the most useful are stable label, fast chat, and then small gap and then notes. and then a big gap and the rest." (2026-10-01) — ranking after months of real use. Pattern: the top three each produce a concrete artifact or format (IDs, codes, NOTES.md entries); the bottom tier is process/meta skills whose value is invisible when they work.
 - "the baseline tends to be too wordy in general. that's part of the pain. i will ask for more detail if i need it." (2026-10-02) — after the blind review. Wordiness itself is the pain, not only unscannable length; the default is less, and detail is on request. Added to /red-pen's shared core.
+- "i think that the way i do NOTES.md is good but a long spec that someone is expected to read is def bad." (2026-10-02) — after the "Plan mode is dead" essay. The line is the reading obligation: a record that is consulted on demand (NOTES.md, greppable IDs) can grow; an artifact a person is expected to read end to end must stay short. Design constraint for the planner skill.
 - Fenced code blocks in README should be one command per block — GUI clients allow easy copy-paste of a whole fenced area, so combining unrelated commands in one block forces users to manually select
 
 ---
