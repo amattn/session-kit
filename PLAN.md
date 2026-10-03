@@ -102,9 +102,7 @@ Publish commit force-pushes over origin's prior 0.9.0 commit (which had the un-c
 
 Incorporated `WRITING_DIRECTIVES.md` as a new always-on skill, `/red-pen` v0.1.0. SKILL.md (four modes, shared core, mode selection, cut pass, bootstrap block), HELP.md, README entries, CHANGELOG. Plugin/marketplace versions not bumped — distribution bump is human-directed.
 
-## Next Steps
-
-### 19. Eval: /red-pen (iterations 1 to 3 done)
+### 19. Eval: /red-pen, iterations 1 to 3 ✓
 
 Iteration 3 blind result: skill preferred 6 of 8, baseline 1, both fine 1; graders 84% vs 48%. Fixes applied as v0.2.1 (cost on its own line, bold bullet labels, lead-in for the before/after pair, tighter budget escape, new worked example). Remaining, optional: an iteration 4 to confirm v0.2.1; replace the non-discriminating assertions; reconcile the pr-description assertions with the user's preference.
 
@@ -112,18 +110,28 @@ Prerequisite done: `scripts/symptoms.py` gives the eval a mechanical before/afte
 
 Create `skills/red-pen-workspace/evals/evals.json` with skill-creator guidance, run with-skill vs baseline, apply findings. Inputs must be fresh generated drafts, not mature specs (see NOTES: premise test). Judge by preference on paired before/after paragraphs, reported by symptom counts, never by word count. Candidates: a fresh spec request for a product reader (does it open with a preamble, state each fact once, pace by stakes?), a `/red-pen <file>` editing pass on `test-projects/edit-target/grid_section.md`, a "too long" follow-up, a code change (does it narrate in comments?), a bootstrap on a project that already has a commit style. The open question the eval must answer: do the always-on rules prevent the symptoms at generation time, or only let the editing pass remove them afterward?
 
+### 20. Port /multi-adversarial-review from vog_kit ✓
+
+Claude copy ported as `skills/multi-adversarial-review` v0.1.0 (alias `mar` via description trigger). Vog-specifics generalized to examples, HELP.md, README, CHANGELOG. session-kit canonical; vog_kit README now points here. Follow-ups: Codex variant; a `copy` target for /red-pen (readers as lenses, Strong/fidelity contract); evals in degraded same-host mode.
+
+### 21. `copy` target for /multi-adversarial-review ✓
+
+Added as `references/copy-review.md` with hooks in SKILL.md and HELP.md; /red-pen points to it. /multi-adversarial-review v0.2.0, /red-pen v0.2.2. Not yet run: the first real copy review is the test, and vog_kit's mirror needs the same change.
+
+### 22. Publish v0.10.0 ✓
+
+Rebased onto the May changes (/start, OpenCode, /warmup scaffolding). Plugin 0.10.0, marketplace metadata 0.6.0; /red-pen and /multi-adversarial-review added to both manifests. Tagged v0.10.0.
+
+## Next Steps
+
+### Planner skill
+
+New skill for plet-style planning. Name TBD. Candidate for its spec template: a numbered open-items section (owner, item, lean) that readers answer with /fast-chat codes and /stable-label IDs — deliberately kept out of /red-pen. Deferred until /red-pen evals (#16) are done.
+
 ### Description optimization
 
 Run the skill-creator trigger optimization loop on each skill's description to improve triggering accuracy.
 
-### 18. Port /multi-adversarial-review from vog_kit ✓
+### /red-pen eval iteration 4 (optional)
 
-Claude copy ported as `skills/multi-adversarial-review` v0.1.0 (alias `mar` via description trigger). Vog-specifics generalized to examples, HELP.md, README, CHANGELOG. session-kit canonical; vog_kit README now points here. Follow-ups: Codex variant; a `copy` target for /red-pen (readers as lenses, Strong/fidelity contract); evals in degraded same-host mode.
-
-### 19. `copy` target for /multi-adversarial-review ✓
-
-Added as `references/copy-review.md` with hooks in SKILL.md and HELP.md; /red-pen points to it. /multi-adversarial-review v0.2.0, /red-pen v0.2.2. Not yet run: the first real copy review is the test, and vog_kit's mirror needs the same change.
-
-### 20. Planner skill
-
-New skill for plet-style planning. Name TBD. Candidate for its spec template: a numbered open-items section (owner, item, lean) that readers answer with /fast-chat codes and /stable-label IDs — deliberately kept out of /red-pen. Deferred until /red-pen evals (#16) are done.
+Confirm v0.2.1+ fixes; replace the assertions that do not discriminate; align the pr-description assertions with the owner's preference.

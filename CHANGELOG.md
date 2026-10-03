@@ -2,15 +2,20 @@
 
 All notable changes to session-kit. Versions track the plugin version in `.claude-plugin/plugin.json`.
 
-## [Unreleased]
+## [0.10.0] — 2026-10-02
+
+Two new skills, `/red-pen` and `/multi-adversarial-review`, on top of 0.9.0. Plugin 0.10.0, marketplace metadata 0.6.0.
 
 ### Changed
+- Plugin and marketplace descriptions list all nine skills, `/start` first, then most used to least; keywords cover the new skills
+- `/start` v0.2.0: `/red-pen` joins the standard tier (full tier is now all seven skills with a setup step); `/multi-adversarial-review` stays out of every tier and the closing line says it is ready once a second reviewer tool is installed
+- `/red-pen` v0.2.4: under `/start`, its bootstrap uses the default reader instead of asking
 - README: skill table links to each How to Use entry; R/O and the reviewer tool names glossed; rename history cut from the table (first `copy` review, stage 1)
-- `/notes` v0.1.3: HELP.md lists the suggested sections in the current order
+- `/notes` v0.2.1: HELP.md lists the suggested sections in the current order
 - README (copy review, stage 2): intro says "hundreds of sessions"; Install says what installing activates; setup claim qualified; /fast-chat and /red-pen examples match their skills; routes reference linked; one command per fence in option 3
 - `/red-pen` v0.2.3: HELP.md example shows the current report shape
 - README: skills ordered by usefulness in every section (stable-label first, feedback-foo last); install commands skip the `*-workspace` eval directories; /notes claims softened; /stable-label example made consistent
-- `/stable-label` v0.1.2: HELP.md example no longer adds a p95 the user did not ask for
+- `/stable-label` v0.1.4: HELP.md example no longer adds a p95 the user did not ask for
 - README Origin: generic ("hundreds of AI-assisted development sessions"); plet-skills link and "8+ parts" removed
 
 ### Added
