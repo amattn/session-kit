@@ -116,7 +116,7 @@ Claude copy ported as `skills/multi-adversarial-review` v0.1.0 (alias `mar` via 
 
 ### 21. `copy` target for /multi-adversarial-review ✓
 
-Added as `references/copy-review.md` with hooks in SKILL.md and HELP.md; /red-pen points to it. /multi-adversarial-review v0.2.0, /red-pen v0.2.2. Not yet run: the first real copy review is the test, and vog_kit's mirror needs the same change.
+Added as `references/copy-review.md` with hooks in SKILL.md and HELP.md; /red-pen points to it. /multi-adversarial-review v0.2.0, /red-pen v0.2.2. First real run: the README copy review (see NOTES).
 
 ### 22. Publish v0.10.0 ✓
 

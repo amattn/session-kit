@@ -589,6 +589,10 @@ Same 8 cases, skill v0.2.0, 67 assertions. Graders: 84% vs 48%. Blind side-by-si
 - **From the graders, open:** graders still disagree with the user on pr-description (3/7 on length and a per-file list; the user preferred it). Several assertions do not discriminate (code-comments 8/8 vs 7/8, too-long 9/9 vs 8/9). Invented or unsupported claims still appear in both configurations.
 - **Skill at v0.2.1.** These changes are untested; a fourth iteration would confirm them.
 
+### vog_kit is out of scope (2026-10-02)
+
+User: "pls totally disregard vog_kit." No syncing, mirroring, or follow-ups there; session-kit's copy of /multi-adversarial-review is the only one this project maintains.
+
 ### /start tiers include /red-pen; /multi-adversarial-review stays out (2026-10-02)
 
 /start's tiers predated the two new skills and its full tier said "all six". Owner rulings: /red-pen joins the **standard** tier (chose over full-only, because it is always-on and ranks above /warmup in the usage order); /multi-adversarial-review joins **no tier**, because it has no setup step, and /start's closing line says it is ready once a second reviewer tool is installed (chose over leaving it out of /start entirely).
