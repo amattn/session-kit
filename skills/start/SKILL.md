@@ -1,7 +1,7 @@
 ---
 name: start
-version: 0.1.0
-description: "One-shot bootstrap for the session-kit skill suite. Sets up multiple session-kit skills (warmup, notes, stable-label, fast-chat, dictation, foo) together in a single pass — eliminating the per-skill bootstrap loop and the retro-labeling gap that occurs when /notes captures content before /stable-label runs. Three tiers: minimal (warmup only), standard (warmup + notes + stable-label + fast-chat), full (all six). Use when the user asks to 'start session-kit', 'init session-kit', 'set up session-kit', 'bootstrap session-kit', 'install session-kit on this project', or runs the skill directly. Also trigger when a user just installed session-kit and wants to enable it on a project, when they want a fresh project scaffolded with session-kit conventions, or when they mention multiple session-kit skills together. Skip when only a single sub-skill bootstrap is appropriate, when the project already has session-kit set up (AGENTS.md contains /warmup or /notes breadcrumbs), or when the user is asking how the suite works rather than wanting to apply it."
+version: 0.2.0
+description: "One-shot bootstrap for the session-kit skill suite. Sets up multiple session-kit skills (warmup, notes, stable-label, fast-chat, red-pen, dictation, foo) together in a single pass — eliminating the per-skill bootstrap loop and the retro-labeling gap that occurs when /notes captures content before /stable-label runs. Three tiers: minimal (warmup only), standard (warmup + notes + stable-label + fast-chat + red-pen), full (all seven that have a setup step). Use when the user asks to 'start session-kit', 'init session-kit', 'set up session-kit', 'bootstrap session-kit', 'install session-kit on this project', or runs the skill directly. Also trigger when a user just installed session-kit and wants to enable it on a project, when they want a fresh project scaffolded with session-kit conventions, or when they mention multiple session-kit skills together. Skip when only a single sub-skill bootstrap is appropriate, when the project already has session-kit set up (AGENTS.md contains /warmup or /notes breadcrumbs), or when the user is asking how the suite works rather than wanting to apply it."
 user-invocable: true
 ---
 
@@ -15,7 +15,7 @@ Bootstrap the session-kit suite in one pass instead of running `/warmup`, `/note
 
 1. **Bootstrap order matters but is annoying to get right** — `/notes` needs `/warmup` to load it; `/stable-label`'s prefix table lives in NOTES.md. Doing them individually means remembering the order.
 2. **Retro-labeling gap** — running `/notes` before `/stable-label` creates content that has to be labeled afterward. A unified bootstrap eliminates the gap.
-3. **Decision fatigue** — each skill's bootstrap asks 2-4 questions. Running 3-6 skills in a row means 10+ questions for what's usually a routine setup. Smart defaults + one confirm replaces the loop.
+3. **Decision fatigue** — each skill's bootstrap asks 2-4 questions. Running 3-7 skills in a row means 10+ questions for what's usually a routine setup. Smart defaults + one confirm replaces the loop.
 
 ---
 
@@ -30,15 +30,17 @@ Bootstrap the session-kit suite in one pass instead of running `/warmup`, `/note
 
 ## Tiers
 
-| Tier         | Skills bootstrapped                                                       |
-|--------------|---------------------------------------------------------------------------|
-| **minimal**  | /warmup                                                                   |
-| **standard** | /warmup + /notes + /stable-label + /fast-chat *(default)*                 |
-| **full**     | /warmup + /notes + /stable-label + /fast-chat + /dictation + /feedback-foo |
+| Tier         | Skills bootstrapped                                                                  |
+|--------------|--------------------------------------------------------------------------------------|
+| **minimal**  | /warmup                                                                              |
+| **standard** | /warmup + /notes + /stable-label + /fast-chat + /red-pen *(default)*                 |
+| **full**     | /warmup + /notes + /stable-label + /fast-chat + /red-pen + /dictation + /feedback-foo |
+
+`/multi-adversarial-review` is in no tier: it has no setup step and works as soon as a second reviewer tool is installed.
 
 **Why these groupings:**
 - **minimal** — just the reliability scaffold. For projects that already have their own NOTES.md or convention story, or where the user only wants Required Reading + canaries.
-- **standard** — the "I want session-kit on this project" default. Adds institutional memory (`/notes`), greppable cross-references (`/stable-label`), and structured interaction (`/fast-chat`). Covers most use cases.
+- **standard** — the "I want session-kit on this project" default. Adds institutional memory (`/notes`), greppable cross-references (`/stable-label`), structured interaction (`/fast-chat`), and writing conventions (`/red-pen`). Covers most use cases.
 - **full** — adds voice-input corrections (`/dictation`), process observation tracking (`/feedback-foo`). Useful for long-running projects, voice-input users, and teams doing process improvement.
 
 ---
@@ -63,7 +65,7 @@ Show the user exactly what will be created and changed. Use /fast-chat formattin
 About to bootstrap session-kit (standard tier) for `<project>`:
 
 Files to create:
-- AGENTS.md         (Required Reading, Post-Compaction Rule, Session Start canary, NOTES.md Discipline, Stable Label Convention, /fast-chat Interaction Conventions, Self-Improvement)
+- AGENTS.md         (Required Reading, Post-Compaction Rule, Session Start canary, NOTES.md Discipline, Stable Label Convention, /fast-chat Interaction Conventions, /red-pen Writing Conventions, Self-Improvement)
 - CLAUDE.md         (pointer to AGENTS.md)
 - NOTES.md          (from /notes template, with Stable Label Prefixes table pre-seeded: DEC, ICR, INS, OPN, MON, TAX, FOO)
 - .gitignore        (.DS_Store) — only if missing
@@ -84,7 +86,7 @@ O. Ok, approve
 
 ### Step 3 — execute (depending on the user's choice)
 
-- **A or O** — write all files atomically in the order: AGENTS.md → CLAUDE.md → NOTES.md → auto-memory entries → MEMORY.md. Then emit the standard /warmup Session Start canary so the user can see it working.
+- **A or O** — write all files atomically in the order: AGENTS.md → CLAUDE.md → NOTES.md → auto-memory entries → MEMORY.md. Then emit the standard /warmup Session Start canary so the user can see it working, and one closing line: `/multi-adversarial-review` needs no setup and is ready whenever a second reviewer tool (Codex, Pi, cn, or OpenCode) is installed.
 - **B** — re-present the plan with the new tier's contents.
 - **C (customize)** — switch into interactive mode (see § Interactive Mode below). Walk through `/warmup`, `/notes`, `/stable-label`, then any tier-specific extras in dependency order.
 - **Anything else (prose, edits)** — apply the edit, re-present the plan. (Per /fast-chat: silence is not approval. The plan stays open until the user says O.)
@@ -99,8 +101,9 @@ The unified bootstrap invokes sub-skills via the Skill tool (see § Invoking Sub
 2. **/notes** — writes `NOTES.md` to project root from /notes' inline template (substitutes `{{PROJECT_NAME}}`, `{{DATE}}`, `{{PROJECT_DESCRIPTION}}`), adds NOTES.md to Required Reading, adds NOTES.md Discipline block to AGENTS.md
 3. **/stable-label** — detects the pre-seeded prefix table from /notes (Branch A of /stable-label's bootstrap), adds Stable Label Convention rules to AGENTS.md. *No prefix table re-proposal* — defaults come from /notes' template.
 4. **/fast-chat** — adds Interaction Conventions block to AGENTS.md
-5. **/dictation** *(full tier only)* — scans project for jargon, proposes correction table, writes to AGENTS.md
-6. **/feedback-foo** *(full tier only)* — creates FEEDBACK_FOO.md scaffold, adds Self-Improvement directive to AGENTS.md
+5. **/red-pen** — adds the Writing Conventions block to AGENTS.md. In unified mode it uses the default reader (an insider who knows the codebase and the thread) instead of asking who reads the project's output; the user can add a reader roster later with `/red-pen`
+6. **/dictation** *(full tier only)* — scans project for jargon, proposes correction table, writes to AGENTS.md
+7. **/feedback-foo** *(full tier only)* — creates FEEDBACK_FOO.md scaffold, adds Self-Improvement directive to AGENTS.md
 
 Steps 1-3 are tightly coupled: /notes' template seeds /stable-label's table; /warmup's Required Reading needs /notes' NOTES.md path. Run them in this order to avoid retro-edits.
 
@@ -119,6 +122,7 @@ To eliminate per-project decisions, /session-kit:start applies these defaults:
 | Required Reading         | `NOTES.md` (added by /notes step)                                             |
 | Stable Label prefix set  | `DEC, ICR, INS, OPN, MON, TAX, FOO` (from /notes template)                    |
 | Open Questions seeding   | Empty by default; offer to seed *after* bootstrap completes                   |
+| Readers (/red-pen)       | Insider default; no roster question during bootstrap                          |
 | FEEDBACK_FOO.md location | Project root *(full tier only)*                                               |
 | Dictation seeds          | Project name + obvious jargon scanned from README *(full tier only)*          |
 
@@ -147,7 +151,7 @@ If the project already has session-kit (detected by `<!-- managed by /warmup -->
 
 ## Invoking Sub-Skills via the Skill Tool
 
-/session-kit:start does **not** duplicate, inline, or `Read` the bootstrap logic of each sub-skill. Instead, it activates each sub-skill by calling the **Skill tool** — e.g. `Skill(skill: "warmup")`, `Skill(skill: "notes")`, `Skill(skill: "stable-label")`, `Skill(skill: "fast-chat")`, `Skill(skill: "dictation")`, `Skill(skill: "feedback-foo")`. The exact invocation name comes from the available-skills list at runtime (plain `name` for personal skills, `plugin:name` for plugin-namespaced ones — session-kit ships as a plugin, so `session-kit:warmup` etc. is the typical form). Each call loads that skill's SKILL.md into context the proper way — as a system reminder — and the sub-skill's own Bootstrap section then drives its setup.
+/session-kit:start does **not** duplicate, inline, or `Read` the bootstrap logic of each sub-skill. Instead, it activates each sub-skill by calling the **Skill tool** — e.g. `Skill(skill: "warmup")`, `Skill(skill: "notes")`, `Skill(skill: "stable-label")`, `Skill(skill: "fast-chat")`, `Skill(skill: "red-pen")`, `Skill(skill: "dictation")`, `Skill(skill: "feedback-foo")`. The exact invocation name comes from the available-skills list at runtime (plain `name` for personal skills, `plugin:name` for plugin-namespaced ones — session-kit ships as a plugin, so `session-kit:warmup` etc. is the typical form). Each call loads that skill's SKILL.md into context the proper way — as a system reminder — and the sub-skill's own Bootstrap section then drives its setup.
 
 **Do not use the Read tool on `skills/<name>/SKILL.md` to look up sub-skill behavior.** Sub-skills are activated, not read. Reading SKILL.md as a regular file bypasses the skill-loading machinery and pulls in content that wasn't meant to be consumed that way.
 
@@ -176,7 +180,7 @@ Detect tier + project state, apply smart defaults
 Present unified plan (one approval prompt)
         ↓
 Execute in dependency order:
-    /warmup → /notes → /stable-label → /fast-chat → [/dictation → /foo]
+    /warmup → /notes → /stable-label → /fast-chat → /red-pen → [/dictation → /foo]
         ↓
 All files written atomically, canary line emitted
         ↓

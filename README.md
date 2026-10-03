@@ -8,7 +8,7 @@ Extracted from patterns discovered during hundreds of sessions of AI-assisted de
 
 | Skill | What it does |
 |-------|-------------|
-| [`/start`](#start) | Unified bootstrap for the suite. One approval covers the plan, plus a quick multi-select for `.claude/settings.json` when that file is missing or marketplace-only. Tiers: `minimal` (/warmup), `standard` (default), `full`. Re-runnable — picks up only what's missing. |
+| [`/start`](#start) | Unified bootstrap for the suite. One approval covers the plan, plus a quick multi-select for `.claude/settings.json` when that file is missing or marketplace-only. Tiers: `minimal` (/warmup), `standard` (default, adds /notes, /stable-label, /fast-chat, /red-pen), `full` (adds /dictation and /feedback-foo). Re-runnable — picks up only what's missing. |
 | [`/stable-label`](#stable-label) | Greppable stable references. Gives every referenceable thing an append-only ID (`REQ_3`, `DEC_14`) that never renumbers and always resolves to exactly one definition. |
 | [`/fast-chat`](#fast-chat) | Structured interaction patterns. Numbered questions, lettered options, batch answer codes (`1A, 2B, 3 let's discuss pros/cons`), and a review prompt that always ends with R (show recommendations) and O (approve). Always-on communication style that makes decisions faster. |
 | [`/multi-adversarial-review`](#multi-adversarial-review) | Sequential multi-model review. A lead commits a stable state, independent reviewer models inspect it one at a time, and the lead dispositions every finding and commits before the next model reviews. Read-only reviewers, evidence-backed findings, an auditable trail. (Also invocable as `/mar`.) |
@@ -123,8 +123,10 @@ Why it matters: per-skill bootstraps are great for incremental adoption, but a f
 
 Tiers:
 - `minimal` — just `/warmup`
-- `standard` *(default)* — `/warmup` + `/notes` + `/stable-label` + `/fast-chat`
-- `full` — all six skills
+- `standard` *(default)* — `/warmup` + `/notes` + `/stable-label` + `/fast-chat` + `/red-pen`
+- `full` — all seven skills that have a setup step
+
+`/multi-adversarial-review` has no setup step, so it is in no tier.
 
 Re-runnable — picks up only what's missing; existing files are never overwritten.
 
@@ -232,7 +234,8 @@ Agent: About to bootstrap session-kit (standard tier) for `my-project`:
        Files to create:
        - AGENTS.md     (Required Reading, Post-Compaction Rule, Session Start
                         canary, NOTES.md Discipline, Stable Label Convention,
-                        /fast-chat Interaction Conventions)
+                        /fast-chat Interaction Conventions, /red-pen Writing
+                        Conventions)
        - CLAUDE.md     (pointer to AGENTS.md)
        - NOTES.md      (from /notes template, with default prefix table
                         pre-seeded: DEC, ICR, INS, OPN, MON, TAX, FOO)
@@ -265,6 +268,8 @@ Agent: .claude/settings.json is missing. Propose adding:
 
 You: O
 Agent: Bootstrapped. Loaded: AGENTS.md, NOTES.md. Git: working tree clean. Ready.
+       /multi-adversarial-review needs no setup; it is ready once a second
+       reviewer tool (Codex, Pi, cn, or OpenCode) is installed.
 ```
 
 ### `/stable-label`

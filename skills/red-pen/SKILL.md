@@ -1,6 +1,6 @@
 ---
 name: red-pen
-version: 0.2.3
+version: 0.2.4
 description: "Writing directives for every output type — spec/plan, code comments, code and diffs, chat. Makes AI-generated text less painful to read by substituting explicit constraints (word budgets, a named reader, mandatory prioritization, a cut pass) for the editing cost that generated text never pays. Use when the user asks to 'red-pen', 'red pen this', 'tighten this', 'cut this down', 'too long', 'too wordy', 'less fluff', 'stop narrating', 'this reads like AI', 'edit this', 'set up writing conventions', or 'writing directives'. Also apply these rules always-on, without invocation, before writing any spec, plan, design note, code comment, diff, commit message, or chat reply — decide the output type first, then write to its rules. Also trigger the bootstrap flow when setting up a project's AGENTS.md and/or CLAUDE.md if no writing conventions are defined yet."
 user-invocable: true
 allowed-tools: Bash(${CLAUDE_SKILL_DIR}/scripts/*)
@@ -220,7 +220,7 @@ When invoked on a project for the first time:
 
 2. **Add a Writing Conventions section** — a reference card, not a tutorial: about 250 words before the reader roster, which is a table and sits outside that budget. The shared core and the mode table, with a pointer to /red-pen for the full per-mode rules. Mark with `<!-- managed by /red-pen -->`.
 
-3. **Seed the reader roster** — ask one question: who reads what this project produces? Propose rows from the answer (and from README, NOTES.md, and the org structure if visible). For each reader: what they know, what they decide, where they stop. A project whose only reader is the insider skips the table, and then the block states the default in one sentence instead of leaving a "Readers:" line with nothing under it.
+3. **Seed the reader roster** — ask one question: who reads what this project produces? Propose rows from the answer (and from README, NOTES.md, and the org structure if visible). For each reader: what they know, what they decide, where they stop. A project whose only reader is the insider skips the table, and then the block states the default in one sentence instead of leaving a "Readers:" line with nothing under it. When `/start` runs this bootstrap as part of the suite, skip the question and use the insider default; say once that a roster can be added later with `/red-pen`.
 
 4. **Inform the user** — one or two sentences. Mention that `/red-pen <target>` edits a file or section against the rules, and that "too long" or "red-pen this" works mid-conversation.
 

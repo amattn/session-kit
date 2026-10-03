@@ -2,7 +2,7 @@
 
 ## What it does
 
-Bootstraps the session-kit skill suite (`/warmup`, `/notes`, `/stable-label`, `/fast-chat`, `/dictation`, `/feedback-foo`) in one pass instead of running each individually. Smart defaults + one approval replaces the 10+ questions that the per-skill bootstraps would normally ask.
+Bootstraps the session-kit skill suite (`/warmup`, `/notes`, `/stable-label`, `/fast-chat`, `/red-pen`, `/dictation`, `/feedback-foo`) in one pass instead of running each individually. Smart defaults + one approval replaces the 10+ questions that the per-skill bootstraps would normally ask.
 
 ## When to use it
 
@@ -21,18 +21,20 @@ Bootstraps the session-kit skill suite (`/warmup`, `/notes`, `/stable-label`, `/
 ```
 /session-kit:start              # Standard tier (default)
 /session-kit:start minimal      # Just /warmup
-/session-kit:start full         # All six skills
+/session-kit:start full         # All seven skills that have a setup step
 ```
 
 You can also say it in prose: "bootstrap session-kit on this project", "init session-kit standard", "set up session-kit with the full tier", etc.
 
 ## Tiers
 
-| Tier         | Skills bootstrapped                                                       |
-|--------------|---------------------------------------------------------------------------|
-| **minimal**  | /warmup                                                                   |
-| **standard** | /warmup + /notes + /stable-label + /fast-chat *(default)*                 |
-| **full**     | /warmup + /notes + /stable-label + /fast-chat + /dictation + /feedback-foo |
+| Tier         | Skills bootstrapped                                                                  |
+|--------------|--------------------------------------------------------------------------------------|
+| **minimal**  | /warmup                                                                              |
+| **standard** | /warmup + /notes + /stable-label + /fast-chat + /red-pen *(default)*                 |
+| **full**     | /warmup + /notes + /stable-label + /fast-chat + /red-pen + /dictation + /feedback-foo |
+
+`/multi-adversarial-review` has no setup step, so it is in no tier; it is ready once a second reviewer tool is installed.
 
 ## The flow
 
@@ -67,6 +69,8 @@ After bootstrap, use the individual skills for ongoing work:
 - `/stable-label` — assign IDs, run consistency passes
 - `/warmup` — diagnose loading failures, strengthen directives
 - `/fast-chat` — adjust interaction conventions
+- `/red-pen` — add a reader roster, edit a document against the writing rules
+- `/multi-adversarial-review` (`/mar`) — review committed work with an outside model
 - `/dictation` — add voice corrections
 - `/feedback-foo` — track process observations
 

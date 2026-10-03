@@ -589,6 +589,13 @@ Same 8 cases, skill v0.2.0, 67 assertions. Graders: 84% vs 48%. Blind side-by-si
 - **From the graders, open:** graders still disagree with the user on pr-description (3/7 on length and a per-file list; the user preferred it). Several assertions do not discriminate (code-comments 8/8 vs 7/8, too-long 9/9 vs 8/9). Invented or unsupported claims still appear in both configurations.
 - **Skill at v0.2.1.** These changes are untested; a fourth iteration would confirm them.
 
+### /start tiers include /red-pen; /multi-adversarial-review stays out (2026-10-02)
+
+/start's tiers predated the two new skills and its full tier said "all six". Owner rulings: /red-pen joins the **standard** tier (chose over full-only, because it is always-on and ranks above /warmup in the usage order); /multi-adversarial-review joins **no tier**, because it has no setup step, and /start's closing line says it is ready once a second reviewer tool is installed (chose over leaving it out of /start entirely).
+
+- Under /start, /red-pen's bootstrap skips its reader question and uses the insider default, to keep /start's single approval. A roster can be added later with /red-pen.
+- Full tier is now "all seven skills that have a setup step". /start v0.2.0, /red-pen v0.2.4.
+
 ### README Origin made generic (2026-10-02)
 
 User: "plet is getting deprecated. i think this needs to be very generic like during hundreds of sessions or something like that." Origin now says the suite was developed and refined over hundreds of AI-assisted development sessions. Dropped the plet-skills link and the unsourced "8+ parts". The /dictation examples still use "plet" as a sample jargon term; left as is, since an example term does not need a live project behind it.
