@@ -24,7 +24,7 @@ session-kit is a suite of Claude Code skill plugins for making AI-assisted devel
 - "i'm not worried about long. the claude code ui is awesome at autocomplete" — length of slash commands is not a concern; clarity and descriptiveness win
 - "feedback foo is the least useful of the session kit tools in practice. the most useful are stable label, fast chat, and then small gap and then notes. and then a big gap and the rest." (2026-10-01) — ranking after months of real use. Pattern: the top three each produce a concrete artifact or format (IDs, codes, NOTES.md entries); the bottom tier is process/meta skills whose value is invisible when they work.
 - "the baseline tends to be too wordy in general. that's part of the pain. i will ask for more detail if i need it." (2026-10-02) — after the blind review. Wordiness itself is the pain, not only unscannable length; the default is less, and detail is on request. Added to /red-pen's shared core.
-- "i think that the way i do NOTES.md is good but a long spec that someone is expected to read is def bad." (2026-10-02) — after the "Plan mode is dead" essay. The line is the reading obligation: a record that is consulted on demand (NOTES.md, greppable IDs) can grow; an artifact a person is expected to read end to end must stay short. Design constraint for the planner skill.
+- "i think that the way i do NOTES.md is good but a long spec that someone is expected to read is def bad." (2026-10-02) — after the "Plan mode is dead" essay. The line is the reading obligation: a record that is consulted on demand (NOTES.md, greppable IDs) can grow; an artifact a person is expected to read end to end must stay short. It applies to any document a person is asked to read.
 - Fenced code blocks in README should be one command per block — GUI clients allow easy copy-paste of a whole fenced area, so combining unrelated commands in one block forces users to manually select
 
 ---
@@ -44,8 +44,7 @@ session-kit is a suite of Claude Code skill plugins for making AI-assisted devel
 | 7 | ~~/discipline~~ | Folded into /warmup + /foo | EX_6 |
 | 8 | /stable-label | **Implemented** | EX_7 |
 | 9 | /red-pen | **Implemented** | WRITING_DIRECTIVES.md |
-| 10 | /planner (name TBD) | Planned | plet-style planning |
-| 11 | /multi-adversarial-review (alias: mar) | **Implemented**; `copy` target added 2026-10-02 | vog_kit |
+| 10 | /multi-adversarial-review (alias: mar) | **Implemented**; `copy` target added 2026-10-02 | vog_kit |
 
 ---
 
@@ -479,7 +478,6 @@ Source: `WRITING_DIRECTIVES.md` (user's standalone file). Inspiration: Ayman Nad
 - **Chose new always-on skill over folding into /fast-chat** — /fast-chat is interaction mechanics (codes, review tail); only §4 Chat overlaps. §1/§2/§3 have no home in any existing skill, and folding would bloat /fast-chat. Rejected /warmup (explicitly excludes content). Revisit if the skill ends up only ever used for chat.
 - **Bootstrap shape:** concise CLAUDE.md block (shared core + mode table, ~150 words) with the full per-mode rules in SKILL.md — same tradeoff /fast-chat makes. Rejected copying the full file into the project + Required Reading (heavier, duplicates the skill).
 - **"Why this file exists" preamble:** compressed into SKILL.md as the "recognizable shape" checklist (the diagnosis list is operational — it's what to avoid); long-form rationale goes to README per "value-add context belongs in README."
-- **Integration point:** §1 Spec is the natural bridge to the planned planner skill (plet-style planning) — the planner produces the artifact, §1 says how it should read.
 - **Commit messages (Mode 3):** a project's own commit style wins; when none is specified, session-kit's own style is the default (`<verb> <what>: <brief description>`, themed bullet body only for non-obvious decisions, no body for trivial commits). User: "defers to a project's own commit style, but use session-kit's commit style as the default when not specified." Rejected: the source file's bare rule ("first line is what changed and why, under 72 chars") — too thin to produce consistent subjects.
 - **Name:** `/red-pen` — see next entry.
 
@@ -504,7 +502,7 @@ Resolves the attention-triage question: how does a long generated artifact tell 
 - **Never omitted.** User: "a preamble saying this is only for X is useful." One reader → one sentence saying so.
 - **Asks live in open items, not the preamble.** User: "I don't like mixing the job to be done (needs a decision) in the preamble, which should be author/reader guidance. if there is discrete action to be taken, doesn't a dedicated open items section make more sense?" Open items: one line each — owner, item, where it lives, author's lean. Everything not listed is settled. Numbered if /fast-chat, IDs if /stable-label — this is the fast-chat × red-pen intersection the question started from.
 - **Preamble rule says nothing about section order.** User cut "Open items follows, then Decisions, Assumptions, Risks, Scope out" from the rule: "too much structure and scope for general writing guides."
-- **Open items is conditional and unprescribed.** User: "open items is a conditional section. it should be in documents where it is needed, but that is a case by case. and I don't want to be prescriptive in this document about what those lines or structure looks like." Red-pen keeps only the writing rule — asks never go in the preamble; a dedicated section carries them when the document needs one — and says nothing about the section's form. The numbered/ID'd open-items format (the fast-chat × stable-label integration) is a candidate for the planner's spec template, not a writing rule.
+- **Open items is conditional and unprescribed.** User: "open items is a conditional section. it should be in documents where it is needed, but that is a case by case. and I don't want to be prescriptive in this document about what those lines or structure looks like." Red-pen keeps only the writing rule — asks never go in the preamble; a dedicated section carries them when the document needs one — and says nothing about the section's form.
 - **Fractal pyramid allowed.** The user's "executive summary at the H3 level for each H2" is a per-section stop rather than one global pyramid by audience; the layering rule now allows either, and the preamble states which.
 - **"Open with the hinge" retired** as a rule — satisfied structurally by open items.
 
@@ -589,10 +587,6 @@ Same 8 cases, skill v0.2.0, 67 assertions. Graders: 84% vs 48%. Blind side-by-si
 - **From the graders, open:** graders still disagree with the user on pr-description (3/7 on length and a per-file list; the user preferred it). Several assertions do not discriminate (code-comments 8/8 vs 7/8, too-long 9/9 vs 8/9). Invented or unsupported claims still appear in both configurations.
 - **Skill at v0.2.1.** These changes are untested; a fourth iteration would confirm them.
 
-### Planner skill on hold (2026-10-02)
-
-User: "i changed my mind. i really need to rethink this one. i'd like to leave it out for now." Nothing built. For when it resumes: Claude surveyed plet's plan phase and proposed keeping its question format, per-item approval, write-and-commit-on-approval, gap analysis, and small dependency-ordered tasks with testable criteria; dropping the long PRD, state.json, the run loop, and the scripts; and splitting output into a record (NOTES.md) and a short plan file. Not decided: name, file location, task tracking, or whether the skill should exist in this form at all. Constraints already recorded: long specs bad, records good; plet is being deprecated.
-
 ### vog_kit is out of scope (2026-10-02)
 
 User: "pls totally disregard vog_kit." No syncing, mirroring, or follow-ups there; session-kit's copy of /multi-adversarial-review is the only one this project maintains.
@@ -672,7 +666,6 @@ The feeling to convey: "makes AI writing less painful." User: "red-pen is short 
 - ~~Writing directives skill name~~ → resolved: /red-pen
 - ~~/red-pen attention triage tags~~ → resolved: preamble + open items section instead of tags
 - /red-pen Mode 5 for outsider-facing docs — held until a real example exists
-- Planner skill (plet-style planning) — name TBD, deferred until /red-pen evals are done. The /red-pen inspiration article ("Plan Mode Is Dead") is also relevant reading for this one.
 - ~~Plugin subsets~~ → resolved: symlinks work. See below.
 
 ### Plugin bundle design (2026-03-14)

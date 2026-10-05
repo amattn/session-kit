@@ -2,6 +2,11 @@
 
 All notable changes to session-kit. Versions track the plugin version in `.claude-plugin/plugin.json`.
 
+## [Unreleased]
+
+### Changed
+- `/red-pen` v0.2.5: How It Fits section trimmed
+
 ## [0.10.0] — 2026-10-02
 
 Two new skills, `/red-pen` and `/multi-adversarial-review`, on top of 0.9.0. Plugin 0.10.0, marketplace metadata 0.6.0.

@@ -124,10 +124,6 @@ Rebased onto the May changes (/start, OpenCode, /warmup scaffolding). Plugin 0.1
 
 ## Next Steps
 
-### Planner skill (on hold)
-
-On hold at the owner's request, to be rethought. Recorded constraints and the plet survey are in NOTES.md.
-
 ### Description optimization
 
 Run the skill-creator trigger optimization loop on each skill's description to improve triggering accuracy.

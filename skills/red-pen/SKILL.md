@@ -1,6 +1,6 @@
 ---
 name: red-pen
-version: 0.2.4
+version: 0.2.5
 description: "Writing directives for every output type — spec/plan, code comments, code and diffs, chat. Makes AI-generated text less painful to read by substituting explicit constraints (word budgets, a named reader, mandatory prioritization, a cut pass) for the editing cost that generated text never pays. Use when the user asks to 'red-pen', 'red pen this', 'tighten this', 'cut this down', 'too long', 'too wordy', 'less fluff', 'stop narrating', 'this reads like AI', 'edit this', 'set up writing conventions', or 'writing directives'. Also apply these rules always-on, without invocation, before writing any spec, plan, design note, code comment, diff, commit message, or chat reply — decide the output type first, then write to its rules. Also trigger the bootstrap flow when setting up a project's AGENTS.md and/or CLAUDE.md if no writing conventions are defined yet."
 user-invocable: true
 allowed-tools: Bash(${CLAUDE_SKILL_DIR}/scripts/*)
@@ -326,4 +326,4 @@ Mode 1 Spec                 → the shape every plan, spec, and design note take
                                (preamble, decisions, assumptions, risks, scope out)
 ```
 
-/red-pen pairs with /fast-chat: /fast-chat makes each exchange shorter by replacing prose with codes, /red-pen makes whatever prose remains worth reading. It pairs with /notes: NOTES.md decision entries follow Mode 1's `chose A over B because C` shape, so the institutional memory is checkable, not fluent. And Mode 1 is the output contract for any planning skill — the planner produces the artifact, /red-pen says how it must read.
+/red-pen pairs with /fast-chat: /fast-chat makes each exchange shorter by replacing prose with codes, /red-pen makes whatever prose remains worth reading. It pairs with /notes: NOTES.md decision entries follow Mode 1's `chose A over B because C` shape, so the institutional memory is checkable, not fluent.
