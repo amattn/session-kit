@@ -1,0 +1,97 @@
+{
+  "expectations": [
+    {
+      "text": "Fact retained: Rate limits are per API key",
+      "passed": true,
+      "evidence": "'the per-API-key rate limiter for ledgerd'"
+    },
+    {
+      "text": "Fact retained: State lives in Redis so all replicas share it",
+      "passed": true,
+      "evidence": "'Its state lives in Redis ... so that all three replicas behind the load balancer enforce one shared limit'"
+    },
+    {
+      "text": "Fact retained: Default capacity (burst) is 200 tokens",
+      "passed": true,
+      "evidence": "'The defaults are a 200-token capacity'"
+    },
+    {
+      "text": "Fact retained: Default refill rate is 100 tokens per second",
+      "passed": true,
+      "evidence": "'refilling at 100 tokens/sec'"
+    },
+    {
+      "text": "Fact retained: Uses Redis server time (TIME) so replicas share one clock",
+      "passed": true,
+      "evidence": "'The script calls TIME instead of using the replica's clock, so clock skew between replicas can't add or remove tokens'"
+    },
+    {
+      "text": "Fact retained: The whole check runs atomically as one Lua script",
+      "passed": true,
+      "evidence": "'One Lua script reads the bucket ... Redis runs scripts atomically'"
+    },
+    {
+      "text": "Fact retained: Tokens refill continuously based on elapsed time, capped at capacity",
+      "passed": true,
+      "evidence": "'adds the tokens earned since the last call' with '200-token capacity refilling at 100 tokens/sec'"
+    },
+    {
+      "text": "Fact retained: A new key starts with a full bucket",
+      "passed": true,
+      "evidence": "'A missing key is treated as a full bucket'"
+    },
+    {
+      "text": "Fact retained: Each request costs 1 token by default; cost is configurable",
+      "passed": true,
+      "evidence": "'Each request spends cost tokens (default 1), so an expensive endpoint can charge more'"
+    },
+    {
+      "text": "Fact retained: Keys expire after twice the time to refill a full bucket",
+      "passed": true,
+      "evidence": "'expires after ceil(capacity / rate) * 2 seconds (4s with the defaults), twice the time it takes an empty bucket to refill'"
+    },
+    {
+      "text": "Fact retained: Redis keys are named rl:<api_key>",
+      "passed": true,
+      "evidence": "'reads the bucket at rl:<api_key>'"
+    },
+    {
+      "text": "Fact retained: On a Redis error it fails open: allows the request and logs a warning",
+      "passed": true,
+      "evidence": "'if Redis errors, check fails open and allows the request'; 'the warning is logged once per request'"
+    },
+    {
+      "text": "Fact retained: Fail-open reason: a Redis outage must not take down balance serving",
+      "passed": true,
+      "evidence": "'because a Redis outage must not take down balance serving'"
+    },
+    {
+      "text": "Fact retained: Denied requests get retry_after = ceil(missing tokens / rate)",
+      "passed": true,
+      "evidence": "'the number of whole seconds until enough tokens exist' (equivalent to ceil(missing / rate))"
+    },
+    {
+      "text": "Fact retained: retry_after is at least 1 second",
+      "passed": true,
+      "evidence": "'at least 1'"
+    }
+  ],
+  "summary": {
+    "passed": 15,
+    "failed": 0,
+    "total": 15,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "total_tool_calls": 0,
+    "output_chars": 1946,
+    "errors_encountered": 0
+  },
+  "eval_feedback": {
+    "suggestions": [
+      "Assertion list misses the tostring(tokens) / Lua float truncation detail; this response states it correctly.",
+      "Assertion list misses the cost > capacity trap and the per-request warning log flood during an outage; this response states both."
+    ],
+    "overall": "All 15 facts retained accurately in 1946 chars. No factual errors found. The expiry rationale is stated explicitly, as twice the time an empty bucket takes to refill."
+  }
+}

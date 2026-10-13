@@ -1,0 +1,87 @@
+{
+  "eval_id": 2,
+  "eval_name": "edit-target",
+  "prompt": "Setup: test-projects/edit-target holds grid_section.md, an 1,839-word requirements section written in the style of unedited AI output. The case measures how many of its facts survive the edit, alongside sentence-level counts.\n\nUser's message: red-pen grid_section.md. The reader is product management.",
+  "assertions": [
+    {
+      "text": "Fact retained: Duration and grid are independent concepts",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: A 45-minute meeting on a 30-minute grid strands 15 minutes",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Grid is set per meeting type by the firm",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: 30-minute grid types: kickoff, follow-up, plan review, review follow-up, office drop-in, hold",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: 15-minute grid types: intro call, quick check-in, workshop, other on-site session",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Office drop-in is 15 minutes on a 30-minute grid, for half-hour arrival waves",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: On-site sessions use a 15-minute grid because meeting-room time is scarcest",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Only three slots are shown by default",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: 45 should be a span on the 15-minute lattice, not a step size",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Two 45-minute meetings tile a 90-minute block",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Capability 1: fill a dedicated 90-minute gap",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Capability 2: align to edges left by existing bookings",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Slot score ranks by closeness to noon: Strong within 2 hours, Fair within 4, Weak beyond",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Edge-based ranking was withdrawn because advisors rejected outside-in filling",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Adjacent-slot checking code remains but nothing calls it",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: A dynamic edge-aware rule for fragmented days is parked, not a priority",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: 45-minute support is a placement change, not a ranking change",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Adaptive grid shapes: grid follows the meeting, grid follows the gap",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: The booking UI passes the chosen duration as the grid",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: The duration/grid entanglement may be work in progress and needs a deliberate answer",
+      "type": "fact"
+    }
+  ]
+}

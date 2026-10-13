@@ -1,0 +1,77 @@
+{
+  "expectations": [
+    {
+      "text": "Fact retained: Rate limiter state is in Redis because there are three replicas and the limit must be shared",
+      "passed": true,
+      "evidence": "'Redis holds one shared count' after 'ledgerd runs three replicas... A counter inside each process would give each replica its own count'."
+    },
+    {
+      "text": "Fact retained: Sticky sessions were rejected because partners don't send cookies",
+      "passed": true,
+      "evidence": "'Sticky sessions (pinning a client to one replica) were rejected because partners don't send cookies.'"
+    },
+    {
+      "text": "Fact retained: Rate-limited responses are 429 with Retry-After",
+      "passed": true,
+      "evidence": "'over-limit requests get a 429 with a `Retry-After` header'."
+    },
+    {
+      "text": "Fact retained: 429 was chosen over 503 because the mobile client already backs off on 429",
+      "passed": true,
+      "evidence": "'503 was rejected because the mobile client already backs off on 429.'"
+    },
+    {
+      "text": "Fact retained: Silently queueing requests was rejected because it hides the problem from partners",
+      "passed": true,
+      "evidence": "'Silently queueing excess requests was rejected because it hides the problem from partners.'"
+    },
+    {
+      "text": "Fact retained: The limit is keyed per API key, not per IP, because partners share egress IPs",
+      "passed": true,
+      "evidence": "'Per API key, not per IP... Partners share egress IPs, so an IP-based limit would throttle different partners together.'"
+    },
+    {
+      "text": "Fact retained: Balances must never be older than 30 seconds (cache TTL is load-bearing)",
+      "passed": false,
+      "evidence": "The 30-second balance-freshness invariant and load-bearing cache TTL are not mentioned anywhere in the response."
+    },
+    {
+      "text": "Fact retained: Per-tenant quotas are not decided; default is one limit for all partners",
+      "passed": true,
+      "evidence": "'Per-partner quotas. Not decided. For now, all partners share one limit.'"
+    },
+    {
+      "text": "Fact retained: Whether the mobile app gets its own higher limit is open",
+      "passed": true,
+      "evidence": "'A separate mobile limit. Whether the mobile app gets its own, higher limit.' listed under 'Still open'."
+    },
+    {
+      "text": "Fact retained: A partner hit 2k rps last month and made the mobile app slow",
+      "passed": true,
+      "evidence": "'Last month one partner hit ledgerd at 2k requests per second, and the app slowed down for everyone.'"
+    },
+    {
+      "text": "Fact retained: The user prefers a picked default over a config knob",
+      "passed": true,
+      "evidence": "'The owner's standing preference: pick a default rather than add a config knob, and revisit later.'"
+    }
+  ],
+  "summary": {
+    "passed": 10,
+    "failed": 1,
+    "total": 11,
+    "pass_rate": 0.9091
+  },
+  "execution_metrics": {
+    "total_tool_calls": 0,
+    "output_chars": 1793,
+    "errors_encountered": 0
+  },
+  "eval_feedback": {
+    "suggestions": [
+      "Dropped the only invariant in NOTES.md (never return a balance older than 30s; cache TTL is load-bearing). An explanation of the notes should keep it, or at least flag that the limiter must not touch the cache TTL.",
+      "Minor embellishment: 'the app slowed down for everyone' adds 'for everyone', which the user quote does not say."
+    ],
+    "overall": "10/11 facts retained, all with reasons. No factual errors. Extra claims (load balancer, stale docs/design.md, draft_reply.md leaning token bucket, algorithm and numbers unrecorded) check out against CLAUDE.md, docs/design.md and draft_reply.md. The only miss is the 30s invariant."
+  }
+}

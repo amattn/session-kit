@@ -1,0 +1,77 @@
+{
+  "skill_name": "red-pen",
+  "iteration": 4,
+  "focus": "fact retention under the v0.3.0 sentence rules; configurations: new_skill (v0.3.0), old_skill (v0.2.5), without_skill",
+  "evals": [
+    {
+      "id": 0,
+      "name": "explain-code",
+      "project": "explain-code",
+      "prompt": "Explain src/token_bucket.py to a new engineer joining the team.",
+      "expectations": [
+        "Fact retained: Rate limits are per API key",
+        "Fact retained: State lives in Redis so all replicas share it",
+        "Fact retained: Default capacity (burst) is 200 tokens",
+        "Fact retained: Default refill rate is 100 tokens per second",
+        "Fact retained: Uses Redis server time (TIME) so replicas share one clock",
+        "Fact retained: The whole check runs atomically as one Lua script",
+        "Fact retained: Tokens refill continuously based on elapsed time, capped at capacity",
+        "Fact retained: A new key starts with a full bucket",
+        "Fact retained: Each request costs 1 token by default; cost is configurable",
+        "Fact retained: Keys expire after twice the time to refill a full bucket",
+        "Fact retained: Redis keys are named rl:<api_key>",
+        "Fact retained: On a Redis error it fails open: allows the request and logs a warning",
+        "Fact retained: Fail-open reason: a Redis outage must not take down balance serving",
+        "Fact retained: Denied requests get retry_after = ceil(missing tokens / rate)",
+        "Fact retained: retry_after is at least 1 second"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "explain-notes",
+      "project": "ledgerd",
+      "prompt": "Explain the rate limiting decisions in NOTES.md to a new teammate.",
+      "expectations": [
+        "Fact retained: Rate limiter state is in Redis because there are three replicas and the limit must be shared",
+        "Fact retained: Sticky sessions were rejected because partners don't send cookies",
+        "Fact retained: Rate-limited responses are 429 with Retry-After",
+        "Fact retained: 429 was chosen over 503 because the mobile client already backs off on 429",
+        "Fact retained: Silently queueing requests was rejected because it hides the problem from partners",
+        "Fact retained: The limit is keyed per API key, not per IP, because partners share egress IPs",
+        "Fact retained: Balances must never be older than 30 seconds (cache TTL is load-bearing)",
+        "Fact retained: Per-tenant quotas are not decided; default is one limit for all partners",
+        "Fact retained: Whether the mobile app gets its own higher limit is open",
+        "Fact retained: A partner hit 2k rps last month and made the mobile app slow",
+        "Fact retained: The user prefers a picked default over a config knob"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "edit-target",
+      "project": "edit-target",
+      "prompt": "red-pen grid_section.md. The reader is product management.",
+      "expectations": [
+        "Fact retained: Duration and grid are independent concepts",
+        "Fact retained: A 45-minute meeting on a 30-minute grid strands 15 minutes",
+        "Fact retained: Grid is set per meeting type by the firm",
+        "Fact retained: 30-minute grid types: kickoff, follow-up, plan review, review follow-up, office drop-in, hold",
+        "Fact retained: 15-minute grid types: intro call, quick check-in, workshop, other on-site session",
+        "Fact retained: Office drop-in is 15 minutes on a 30-minute grid, for half-hour arrival waves",
+        "Fact retained: On-site sessions use a 15-minute grid because meeting-room time is scarcest",
+        "Fact retained: Only three slots are shown by default",
+        "Fact retained: 45 should be a span on the 15-minute lattice, not a step size",
+        "Fact retained: Two 45-minute meetings tile a 90-minute block",
+        "Fact retained: Capability 1: fill a dedicated 90-minute gap",
+        "Fact retained: Capability 2: align to edges left by existing bookings",
+        "Fact retained: Slot score ranks by closeness to noon: Strong within 2 hours, Fair within 4, Weak beyond",
+        "Fact retained: Edge-based ranking was withdrawn because advisors rejected outside-in filling",
+        "Fact retained: Adjacent-slot checking code remains but nothing calls it",
+        "Fact retained: A dynamic edge-aware rule for fragmented days is parked, not a priority",
+        "Fact retained: 45-minute support is a placement change, not a ranking change",
+        "Fact retained: Adaptive grid shapes: grid follows the meeting, grid follows the gap",
+        "Fact retained: The booking UI passes the chosen duration as the grid",
+        "Fact retained: The duration/grid entanglement may be work in progress and needs a deliberate answer"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "expectations": [
+    {
+      "text": "Fact retained: Duration and grid are independent concepts",
+      "passed": true,
+      "evidence": "L3: \"It is independent of how long the meeting is\" with Duration/Grid definitions L5-6."
+    },
+    {
+      "text": "Fact retained: A 45-minute meeting on a 30-minute grid strands 15 minutes",
+      "passed": true,
+      "evidence": "L8: \"A 45-minute meeting on a 30-minute grid consumes two slots and strands 15 minutes\"."
+    },
+    {
+      "text": "Fact retained: Grid is set per meeting type by the firm",
+      "passed": true,
+      "evidence": "L12: \"The firm sets the grid per meeting type; neither the booker nor the advisor chooses it.\""
+    },
+    {
+      "text": "Fact retained: 30-minute grid types: kickoff, follow-up, plan review, review follow-up, office drop-in, hold",
+      "passed": true,
+      "evidence": "L16 table: 30 min row lists all six types unchanged."
+    },
+    {
+      "text": "Fact retained: 15-minute grid types: intro call, quick check-in, workshop, other on-site session",
+      "passed": true,
+      "evidence": "L17 table: 15 min row lists all four types unchanged."
+    },
+    {
+      "text": "Fact retained: Office drop-in is 15 minutes on a 30-minute grid, for half-hour arrival waves",
+      "passed": true,
+      "evidence": "L21: \"Office drop-in is a 15-minute meeting on a 30-minute grid, so the front desk gets half-hour arrival waves\"."
+    },
+    {
+      "text": "Fact retained: On-site sessions use a 15-minute grid because meeting-room time is scarcest",
+      "passed": true,
+      "evidence": "L22: on-site sessions \"use a 15-minute grid because meeting-room time is the scarcest resource\"."
+    },
+    {
+      "text": "Fact retained: Only three slots are shown by default",
+      "passed": true,
+      "evidence": "L28: \"the three-slot default in §7.5\"; L47: Slot score \"picks the three slots shown by default\"."
+    },
+    {
+      "text": "Fact retained: 45 should be a span on the 15-minute lattice, not a step size",
+      "passed": true,
+      "evidence": "L30: step size realigns only every three hours; \"As a span on the existing 15-minute lattice it is well-behaved\"."
+    },
+    {
+      "text": "Fact retained: Two 45-minute meetings tile a 90-minute block",
+      "passed": true,
+      "evidence": "L33: \"Two 45s tile a 90-minute block exactly.\""
+    },
+    {
+      "text": "Fact retained: Capability 1: fill a dedicated 90-minute gap",
+      "passed": true,
+      "evidence": "L37: \"Fill a 90-minute gap. Offer a 90-minute opening as the home for two 45-minute meetings\"."
+    },
+    {
+      "text": "Fact retained: Capability 2: align to edges left by existing bookings",
+      "passed": true,
+      "evidence": "L38: \"Align to existing bookings. Anchor a 45-minute meeting to the edges the advisor's booked day creates\"."
+    },
+    {
+      "text": "Fact retained: Slot score ranks by closeness to noon: Strong within 2 hours, Fair within 4, Weak beyond",
+      "passed": true,
+      "evidence": "L47: \"It scores distance from noon: Strong within 2 hours (10am-2pm), Fair within 4 (8am-4pm), Weak beyond.\""
+    },
+    {
+      "text": "Fact retained: Edge-based ranking was withdrawn because advisors rejected outside-in filling",
+      "passed": true,
+      "evidence": "L50: edge-based ranking \"was tried and deprecated because advisors rejected days filled from the outside in\"."
+    },
+    {
+      "text": "Fact retained: Adjacent-slot checking code remains but nothing calls it",
+      "passed": true,
+      "evidence": "L48: \"the code remains and nothing calls it.\""
+    },
+    {
+      "text": "Fact retained: A dynamic edge-aware rule for fragmented days is parked, not a priority",
+      "passed": true,
+      "evidence": "L52: \"A future version could rank by closeness to noon by default and shift toward edges once a day is fragmented enough... Not a priority\"."
+    },
+    {
+      "text": "Fact retained: 45-minute support is a placement change, not a ranking change",
+      "passed": true,
+      "evidence": "L54: \"45-minute support is a placement change: it widens the set of start times offered, does not reorder them, and does not need edge-based ranking back.\""
+    },
+    {
+      "text": "Fact retained: Adaptive grid shapes: grid follows the meeting, grid follows the gap",
+      "passed": true,
+      "evidence": "L60-61: \"Grid follows the meeting being booked.\" / \"Grid follows the gap.\""
+    },
+    {
+      "text": "Fact retained: The booking UI passes the chosen duration as the grid",
+      "passed": true,
+      "evidence": "L67: \"that duration currently also becomes the grid, overriding the meeting type's.\""
+    },
+    {
+      "text": "Fact retained: The duration/grid entanglement may be work in progress and needs a deliberate answer",
+      "passed": true,
+      "evidence": "L69: \"This may be work in progress toward the adaptive grid in §6.4 rather than a defect; either way it needs a deliberate answer.\""
+    }
+  ],
+  "summary": {
+    "passed": 20,
+    "failed": 0,
+    "total": 20,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "total_tool_calls": 0,
+    "output_chars": 6515,
+    "errors_encountered": 0
+  },
+  "eval_feedback": {
+    "suggestions": [
+      "Meaning change at L19: \"Two cases show the grid is a business lever, not a derived value\" credits both cases as proof. In the original only office drop-in is the proof; the on-site case is about packing scarce room time.",
+      "Meaning change at L63: \"The second is the stronger\" turns the original's \"more interesting\" into a ranking of the options the original did not make. It also says edge-based ranking was deprecated for \"reordering\", but the original says it was deprecated for outside-in filling.",
+      "L52 heading \"Edge-awareness is wrong for sparse days, not wrong.\" is garbled. It means \"not wrong in general\".",
+      "Dropped content not covered by assertions: \"or something already under design review\" (6.5), the 6.4 framing sentence that today's per-type grid may not be the right long-term model (the heading still implies it), and the note that edge-based ranking was \"rejected on purpose, not left unfinished\"."
+    ],
+    "overall": "20/20 facts retained. It is the shortest output, and the compression caused two small meaning shifts: the business-lever proof is credited to both cases (L19), and grid-follows-the-gap is called \"stronger\" with a reframed deprecation cause (L63)."
+  }
+}

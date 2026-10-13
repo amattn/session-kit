@@ -1,0 +1,30 @@
+{
+  "eval-0-explain-code/without_skill/run-1/outputs/response.md": {
+    "words": 1076,
+    "avg_sentence_words": 11.6,
+    "long_list_items": 4,
+    "long_sentences": 0,
+    "long_paragraphs": 0,
+    "passive_estimate": 7,
+    "possible_term_switches": [],
+    "headers": 10,
+    "words_per_header": 108,
+    "sentence_headers": 2,
+    "scaffold_headers": 0,
+    "bold_leads": 11,
+    "openers": 3,
+    "hedges": 0,
+    "dated_markers": 0,
+    "forward_refs": 1,
+    "narration": 0,
+    "em_dashes_per_1k": 0.0,
+    "restated_phrases": 0,
+    "restated_top": [],
+    "section_words": {
+      "n": 7,
+      "min": 71,
+      "median": 117,
+      "max": 324
+    }
+  }
+}

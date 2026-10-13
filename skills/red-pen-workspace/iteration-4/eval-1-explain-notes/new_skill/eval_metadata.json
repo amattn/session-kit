@@ -1,0 +1,51 @@
+{
+  "eval_id": 1,
+  "eval_name": "explain-notes",
+  "prompt": "Setup: the agent is dropped into test-projects/ledgerd, whose NOTES.md holds three rate-limiting decisions with reasons and rejected options, two open questions, an invariant, and two user quotes. The case measures how many of those facts survive in the explanation.\n\nUser's message: Explain the rate limiting decisions in NOTES.md to a new teammate.",
+  "assertions": [
+    {
+      "text": "Fact retained: Rate limiter state is in Redis because there are three replicas and the limit must be shared",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Sticky sessions were rejected because partners don't send cookies",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Rate-limited responses are 429 with Retry-After",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: 429 was chosen over 503 because the mobile client already backs off on 429",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Silently queueing requests was rejected because it hides the problem from partners",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: The limit is keyed per API key, not per IP, because partners share egress IPs",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Balances must never be older than 30 seconds (cache TTL is load-bearing)",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Per-tenant quotas are not decided; default is one limit for all partners",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Whether the mobile app gets its own higher limit is open",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: A partner hit 2k rps last month and made the mobile app slow",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: The user prefers a picked default over a config knob",
+      "type": "fact"
+    }
+  ]
+}

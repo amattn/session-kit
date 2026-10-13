@@ -1,0 +1,79 @@
+{
+  "expectations": [
+    {
+      "text": "Fact retained: Rate limiter state is in Redis because there are three replicas and the limit must be shared",
+      "passed": true,
+      "evidence": "'We run three replicas behind a load balancer. An in-process counter would give each replica its own count... Redis gives all three a single shared count'."
+    },
+    {
+      "text": "Fact retained: Sticky sessions were rejected because partners don't send cookies",
+      "passed": true,
+      "evidence": "'Rejected: sticky sessions... Partners don't send cookies, so there's nothing to pin on.'"
+    },
+    {
+      "text": "Fact retained: Rate-limited responses are 429 with Retry-After",
+      "passed": true,
+      "evidence": "'Over-limit requests get `429 Too Many Requests` with a `Retry-After` header'."
+    },
+    {
+      "text": "Fact retained: 429 was chosen over 503 because the mobile client already backs off on 429",
+      "passed": true,
+      "evidence": "'Rejected: `503`. The notes give the mobile client's existing 429 handling as the reason for choosing 429 over it.' plus 'The mobile client already backs off when it gets a 429'."
+    },
+    {
+      "text": "Fact retained: Silently queueing requests was rejected because it hides the problem from partners",
+      "passed": true,
+      "evidence": "'Rejected: quietly queueing excess requests. That hides the problem from partners.'"
+    },
+    {
+      "text": "Fact retained: The limit is keyed per API key, not per IP, because partners share egress IPs",
+      "passed": true,
+      "evidence": "'Limits are per API key, not per IP... Keying by IP would throttle unrelated partners together' after 'partners share egress IPs'."
+    },
+    {
+      "text": "Fact retained: Balances must never be older than 30 seconds (cache TTL is load-bearing)",
+      "passed": true,
+      "evidence": "'The critical invariant in NOTES.md is that we never return a balance older than 30 seconds' alongside 'the 30s cache TTL'."
+    },
+    {
+      "text": "Fact retained: Per-tenant quotas are not decided; default is one limit for all partners",
+      "passed": true,
+      "evidence": "'Per-partner quotas. Not decided. For now every partner gets the same single limit.'"
+    },
+    {
+      "text": "Fact retained: Whether the mobile app gets its own higher limit is open",
+      "passed": true,
+      "evidence": "'A separate, higher limit for the mobile app. Also undecided.'"
+    },
+    {
+      "text": "Fact retained: A partner hit 2k rps last month and made the mobile app slow",
+      "passed": true,
+      "evidence": "'Last month one partner hit us at about 2k requests per second and the mobile app got slow.'"
+    },
+    {
+      "text": "Fact retained: The user prefers a picked default over a config knob",
+      "passed": true,
+      "evidence": "'a standing preference from the project owner: \"pick a default and we'll revisit\" rather than adding a config knob for everything.'"
+    }
+  ],
+  "summary": {
+    "passed": 11,
+    "failed": 0,
+    "total": 11,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "total_tool_calls": 0,
+    "output_chars": 2978,
+    "errors_encountered": 0
+  },
+  "eval_feedback": {
+    "suggestions": [
+      "Invented causal link: says the single default limit 'follows' from the owner's no-config-knob preference. NOTES.md lists the two separately and does not connect them.",
+      "Unsourced inferences presented as fact: a partner 'could get roughly 3x the intended limit' with in-process counters; 'Several partners share egress IPs' (source says partners share egress IPs, without 'several'); 'We want them to see they're over the limit and fix it on their side'. These are plausible but not in the source.",
+      "Invented guidance: warns against serving throttled clients staler cached data. This is consistent with the invariant but is not in the notes.",
+      "Says the load-bearing TTL is about caching, not rate limiting, but never says the 30s TTL is load-bearing for the mobile 'available funds' screen."
+    ],
+    "overall": "11/11 facts retained, with reasons. No outright factual errors: 'already run Redis for caching' and 'behind a load balancer' come from CLAUDE.md, and the docs/design.md, draft_reply.md and missing src/api/ claims check out. Longest response; it adds a few unsourced inferences and one invented causal link (default limit 'follows' the config-knob preference)."
+  }
+}

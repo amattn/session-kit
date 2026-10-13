@@ -1,0 +1,59 @@
+{
+  "eval-2-edit-target/without_skill/run-1/outputs/project/grid_section.md": {
+    "words": 1623,
+    "avg_sentence_words": 19.6,
+    "long_list_items": 9,
+    "long_sentences": 15,
+    "long_paragraphs": 0,
+    "passive_estimate": 18,
+    "possible_term_switches": [],
+    "headers": 9,
+    "words_per_header": 180,
+    "sentence_headers": 6,
+    "scaffold_headers": 0,
+    "bold_leads": 21,
+    "openers": 7,
+    "hedges": 1,
+    "dated_markers": 0,
+    "forward_refs": 0,
+    "narration": 0,
+    "em_dashes_per_1k": 14.2,
+    "restated_phrases": 7,
+    "restated_top": [
+      {
+        "phrase": "minute meeting on a 30",
+        "sentences": 3
+      },
+      {
+        "phrase": "fill a 90 minute opening",
+        "sentences": 2
+      },
+      {
+        "phrase": "the set of start times",
+        "sentences": 2
+      },
+      {
+        "phrase": "a 45 minute meeting on",
+        "sentences": 2
+      },
+      {
+        "phrase": "a 30 minute grid takes",
+        "sentences": 2
+      },
+      {
+        "phrase": "a 15 minute meeting on",
+        "sentences": 2
+      },
+      {
+        "phrase": "use a 15 minute grid",
+        "sentences": 2
+      }
+    ],
+    "section_words": {
+      "n": 6,
+      "min": 119,
+      "median": 173,
+      "max": 617
+    }
+  }
+}

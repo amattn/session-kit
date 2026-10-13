@@ -1,0 +1,97 @@
+{
+  "expectations": [
+    {
+      "text": "Fact retained: Rate limits are per API key",
+      "passed": true,
+      "evidence": "'This is the per-API-key rate limiter for ledgerd'"
+    },
+    {
+      "text": "Fact retained: State lives in Redis so all replicas share it",
+      "passed": true,
+      "evidence": "'The limiter keeps its state in Redis, so a key's limit applies across the whole service, not separately on each replica'"
+    },
+    {
+      "text": "Fact retained: Default capacity (burst) is 200 tokens",
+      "passed": true,
+      "evidence": "'The defaults are capacity=200'"
+    },
+    {
+      "text": "Fact retained: Default refill rate is 100 tokens per second",
+      "passed": true,
+      "evidence": "'refill_per_sec=100'"
+    },
+    {
+      "text": "Fact retained: Uses Redis server time (TIME) so replicas share one clock",
+      "passed": true,
+      "evidence": "'The script gets the time from Redis (redis.call('TIME')), not from each replica's system clock ... gives everyone the same clock'"
+    },
+    {
+      "text": "Fact retained: The whole check runs atomically as one Lua script",
+      "passed": true,
+      "evidence": "'Atomicity. Redis runs a script start to finish with no other commands interleaved'"
+    },
+    {
+      "text": "Fact retained: Tokens refill continuously based on elapsed time, capped at capacity",
+      "passed": true,
+      "evidence": "'Tokens refill continuously at refill_per_sec'; line 19 'add elapsed * rate tokens, capped at cap'"
+    },
+    {
+      "text": "Fact retained: A new key starts with a full bucket",
+      "passed": true,
+      "evidence": "'If the key doesn't exist yet, treat the bucket as full, last updated now'"
+    },
+    {
+      "text": "Fact retained: Each request costs 1 token by default; cost is configurable",
+      "passed": true,
+      "evidence": "'A request costs cost tokens (default 1)'; check(api_key, cost=1)"
+    },
+    {
+      "text": "Fact retained: Keys expire after twice the time to refill a full bucket",
+      "passed": true,
+      "evidence": "'Set a TTL of ceil(cap / rate) * 2 seconds (4 s with the defaults). A bucket refills completely in cap / rate seconds'"
+    },
+    {
+      "text": "Fact retained: Redis keys are named rl:<api_key>",
+      "passed": true,
+      "evidence": "'The Redis key is rl:{api_key}'"
+    },
+    {
+      "text": "Fact retained: On a Redis error it fails open: allows the request and logs a warning",
+      "passed": true,
+      "evidence": "'Redis error -> (True, 0) and a log warning. This is fail-open'"
+    },
+    {
+      "text": "Fact retained: Fail-open reason: a Redis outage must not take down balance serving",
+      "passed": true,
+      "evidence": "'serving balances matters more than enforcing limits. A rate-limiter outage shouldn't become a ledgerd outage', plus the quoted code comment"
+    },
+    {
+      "text": "Fact retained: Denied requests get retry_after = ceil(missing tokens / rate)",
+      "passed": true,
+      "evidence": "'ceil((cost - tokens) / rate)'"
+    },
+    {
+      "text": "Fact retained: retry_after is at least 1 second",
+      "passed": true,
+      "evidence": "'at least 1 second'"
+    }
+  ],
+  "summary": {
+    "passed": 15,
+    "failed": 0,
+    "total": 15,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "total_tool_calls": 0,
+    "output_chars": 6650,
+    "errors_encountered": 0
+  },
+  "eval_feedback": {
+    "suggestions": [
+      "Assertion list misses facts this response gives: tostring(tokens) and Lua float truncation; cost > capacity is always denied; cost <= 0 is not validated; slow Redis blocks until the client timeout; the raw API key is visible in Redis key names; every replica must use the same config; denials also write state.",
+      "The response is about 3.5x longer than the skill runs and retains the same fact count. The length buys extra correct edge cases, not extra listed facts."
+    ],
+    "overall": "All 15 facts retained accurately in 6650 chars. No clear factual errors found. One minor imprecision: it says a cost > capacity request is told to retry 'in about 1 second', but retry_after = ceil((cost - tokens)/rate), which grows with cost (for example, cost=500 at a full bucket gives 3). The Redis-version claims (TIME then a write needs Redis 5+ effects replication; multi-field HSET needs 4.0+) are correct."
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "eval_id": 0,
+  "eval_name": "explain-code",
+  "prompt": "Setup: the agent is dropped into test-projects/explain-code, a 50-line Redis token-bucket rate limiter in Python with a short CLAUDE.md. The reader is a new engineer. The case measures how many of the code's facts survive in the explanation.\n\nUser's message: Explain src/token_bucket.py to a new engineer joining the team.",
+  "assertions": [
+    {
+      "text": "Fact retained: Rate limits are per API key",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: State lives in Redis so all replicas share it",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Default capacity (burst) is 200 tokens",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Default refill rate is 100 tokens per second",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Uses Redis server time (TIME) so replicas share one clock",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: The whole check runs atomically as one Lua script",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Tokens refill continuously based on elapsed time, capped at capacity",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: A new key starts with a full bucket",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Each request costs 1 token by default; cost is configurable",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Keys expire after twice the time to refill a full bucket",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Redis keys are named rl:<api_key>",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: On a Redis error it fails open: allows the request and logs a warning",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Fail-open reason: a Redis outage must not take down balance serving",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: Denied requests get retry_after = ceil(missing tokens / rate)",
+      "type": "fact"
+    },
+    {
+      "text": "Fact retained: retry_after is at least 1 second",
+      "type": "fact"
+    }
+  ]
+}

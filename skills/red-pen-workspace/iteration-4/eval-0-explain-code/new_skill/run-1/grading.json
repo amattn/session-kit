@@ -1,0 +1,98 @@
+{
+  "expectations": [
+    {
+      "text": "Fact retained: Rate limits are per API key",
+      "passed": true,
+      "evidence": "'caps each API key at a burst of 200 requests'"
+    },
+    {
+      "text": "Fact retained: State lives in Redis so all replicas share it",
+      "passed": true,
+      "evidence": "'enforces that cap across all three replicas by keeping the state in the shared Redis'"
+    },
+    {
+      "text": "Fact retained: Default capacity (burst) is 200 tokens",
+      "passed": true,
+      "evidence": "'Each key's bucket holds up to 200 tokens'"
+    },
+    {
+      "text": "Fact retained: Default refill rate is 100 tokens per second",
+      "passed": true,
+      "evidence": "'tokens come back at 100 per second'"
+    },
+    {
+      "text": "Fact retained: Uses Redis server time (TIME) so replicas share one clock",
+      "passed": true,
+      "evidence": "'The script reads Redis TIME, not the replica's clock, so drift between replicas does not matter'"
+    },
+    {
+      "text": "Fact retained: The whole check runs atomically as one Lua script",
+      "passed": true,
+      "evidence": "'Redis runs a Lua script atomically, so refill, spend, and write happen as one step'"
+    },
+    {
+      "text": "Fact retained: Tokens refill continuously based on elapsed time, capped at capacity",
+      "passed": true,
+      "evidence": "'tokens come back at 100 per second up to the cap' (rate-based refill, capped; elapsed-time basis implied by per-second rate)"
+    },
+    {
+      "text": "Fact retained: A new key starts with a full bucket",
+      "passed": true,
+      "evidence": "'A missing hash means a full bucket'"
+    },
+    {
+      "text": "Fact retained: Each request costs 1 token by default; cost is configurable",
+      "passed": true,
+      "evidence": "'A request spends cost tokens (default 1)'; check(api_key, cost) signature shown"
+    },
+    {
+      "text": "Fact retained: Keys expire after twice the time to refill a full bucket",
+      "passed": true,
+      "evidence": "'Keys expire after 4 idle seconds (ceil(200/100) * 2)' -- formula is twice the full-refill time"
+    },
+    {
+      "text": "Fact retained: Redis keys are named rl:<api_key>",
+      "passed": true,
+      "evidence": "'State is a hash at rl:<api_key>'"
+    },
+    {
+      "text": "Fact retained: On a Redis error it fails open: allows the request and logs a warning",
+      "passed": true,
+      "evidence": "'On any RedisError, check logs a warning and allows the request'"
+    },
+    {
+      "text": "Fact retained: Fail-open reason: a Redis outage must not take down balance serving",
+      "passed": true,
+      "evidence": "'because a Redis outage must not take down balance serving'"
+    },
+    {
+      "text": "Fact retained: Denied requests get retry_after = ceil(missing tokens / rate)",
+      "passed": true,
+      "evidence": "'retry_after is the time to refill the shortfall, rounded up'"
+    },
+    {
+      "text": "Fact retained: retry_after is at least 1 second",
+      "passed": true,
+      "evidence": "'minimum 1'"
+    }
+  ],
+  "summary": {
+    "passed": 15,
+    "failed": 0,
+    "total": 15,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "total_tool_calls": 0,
+    "output_chars": 1817,
+    "errors_encountered": 0
+  },
+  "eval_feedback": {
+    "suggestions": [
+      "Assertion list misses the tostring(tokens) detail (Redis truncates Lua numbers to integers); this response states it correctly.",
+      "Assertion list misses the cost > capacity trap (always denied, but a finite retry_after is returned); this response states it correctly.",
+      "Assertion list misses the operational cost of fail-open (no rate limiting on any replica during an outage); this response states it."
+    ],
+    "overall": "All 15 facts retained accurately in 1817 chars. No factual errors found; the claim that the repo has no callers of check is true (only CLAUDE.md and token_bucket.py exist). The refill fact is the least explicit ('come back at 100 per second up to the cap'), but it still conveys rate-based capped refill."
+  }
+}

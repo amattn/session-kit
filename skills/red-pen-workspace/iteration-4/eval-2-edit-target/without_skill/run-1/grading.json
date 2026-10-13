@@ -1,0 +1,124 @@
+{
+  "expectations": [
+    {
+      "text": "Fact retained: Duration and grid are independent concepts",
+      "passed": true,
+      "evidence": "L8: \"The two are independent.\" with Duration/Grid definitions L5-6."
+    },
+    {
+      "text": "Fact retained: A 45-minute meeting on a 30-minute grid strands 15 minutes",
+      "passed": true,
+      "evidence": "L8: \"A 45-minute meeting on a 30-minute grid takes two consecutive slots and strands the 15 minutes after it.\""
+    },
+    {
+      "text": "Fact retained: Grid is set per meeting type by the firm",
+      "passed": true,
+      "evidence": "L12: \"The grid is set per meeting type by the firm. Neither the booker nor the advisor chooses it.\""
+    },
+    {
+      "text": "Fact retained: 30-minute grid types: kickoff, follow-up, plan review, review follow-up, office drop-in, hold",
+      "passed": true,
+      "evidence": "L16 table: 30 min row lists all six types unchanged."
+    },
+    {
+      "text": "Fact retained: 15-minute grid types: intro call, quick check-in, workshop, other on-site session",
+      "passed": true,
+      "evidence": "L17 table: 15 min row lists all four types unchanged."
+    },
+    {
+      "text": "Fact retained: Office drop-in is 15 minutes on a 30-minute grid, for half-hour arrival waves",
+      "passed": true,
+      "evidence": "L21: drop-in is 15 minutes on a 30-minute grid, deliberate, \"the front desk gets predictable half-hour arrival waves\"."
+    },
+    {
+      "text": "Fact retained: On-site sessions use a 15-minute grid because meeting-room time is scarcest",
+      "passed": true,
+      "evidence": "L22: on-site sessions \"use a 15-minute grid because meeting-room time is the scarcest resource\"."
+    },
+    {
+      "text": "Fact retained: Only three slots are shown by default",
+      "passed": true,
+      "evidence": "L28: \"show three slots by default\" behavior; \"Only three are shown today because a wall of times is harder to book from\"."
+    },
+    {
+      "text": "Fact retained: 45 should be a span on the 15-minute lattice, not a step size",
+      "passed": true,
+      "evidence": "L30-32: step size is the wrong model; \"45-minute block placed on the existing 15-minute grid\" (lattice renamed \"grid\"; span/step distinction intact)."
+    },
+    {
+      "text": "Fact retained: Two 45-minute meetings tile a 90-minute block",
+      "passed": true,
+      "evidence": "L35: \"Two 45s fill a 90-minute opening exactly, with nothing left over.\""
+    },
+    {
+      "text": "Fact retained: Capability 1: fill a dedicated 90-minute gap",
+      "passed": true,
+      "evidence": "L39: \"Fill a 90-minute opening. Recognize a 90-minute opening as the natural home for two 45-minute meetings\"."
+    },
+    {
+      "text": "Fact retained: Capability 2: align to edges left by existing bookings",
+      "passed": true,
+      "evidence": "L40: \"Align to existing bookings. Start or end a 45-minute meeting at the edges the advisor's booked day already creates\"."
+    },
+    {
+      "text": "Fact retained: Slot score ranks by closeness to noon: Strong within 2 hours, Fair within 4, Weak beyond",
+      "passed": true,
+      "evidence": "L49: \"Strong within 2 hours (10am-2pm), Fair within 4 hours (8am-4pm), Weak beyond.\""
+    },
+    {
+      "text": "Fact retained: Edge-based ranking was withdrawn because advisors rejected outside-in filling",
+      "passed": true,
+      "evidence": "L54: edge-based ranking \"was tried and replaced by closeness to noon because advisors rejected having their days filled from the outside in.\""
+    },
+    {
+      "text": "Fact retained: Adjacent-slot checking code remains but nothing calls it",
+      "passed": true,
+      "evidence": "L50: \"The code remains; nothing calls it.\""
+    },
+    {
+      "text": "Fact retained: A dynamic edge-aware rule for fragmented days is parked, not a priority",
+      "passed": true,
+      "evidence": "L64-69: \"A possible future rule would therefore be dynamic...\" and \"This is explicitly not a priority.\""
+    },
+    {
+      "text": "Fact retained: 45-minute support is a placement change, not a ranking change",
+      "passed": true,
+      "evidence": "L78: \"45-minute support is a placement change, not a ranking change.\""
+    },
+    {
+      "text": "Fact retained: Adaptive grid shapes: grid follows the meeting, grid follows the gap",
+      "passed": true,
+      "evidence": "L86-87: \"Grid follows the meeting being booked.\" / \"Grid follows the gap.\""
+    },
+    {
+      "text": "Fact retained: The booking UI passes the chosen duration as the grid",
+      "passed": true,
+      "evidence": "L93: \"that duration currently also acts as the grid, overriding the meeting type's configured grid.\""
+    },
+    {
+      "text": "Fact retained: The duration/grid entanglement may be work in progress and needs a deliberate answer",
+      "passed": true,
+      "evidence": "L95: \"This may be work in progress rather than a defect... Either way it needs a deliberate decision\"."
+    }
+  ],
+  "summary": {
+    "passed": 20,
+    "failed": 0,
+    "total": 20,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "total_tool_calls": 0,
+    "output_chars": 9628,
+    "errors_encountered": 0
+  },
+  "eval_feedback": {
+    "suggestions": [
+      "Terminology drift: the original's \"15-minute lattice\" becomes \"15-minute grid\" (L32, L42, L48). The section defines \"grid\" as the start times offered, so \"keep 15 minutes as the underlying grid\" can read as putting every type on a 15-minute grid. That contradicts the working 30-minute default and blurs the distinction the section is built on. The fact still passes on substance.",
+      "Added claims not in the original: \"smaller, lower-risk engine change\" (L42; the original said \"smaller and better-behaved\"), \"two unusable fragments\" (L62), \"when it's most avoidable\" (L56), and \"Start or end\" a meeting at edges (L40; the original said \"anchor\").",
+      "Added framing: a \"Recommendation:\" label (L42), \"Open issue:\" in the 6.5 heading, the 6.3 heading renamed to \"Interaction with how slots are ranked\", and the open questions turned into a bullet list. These are structural, and consistent with the original.",
+      "L93 adds \"the model §6.2 recommends against\". This cross-reference is accurate."
+    ],
+    "overall": "20/20 facts retained. It is the longest output, at 9628 chars against 8053 for new_skill and 6515 for old_skill, so it made the lightest edit. The main risk is lattice->grid terminology drift, plus a few small added intensifiers (\"lower-risk\", \"unusable\")."
+  }
+}
