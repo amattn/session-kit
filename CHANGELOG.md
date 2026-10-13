@@ -4,6 +4,13 @@ All notable changes to session-kit. Versions track the plugin version in `.claud
 
 ## [Unreleased]
 
+### Added
+- `/red-pen` v0.3.0: sentence and paragraph rules borrowed from ASD-STE100 at about 80% strength (sentence length, one instruction per step, active voice, one topic per paragraph, one term per concept, no compression below English)
+  - Cut pass checks which facts the cut left out
+  - Agents are a named reader type
+  - `symptoms.py` counts average sentence length, long sentences and list items, long paragraphs, passive voice, and likely term switches
+  - README Origin credits the article that prompted it
+
 ### Changed
 - `/red-pen` v0.2.5: How It Fits section trimmed
 

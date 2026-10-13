@@ -10,6 +10,9 @@ Counts are signals, not verdicts. A table and the prose that teaches its rows
 are one rule in two registers; a repeated phrase inside a code block is code.
 Restatement is matched literally (5-word runs); paraphrased restatement, the
 kind that matters most, is not detected and has to be counted by the reader.
+Passive voice and term switches are estimates: a regex, not a parser. Noun
+stacks and telegraphic fragments are not detected. None of these counts can
+see a lost fact; compare the facts in the before and after yourself.
 """
 import argparse, json, re, statistics, sys
 from collections import defaultdict
@@ -20,6 +23,11 @@ DATED = r"\b(?:DECIDED|RESOLVED|ANSWERED|Refined|Updated|Amended|Superseded)\b[^
 FORWARD = r"\b(?:see below|as described above|as noted (?:above|earlier)|described above|discussed above|more on this below|as we will see)\b"
 NARRATION = r"\b(?:as requested|I've now|I have now|we've now|per (?:the|your) (?:request|instruction)|in this (?:document|section) we|this (?:document|section) (?:describes|covers|explains|will))\b"
 SCAFFOLD = r"^#{1,6}\s+(?:Overview|Introduction|Summary|Conclusion|Background|Next steps)\b"
+PASSIVE = r"\b(?:is|are|was|were|be|been|being)\s+(?:\w+ly\s+)?(?:\w+ed|built|done|made|given|taken|written|sent|kept|set|shown|seen|known|run|held|left|found|broken|chosen|driven)\b"
+# Pairs that usually name one concept; both appearing in one document is a likely term switch.
+TERM_PAIRS = [("folder", "directory"), ("repo", "repository"), ("argument", "parameter"),
+              ("delete", "remove"), ("setting", "option"), ("user", "customer"),
+              ("function", "method"), ("error", "failure"), ("launch", "start")]
 
 def strip_code(text):
     return re.sub(r"```.*?```", "\n", text, flags=re.S)
@@ -65,6 +73,23 @@ def restated(sents, n=5, min_count=2):
     out.sort(key=lambda x: (-x[1], -len(x[0])))
     return out
 
+def sentence_stats(prose):
+    body = re.sub(r"^#{1,6}.*$", "", prose, flags=re.M)
+    body = re.sub(r"^\|.*\|\s*$", "", body, flags=re.M)
+    long_steps = long_other = 0; lengths = []; long_paras = 0
+    for para in re.split(r"\n\s*\n", body):
+        lines = [l for l in para.split("\n") if l.strip()]
+        if not lines: continue
+        is_list = all(re.match(r"\s*(?:[-*]|\d+\.)\s", l) for l in lines[:1])
+        text = " ".join(re.sub(r"^\s*(?:[-*]|\d+\.)\s+", "", l) for l in lines)
+        sents = [x for x in re.split(r"(?<=[.!?])\s+(?=[A-Z`*\"(])", text) if len(x.split()) >= 3]
+        if not is_list and len(sents) > 6: long_paras += 1
+        for x in sents:
+            n = len(x.split()); lengths.append(n)
+            if is_list and n > 20: long_steps += 1
+            elif not is_list and n > 25: long_other += 1
+    return lengths, long_steps, long_other, long_paras
+
 def analyze(text):
     prose = strip_code(text)
     words = len(re.findall(r"\S+", prose))
@@ -81,8 +106,17 @@ def analyze(text):
     if started and n > 0: sec_lengths.append(n)
     sents = sentences(prose)
     rest = restated(sents)
+    lengths, long_steps, long_other, long_paras = sentence_stats(prose)
+    low = prose.lower()
+    switches = [f"{a}/{b}" for a, b in TERM_PAIRS if re.search(rf"\b{a}s?\b", low) and re.search(rf"\b{b}s?\b", low)]
     r = {
         "words": words,
+        "avg_sentence_words": round(sum(lengths) / len(lengths), 1) if lengths else 0,
+        "long_list_items": long_steps,
+        "long_sentences": long_other,
+        "long_paragraphs": long_paras,
+        "passive_estimate": len(re.findall(PASSIVE, prose, flags=re.I)),
+        "possible_term_switches": switches,
         "headers": len(heads),
         "words_per_header": round(words / len(heads)) if heads else None,
         "sentence_headers": len(sent_heads),
@@ -107,6 +141,9 @@ ROWS = [("words","words"),("headers","headers"),("sentence_headers","headers tha
         ("openers","'This is / That is / Note that' openers"),("hedges","hedges"),
         ("dated_markers","dated status markers"),("forward_refs","'see below / as noted above'"),
         ("narration","session narration"),("restated_phrases","phrases restated across sentences"),
+        ("avg_sentence_words","average sentence length (words)"),("long_list_items","list items over 20 words"),
+        ("long_sentences","prose sentences over 25 words"),("long_paragraphs","paragraphs over 6 sentences"),
+        ("passive_estimate","passive voice (estimate)"),
         ("em_dashes_per_1k","em-dashes per 1k words")]
 
 def render(label, r):
@@ -115,6 +152,8 @@ def render(label, r):
         lines.append(f"  {name:<42} {r[k]}")
     s = r["section_words"]
     lines.append(f"  {'section words min/median/max':<42} {s['min']}/{s['median']}/{s['max']} (n={s['n']})")
+    if r["possible_term_switches"]:
+        lines.append("  possible term switches: " + ", ".join(r["possible_term_switches"]))
     if r["restated_top"]:
         lines.append("  restated, most frequent:")
         for t in r["restated_top"]:

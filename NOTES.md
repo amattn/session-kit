@@ -587,6 +587,17 @@ Same 8 cases, skill v0.2.0, 67 assertions. Graders: 84% vs 48%. Blind side-by-si
 - **From the graders, open:** graders still disagree with the user on pr-description (3/7 on length and a per-file list; the user preferred it). Several assertions do not discriminate (code-comments 8/8 vs 7/8, too-long 9/9 vs 8/9). Invented or unsupported claims still appear in both configurations.
 - **Skill at v0.2.1.** These changes are untested; a fourth iteration would confirm them.
 
+### /red-pen borrows from ASD-STE100 at 80% (2026-10-13)
+
+Prompted by Kruno Golubić, "ASD-STE100: What It Is and What It Has to Do with LLMs" (2026-10-02), on Andrej Karpathy's tip to ask an LLM for "80% of the way to ASD-STE100". User: "I think it aligns with redpen."
+
+- **Red-pen worked on the document; STE works on the sentence.** Red-pen had almost no sentence-level rules. Added: about 20 words per step and 25 elsewhere, one instruction per step, active voice unless the actor is unknown, one topic per paragraph of at most about six sentences, one term per concept.
+- **Took the rules, not the 900-word dictionary.** The dictionary would fight developer vocabulary, and the article reports that the strict version loses facts: in a small test, loose "Simple Technical English" lost 8.5% of code-specific facts and full ASD-STE100 lost 46.8%. That is the over-cutting the user caught on the Vog specs, measured.
+- **Guards against over-compression:** keep articles and verbs, stack at most three nouns, and a new cut-pass step that lists the facts before cutting and checks each survived.
+- **Agents as readers.** From the article: an agent reading another agent's output cannot ask what was meant. Added as a named reader type.
+- **Counted, not opinion:** "'Clearly' is an opinion, while STE rules you can count." `symptoms.py` now counts sentence length, long paragraphs, passive voice (estimate), and likely term switches.
+- **Eval result (iteration 4):** 46 facts enumerated before the runs, three cases, one run per configuration. v0.3.0 kept 45/46, the same as v0.2.5; no skill kept 46/46 at 2 to 3.5 times the length and added unsupported claims in two of three cases. Average sentence length fell in every case (for example 18.3 to 14.7 words explaining code). On the section edit all three kept 20/20 facts; v0.3.0 had no meaning changes, v0.2.5 had two small ones, and no skill switched "lattice" to "grid", the term switch the new rule targets. At 80% strength the rules did not reproduce the article's fact loss. Limits: one run each, fact lists written by the skill author, graders from the same model family. Record: `skills/red-pen-workspace/iteration-4/summary.md`.
+
 ### vog_kit is out of scope (2026-10-02)
 
 User: "pls totally disregard vog_kit." No syncing, mirroring, or follow-ups there; session-kit's copy of /multi-adversarial-review is the only one this project maintains.

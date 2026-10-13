@@ -1,6 +1,6 @@
 ---
 name: red-pen
-version: 0.2.5
+version: 0.3.0
 description: "Writing directives for every output type — spec/plan, code comments, code and diffs, chat. Makes AI-generated text less painful to read by substituting explicit constraints (word budgets, a named reader, mandatory prioritization, a cut pass) for the editing cost that generated text never pays. Use when the user asks to 'red-pen', 'red pen this', 'tighten this', 'cut this down', 'too long', 'too wordy', 'less fluff', 'stop narrating', 'this reads like AI', 'edit this', 'set up writing conventions', or 'writing directives'. Also apply these rules always-on, without invocation, before writing any spec, plan, design note, code comment, diff, commit message, or chat reply — decide the output type first, then write to its rules. Also trigger the bootstrap flow when setting up a project's AGENTS.md and/or CLAUDE.md if no writing conventions are defined yet."
 user-invocable: true
 allowed-tools: Bash(${CLAUDE_SKILL_DIR}/scripts/*)
@@ -49,7 +49,7 @@ The same defaults do different damage in different places: a bloated spec wastes
 
 ## Shared Core (applies everywhere)
 
-- **Know the readers.** Name them before writing. For each: what they already know, what they decide, where they stop reading. Default reader for code, comments, and chat: an insider who knows this codebase and this thread. Specs and anything with more than one reader name theirs explicitly. When a named reader may not share a term, gloss it once in the sentence that first uses it ("a token bucket, a burst allowance that refills at a fixed rate") rather than avoiding the term.
+- **Know the readers.** Name them before writing. For each: what they already know, what they decide, where they stop reading. Default reader for code, comments, and chat: an insider who knows this codebase and this thread. Specs and anything with more than one reader name theirs explicitly. A reader can be an agent: an agent reading another agent's output (a tool description, an error message, a handoff note) cannot ask what was meant, so write for it the way you would for a reader who cannot reply. When a named reader may not share a term, gloss it once in the sentence that first uses it ("a token bucket, a burst allowance that refills at a fixed rate") rather than avoiding the term.
 - **Layers are stopping points.** One layer per distinct stop. Each layer is complete for the reader who stops there and assumes everything above it. Readers who stop at the same depth share a layer. A document may stack layers top-down by audience, repeat them per section with a summary first, or split a layer out as a derived artifact (a summary document that points at its full source); the preamble says which. One reader means one layer: answer first.
 - **Readers who differ in what they know get separate artifacts**, linked, not one artifact that serves neither.
 - **Omit what the reader already knows.** Restating the prompt, the diff, or the previous message is a bug.
@@ -58,6 +58,19 @@ The same defaults do different damage in different places: a bloated spec wastes
 - **No scaffolding that carries no information.** No headers on short sections, no bold on every lead, no closing summary that repeats the body, no "it's worth noting", "in summary", "let me explain". Structure that isolates one fact per line is not scaffolding; do not fold a standalone bullet into a paragraph to save a line.
 - **Prefer checkable to fluent.** Lists of assumptions, "X breaks if Y", "chose A over B because C" beat paragraphs.
 - **Numbers over adjectives.** "~40ms" not "fast"; "3 call sites" not "several".
+
+---
+
+## Sentences and Paragraphs
+
+Borrowed from ASD-STE100 Simplified Technical English at about 80% strength. Counted rules, not taste: "clearly" is an opinion, a word count is not. The full standard, with its 900-word dictionary, makes text shorter by throwing out content the reader needed; take the rules, not the dictionary.
+
+- **Short sentences.** At most about 20 words in an instruction or a procedure step, about 25 elsewhere. A longer sentence usually carries two ideas; split it.
+- **One instruction per step.** A step that says "do X and then Y" is two steps.
+- **Active voice.** Use the passive only when the actor is unknown or does not matter.
+- **One topic per paragraph,** at most about six sentences.
+- **One term per concept.** Pick "folder" or "directory" and keep it for the whole document. A second word for the same thing makes the reader check whether it is a second thing.
+- **Do not compress below English.** Keep articles and verbs; never write telegraphic fragments to save words. Stack at most three nouns ("webhook retry policy", not "partner webhook retry backoff policy"). Shorter is the goal only while every fact survives.
 
 ---
 
@@ -205,8 +218,9 @@ Run it before delivering anything longer than a sentence. Read the draft as the 
 3. If a preamble sentence could be deleted without a reader losing a way to stop early, delete it.
 4. Check the asks: each one fires a § Surface by Stakes signal, and a tell that should have been an ask is the costlier miss.
 5. Check provenance: every number and every concrete claim traces to the record, the thread, or the source. One that does not is either cut or labelled an estimate with its basis. An invented figure reads as fluent and is the hardest error for the reader to find.
-6. Check the mode's budget and anti-patterns.
-7. Check that the first sentence is the thing the reader came for.
+6. Check what the cut left out. Before cutting, list the facts the text carries: rules, numbers, names, conditions, consequences. After cutting, check each one survived, or that dropping it was a choice the reader would agree with. Shortening that loses facts is not editing.
+7. Check the mode's budget and anti-patterns.
+8. Check that the first sentence is the thing the reader came for.
 
 The cut pass is the step generated text skips. It is not optional.
 
@@ -239,7 +253,7 @@ Example AGENTS.md and/or CLAUDE.md section:
 | Code / diff / commit | Smallest diff that does the job. Match repo idioms. No speculative abstraction, no defensive noise, no placeholder stubs. Commit subject `<verb> <what>: <brief description>`; body only for a non-obvious decision. |
 | Chat | Answer first. Length matches the question. No restating, no performative phrases. Formatting is rare. One question back at most. |
 
-Everywhere: name the readers and omit what they know. One layer per distinct
+Everywhere: name the readers and omit what they know. Sentences of about 20 words in steps and 25 elsewhere, active voice, one term per concept, and never at the cost of a fact. One layer per distinct
 stopping point, ordered by who stops first; one reader means answer first. Pace by
 uncertainty: settled things get one line. Surface by stakes: record what has no real
 alternative, tell in one line what you chose for a reason, ask when a reader owns it,
@@ -255,6 +269,7 @@ Readers (default for code, comments, chat: an insider who knows this codebase an
 | product / managers | the roadmap and the users | scope, business rules | business logic |
 | design | the flows | interaction and visual choices | design |
 | eng ICs | the codebase | implementation | the end |
+| agent | the prompt it is given, nothing else | what to call or do next | the first instruction it can act on |
 ```
 
 ---

@@ -444,6 +444,7 @@ Agent: (adds to Important Concepts & Insights, under "From the user")
 **Ongoing:** Always-on — no invocation needed. Before writing anything, the agent decides which output type it is producing, writes to that type's rules, and runs a cut pass before delivering. Your side:
 - Say `red-pen this` or `/red-pen <file>` to edit a file or section against the rules — the file is edited and you get a short report: what was found, one before/after paragraph, and a small symptom table
 - Say `too long` or `too wordy` — the agent re-runs the cut pass on its last output and resends, no explanation
+- Sentences stay short (about 20 words in steps, 25 elsewhere), active, and consistent in their terms, borrowed from Simplified Technical English at about 80% strength; every cut is checked for lost facts
 - Ask for a plan, spec, or design note — it opens with a preamble saying who it's for and how to read it, then what it needs from you, not an overview
 - Override a default for the project (a bigger spec budget, a different reader) — it's recorded in the Writing Conventions block, and so is any cut you reject, so the next pass starts calibrated
 - The report after an edit is by symptom, not word count: `scripts/symptoms.py --compare before.md after.md` counts restated phrases, "This is / That is" openers, bold leads, dated markers, and header density
@@ -609,6 +610,8 @@ Developed and refined over hundreds of AI-assisted development sessions, then ex
 `/fast-chat` was strongly inspired by [snarktank's Ralph skills](https://github.com/snarktank/ralph).
 
 `/multi-adversarial-review` was developed in [vog_kit](https://github.com/amattn/vog_kit) while building the Vog language and is now maintained here; vog_kit carries the Codex-host variant and the prior-art survey it was built from.
+
+`/red-pen`'s sentence-level rules borrow from ASD-STE100 Simplified Technical English at about 80% strength, a framing from Kruno Golubić's [ASD-STE100: What It Is and What It Has to Do with LLMs](https://kgolubic.com/posts/asd-ste100-and-llms/) and the Andrej Karpathy post it discusses.
 
 `/red-pen` was inspired by Ayman Nadeem's [Plan Mode Is Dead](https://www.aymannadeem.com/artificial/intelligence,/developer/tools/2026/09/24/plan-mode-is-dead.html).
 

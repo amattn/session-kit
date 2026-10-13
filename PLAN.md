@@ -122,12 +122,16 @@ Added as `references/copy-review.md` with hooks in SKILL.md and HELP.md; /red-pe
 
 Rebased onto the May changes (/start, OpenCode, /warmup scaffolding). Plugin 0.10.0, marketplace metadata 0.6.0; /red-pen and /multi-adversarial-review added to both manifests. Tagged v0.10.0.
 
+### 23. /red-pen v0.3.0: sentence rules from ASD-STE100 ✓
+
+Sentence and paragraph rules at about 80% strength, a lost-facts check in the cut pass, agents as readers, and new symptom counts. Iteration 4 measured fact retention: 45/46 for both v0.3.0 and v0.2.5, with shorter sentences and no meaning drift on the edit.
+
 ## Next Steps
 
 ### Description optimization
 
 Run the skill-creator trigger optimization loop on each skill's description to improve triggering accuracy.
 
-### /red-pen eval iteration 4 (optional)
+### /red-pen eval iteration 5 (optional)
 
 Confirm v0.2.1+ fixes; replace the assertions that do not discriminate; align the pr-description assertions with the owner's preference.
