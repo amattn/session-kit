@@ -633,7 +633,7 @@ Codex, last in the chain, reviewed 2025615 on top of stages 1b and 2. Five findi
 
 - **What sequencing found:** stage 1b's fact-list fix was half done, because step 0 still said to fix symptoms before step 1 listed the facts. Stage 2 had checked the worked example's opener count against the script's regex, not against the row's label.
 - **Fixed:** step 0 now only measures; The Job #3 detects the managed block, so other style rules no longer block bootstrap; `symptoms.py` counts `1)` and blockquoted steps; the opener label matches the script.
-- **Pending owner ruling:** what the reply is when the target is pasted text, not a file (F3).
+- **Ruled: pasted text comes back ready to copy** (F3). User: "if something is pasted in we can assume tht the maintainer will copy the results out to paste where they need to go." The reply is the edited text in one fenced block, then one line naming any fact dropped or stale claim found; no before/after pair and no table. The fence is the lead's addition, from the README-fence insight (a fence copies as one unit). Rejected: the file report with the text in place of the path line; asking where to write it.
 
 ### vog_kit is out of scope (2026-10-02)
 

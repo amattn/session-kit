@@ -293,6 +293,8 @@ When the user points /red-pen at something ("red-pen this", `/red-pen docs/desig
    - Nothing else. No narration of each cut, no word count unless the reader asked. Under 150 words outside the pair. `references/worked_example.md` is the shape.
 4. Do not add anything the original lacked unless the mode requires it (a Mode 1 doc with no preamble gets one; it does not get an Overview).
 
+Pasted text has no file; the user will copy the result to where it goes. The reply is the edited text in one fenced block, then one line naming any fact dropped or stale claim found. No pair and no table: the before is already on screen.
+
 ### Independent review
 
 The author of a document cannot see what its reader does not know. For a document that matters (a spec others will ratify, a README, anything with several audiences), an editing pass by the author is not a review. If the project has /multi-adversarial-review, use its `copy` target: one independent reviewer per named reader, findings that quote the sentence and name the symptom, and a disposition for each. This skill supplies the vocabulary that review uses: the symptom list, the reader roster, and the writing conventions. A cut the owner rejects there becomes a project override here.
