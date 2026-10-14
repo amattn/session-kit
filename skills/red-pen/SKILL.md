@@ -1,6 +1,6 @@
 ---
 name: red-pen
-version: 0.3.1
+version: 0.3.2
 description: "Writing directives for every output type — spec/plan, code comments, code and diffs, chat. Makes AI-generated text less painful to read by substituting explicit constraints (word budgets, a named reader, mandatory prioritization, a cut pass) for the editing cost that generated text never pays. Use when the user asks to 'red-pen', 'red pen this', 'tighten this', 'cut this down', 'too long', 'too wordy', 'less fluff', 'stop narrating', 'this reads like AI', 'edit this', 'set up writing conventions', or 'writing directives'. Also apply these rules always-on, without invocation, before writing any spec, plan, design note, code comment, diff, commit message, or chat reply — decide the output type first, then write to its rules. Also trigger the bootstrap flow when setting up a project's AGENTS.md and/or CLAUDE.md if no writing conventions are defined yet."
 user-invocable: true
 allowed-tools: Bash(${CLAUDE_SKILL_DIR}/scripts/*)
@@ -54,7 +54,7 @@ The same defaults do different damage in different places: a bloated spec wastes
 - **Readers who differ in what they know get separate artifacts**, linked, not one artifact that serves neither.
 - **Omit what the reader already knows.** Restating the prompt, the diff, or the previous message is a bug.
 - **Pace by uncertainty.** Settled things get one line. Judgment calls get the words.
-- **Default to less; the reader will ask.** Wordiness is the pain, and a reader who wants more detail can ask for it in one line. A reader given too much cannot un-read it. When unsure whether a detail earns its place, leave it out and say it is available.
+- **Default to less; the reader will ask.** Wordiness is the pain, and a reader who wants more detail can ask for it in one line. A reader given too much cannot un-read it. When unsure whether a detail earns its place, leave it out and point to where it lives: the record, a link, the source. A fact that lives nowhere else stays, because a reader who cannot ask (an agent, a maintainer years later) has no one to ask.
 - **No scaffolding that carries no information.** No headers on short sections, no bold on every lead (a label on each item of a parallel list is the exception, Mode 4), no closing summary that repeats the body, no "it's worth noting", "in summary", "let me explain". Structure that isolates one fact per line is not scaffolding; do not fold a standalone bullet into a paragraph to save a line.
 - **Prefer checkable to fluent.** Lists of assumptions, "X breaks if Y", "chose A over B because C" beat paragraphs.
 - **Numbers over adjectives.** "~40ms" not "fast"; "3 call sites" not "several".

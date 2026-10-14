@@ -610,8 +610,8 @@ First MAR run on /red-pen, target `spec`. GLM could not connect (its API failed 
   - Bold labels on parallel-list items are the stated exception to "no bold on every lead".
   - The worked example taught fact loss.
   - Also: The Job #2, cut-pass step 9 after the preamble, `symptoms.py` usage notes, and the bootstrap block trimmed to its budget.
+- **Ruled (v0.3.2):** "default to less" means point to where a fact lives; a fact that lives nowhere else stays. User: "1 you lean is correct." Chose over scoping the rule to chat only, which would have dropped it for documents.
 - **Deferred to the owner:**
-  - How far "default to less" reaches for readers who cannot ask.
   - Precedence between house style, overrides, mode rules, and the shared core.
   - Whether the 300-word budget applies to an edit.
   - New finding kinds in MAR copy-review.

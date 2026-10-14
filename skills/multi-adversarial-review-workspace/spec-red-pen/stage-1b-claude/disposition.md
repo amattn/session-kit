@@ -6,7 +6,7 @@ Reviewed b58cc31. Route: Claude general-purpose subagent, No Writing Anywhere (p
 |---|---|---|---|---|---|
 | F1 | high | Worked example drops the staleness bound, invents an open item, miscounts openers (3 vs 2), shares ledgerd's 30s invariant | accepted-fixed | mechanical | Confirmed: Before L9 bound absent from After; "parked idea" not in Before; ledgerd NOTES L9. Replaced with a backup-retention text, fact list shown, counts from symptoms.py |
 | F2 | high | Fact list comes after the cutting steps | accepted-fixed | mechanical | Confirmed L216-221. Listing is now step 1; survival check step 7 |
-| F3 | high | "Default to less; the reader will ask" vs readers who cannot ask and the lost-facts check | accepted-deferred | design | Owner ruling scope. Lead's lean: "leave it out" means point to where it lives; a fact that lives nowhere else stays |
+| F3 | high | "Default to less; the reader will ask" vs readers who cannot ask and the lost-facts check | accepted-deferred, then ruled | design | Owner ruled the lead's lean on 2026-10-14 ("1 you lean is correct"): "leave it out" means point to where it lives; a fact that lives nowhere else stays. Fixed in v0.3.2 |
 | F4 | med-high | Cut-pass step 4 says a missed ask is costlier; § Surface by Stakes and NOTES say doubt goes to tell | accepted-fixed | status/canon | Confirmed vs NOTES L650. Step 5 now checks only that no ask-signal item sits in tell |
 | F5a | medium | "No telegraphic fragments" vs commit bullets, PR labels, status example | accepted-fixed | mechanical | Confirmed; the record-style rules predate v0.3.0. Records exempted |
 | F5b | medium | "No bold on every lead" vs Mode 4 bold labels | accepted-fixed | mechanical | Bold labels were the owner's v0.2.1 preference; stated as the exception |

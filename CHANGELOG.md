@@ -12,6 +12,7 @@ All notable changes to session-kit. Versions track the plugin version in `.claud
   - README Origin credits the article that prompted it
 
 ### Changed
+- `/red-pen` v0.3.2: "default to less" points to where a fact lives; a fact that lives nowhere else stays
 - `/red-pen` v0.3.1: fixes from the first MAR spec review
   - Cut pass lists the facts before cutting, not after
   - Commit default is session-kit's `<prefix>: <description>` style, replacing the retired verb style
