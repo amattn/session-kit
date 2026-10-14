@@ -80,14 +80,22 @@ def sentence_stats(prose):
     for para in re.split(r"\n\s*\n", body):
         lines = [l for l in para.split("\n") if l.strip()]
         if not lines: continue
-        is_list = all(re.match(r"\s*(?:[-*]|\d+\.)\s", l) for l in lines[:1])
-        text = " ".join(re.sub(r"^\s*(?:[-*]|\d+\.)\s+", "", l) for l in lines)
-        sents = [x for x in re.split(r"(?<=[.!?])\s+(?=[A-Z`*\"(])", text) if len(x.split()) >= 3]
-        if not is_list and len(sents) > 6: long_paras += 1
-        for x in sents:
-            n = len(x.split()); lengths.append(n)
-            if is_list and n > 20: long_steps += 1
-            elif not is_list and n > 25: long_other += 1
+        # Split a list into its items, so a bullet with no closing period does
+        # not run into the next. Numbered items are steps (20 words); bullets
+        # and prose get the general limit (25).
+        items = []
+        for l in lines:
+            m = re.match(r"\s*([-*]|\d+\.)\s+", l)
+            if m or not items: items.append([m.group(1) if m else "", l[m.end():] if m else l])
+            else: items[-1][1] += " " + l.strip()
+        for marker, text in items:
+            sents = [x for x in re.split(r"(?<=[.!?])\s+(?=[A-Z`*\"(])", text) if len(x.split()) >= 3]
+            if not marker and len(sents) > 6: long_paras += 1
+            step = marker[:-1].isdigit()
+            for x in sents:
+                n = len(x.split()); lengths.append(n)
+                if step and n > 20: long_steps += 1
+                elif not step and n > 25: long_other += 1
     return lengths, long_steps, long_other, long_paras
 
 def analyze(text):
@@ -112,7 +120,7 @@ def analyze(text):
     r = {
         "words": words,
         "avg_sentence_words": round(sum(lengths) / len(lengths), 1) if lengths else 0,
-        "long_list_items": long_steps,
+        "long_steps": long_steps,
         "long_sentences": long_other,
         "long_paragraphs": long_paras,
         "passive_estimate": len(re.findall(PASSIVE, prose, flags=re.I)),
@@ -141,7 +149,7 @@ ROWS = [("words","words"),("headers","headers"),("sentence_headers","headers tha
         ("openers","'This is / That is / Note that' openers"),("hedges","hedges"),
         ("dated_markers","dated status markers"),("forward_refs","'see below / as noted above'"),
         ("narration","session narration"),("restated_phrases","phrases restated across sentences"),
-        ("avg_sentence_words","average sentence length (words)"),("long_list_items","list items over 20 words"),
+        ("avg_sentence_words","average sentence length (words)"),("long_steps","numbered steps over 20 words"),
         ("long_sentences","prose sentences over 25 words"),("long_paragraphs","paragraphs over 6 sentences"),
         ("passive_estimate","passive voice (estimate)"),
         ("em_dashes_per_1k","em-dashes per 1k words")]

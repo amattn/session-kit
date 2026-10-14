@@ -1,7 +1,7 @@
 ---
 name: red-pen
 version: 0.3.2
-description: "Writing directives for every output type — spec/plan, code comments, code and diffs, chat. Makes AI-generated text less painful to read by substituting explicit constraints (word budgets, a named reader, mandatory prioritization, a cut pass) for the editing cost that generated text never pays. Use when the user asks to 'red-pen', 'red pen this', 'tighten this', 'cut this down', 'too long', 'too wordy', 'less fluff', 'stop narrating', 'this reads like AI', 'edit this', 'set up writing conventions', or 'writing directives'. Also apply these rules always-on, without invocation, before writing any spec, plan, design note, code comment, diff, commit message, or chat reply — decide the output type first, then write to its rules. Also trigger the bootstrap flow when setting up a project's AGENTS.md and/or CLAUDE.md if no writing conventions are defined yet."
+description: "Writing directives for every output type — spec/plan, code comments, code and diffs, chat. Makes AI-generated text less painful to read by substituting explicit constraints (counted limits, a named reader, mandatory prioritization, a cut pass) for the editing cost that generated text never pays. Use when the user asks to 'red-pen', 'red pen this', 'tighten this', 'cut this down', 'too long', 'too wordy', 'less fluff', 'stop narrating', 'this reads like AI', 'edit this', 'set up writing conventions', or 'writing directives'. Also apply these rules always-on, without invocation, before writing any spec, plan, design note, code comment, diff, commit message, or chat reply — decide the output type first, then write to its rules. Also trigger the bootstrap flow when setting up a project's AGENTS.md and/or CLAUDE.md if no writing conventions are defined yet."
 user-invocable: true
 allowed-tools: Bash(${CLAUDE_SKILL_DIR}/scripts/*)
 ---
@@ -15,7 +15,7 @@ allowed-tools: Bash(${CLAUDE_SKILL_DIR}/scripts/*)
 
 AI-generated text is painful to read. Not because it is wrong, but because it is unedited. A human writer pays for every sentence in time and effort, and that cost acts as a filter: what survives is what the author judged worth the reader's attention. Generated text has no such cost, so nothing filters it.
 
-/red-pen is the editor. It substitutes explicit constraints for the missing cost: word budgets stand in for effort, a named reader stands in for the author's sense of audience, mandatory prioritization stands in for editorial judgment, a required cut pass stands in for revision.
+/red-pen is the editor. It substitutes explicit constraints for the missing cost: counted limits stand in for effort, a named reader stands in for the author's sense of audience, mandatory prioritization stands in for editorial judgment, a required cut pass stands in for revision. The goal is clarity; shorter text is a side effect, not the target.
 
 **This is an always-on writing style, not just a tool you invoke.** Invoking `/red-pen` runs the bootstrap (writes conventions to AGENTS.md and/or CLAUDE.md) or edits a target. The rules themselves apply to everything you write, every time, no setup required.
 
@@ -65,7 +65,7 @@ The same defaults do different damage in different places: a bloated spec wastes
 
 Borrowed from ASD-STE100 Simplified Technical English at about 80% strength. Counted rules, not taste: "clearly" is an opinion, a word count is not. The full standard, with its 900-word dictionary, makes text shorter by throwing out content the reader needed; take the rules, not the dictionary.
 
-- **Short sentences.** At most about 20 words in an instruction or a procedure step, about 25 elsewhere. A longer sentence usually carries two ideas; split it.
+- **Short sentences.** At most about 20 words in a numbered step, about 25 elsewhere. A longer sentence usually carries two ideas; split it.
 - **One instruction per step.** A step that says "do X and then Y" is two steps.
 - **Active voice.** Use the passive only when the actor is unknown or does not matter.
 - **One topic per paragraph,** at most about six sentences.
@@ -104,7 +104,7 @@ Shape:
 - **Scope out.** What you are deliberately not doing, one line each.
 - Everything else (background, exploration notes, alternatives considered in detail) is omitted or linked, not inlined.
 
-Budget: 300 words default. Exceed only when a decision is contested, and say so in the document's first line, not in the chat reply; the reader of the document is the one who needs to know. Open items are not a reason to run over: cut elsewhere first.
+Length: about 300 words is a tripwire, not a target. A spec over it gets checked for symptoms (restated rules, inlined background, alternatives in detail); once none are left, it is the length it needs. Open items are not a reason to run long.
 
 Pacing: do not give equal space to each section. A spec where every heading has two paragraphs under it has not been edited.
 
@@ -210,9 +210,13 @@ When unsure, use Mode 4. It is the mode with the least surface area for bloat.
 
 ## The Cut Pass
 
-Run it before delivering anything longer than a sentence. Read the draft as the copy desk chief who has to cut a third without losing a rule, then run the checks; the frame sets the stance, the checks catch what the stance misses.
+Run it before delivering anything longer than a sentence. A chat reply of a paragraph or two gets the short pass: steps 2, 7, and 9, with the fact list kept in your head. Documents, edits, and anything over its tripwire get every step.
 
-0. Anything over its mode's budget is a draft, not a deliverable. Write it, run `${CLAUDE_SKILL_DIR}/scripts/symptoms.py` on it (or the checklist below when there is no shell), cut, then deliver. The symptoms are easier to see in a draft than to avoid while writing.
+Read the draft as the copy desk chief whose job is to make it clear without losing a rule, then run the checks; the frame sets the stance, the checks catch what the stance misses.
+
+The targets are counts that reach zero, not a length: facts lost, sentences over about 25 words, rules stated twice, claims with no source, "It is / That is" openers. A second pass on the output should change nothing. A pass that keeps cutting is cutting facts.
+
+0. Anything over its mode's tripwire is a draft, not a deliverable. Write it, run `${CLAUDE_SKILL_DIR}/scripts/symptoms.py` on it (or the checklist below when there is no shell), fix what it finds, then deliver. The symptoms are easier to see in a draft than to avoid while writing.
 1. Before cutting anything, list the facts the text carries: rules, numbers, names, conditions, consequences. Step 7 checks the cut against this list.
 2. Re-read as the named reader. What do they already know? Cut it.
 3. Check the draft against § The Recognizable Shape. Any match is a cut, not a rewrite.
@@ -220,7 +224,7 @@ Run it before delivering anything longer than a sentence. Read the draft as the 
 5. Check the bins: each ask fires a § Surface by Stakes signal, and no item that fires one is sitting in tell.
 6. Check provenance: every number and every concrete claim traces to the record, the thread, or the source. One that does not is either cut or labelled an estimate with its basis. An invented figure reads as fluent and is the hardest error for the reader to find.
 7. Check what the cut left out. Each fact on the step 1 list survived, or dropping it was a choice the reader would agree with. Shortening that loses facts is not editing.
-8. Check the mode's budget and anti-patterns.
+8. Check the mode's anti-patterns.
 9. Check that the first sentence after any preamble is the thing the reader came for.
 
 The cut pass is the step generated text skips. It is not optional.
@@ -233,7 +237,7 @@ When invoked on a project for the first time:
 
 1. **Audit AGENTS.md and/or CLAUDE.md** — check for existing writing or style conventions. Some projects already have a commit style, a comment policy, or a "be concise" directive. Keep those; the block below complements them.
 
-2. **Add a Writing Conventions section** — a reference card, not a tutorial: about 250 words before the reader roster, which is a table and sits outside that budget. The shared core and the mode table, with a pointer to /red-pen for the full per-mode rules. Mark with `<!-- managed by /red-pen -->`.
+2. **Add a Writing Conventions section** — a reference card, not a tutorial: about 250 words before the reader roster (the roster is a table and does not count). The shared core and the mode table, with a pointer to /red-pen for the full per-mode rules. Mark with `<!-- managed by /red-pen -->`.
 
 3. **Seed the reader roster** — ask one question: who reads what this project produces? Propose rows from the answer (and from README, NOTES.md, and the org structure if visible). For each reader: what they know, what they decide, where they stop. A project whose only reader is the insider skips the table, and then the block states the default in one sentence instead of leaving a "Readers:" line with nothing under it. When `/start` runs this bootstrap as part of the suite, skip the question and use the insider default; say once that a roster can be added later with `/red-pen`.
 
@@ -249,13 +253,13 @@ Example AGENTS.md and/or CLAUDE.md section:
 
 | Output | Rule of thumb |
 |---|---|
-| Spec / plan / design note | Preamble: who it is for and how to read it; asks go in their own section, not the preamble. `chose A over B because C; revisit if D`. Assumptions as a tick-list, risks as `X breaks if Y`. 300-word budget. |
+| Spec / plan / design note | Preamble: who it is for and how to read it; asks go in their own section, not the preamble. `chose A over B because C; revisit if D`. Assumptions as a tick-list, risks as `X breaks if Y`. About 300 words is a tripwire, not a target. |
 | Code comment | Only why, an invariant, an external fact, or a deliberate omission. Never restate the code or narrate the session. |
 | Code / diff / commit | Smallest diff that does the job. Match repo idioms. No speculative abstraction, no defensive noise, no placeholder stubs. Commit subject `<prefix>: <description>`; body only for a non-obvious decision. |
 | Chat | Answer first. Length matches the question. No restating, no performative phrases. Formatting is rare. One question back at most. |
 
 Everywhere: name the readers and omit what they know. Sentences of about 20 words in
-steps and 25 elsewhere, active voice, one term per concept, never at the cost of a fact.
+numbered steps and 25 elsewhere, active voice, one term per concept, never at the cost of a fact.
 One layer per stopping point; one reader means answer first. Settled things get one
 line. Record what has no real alternative, tell what you chose and why, ask when a
 reader owns it, it is hard to reverse, the blast radius is large, or you guessed.
@@ -281,7 +285,7 @@ Readers (default for code, comments, chat: an insider who knows this codebase an
 When the user points /red-pen at something ("red-pen this", `/red-pen docs/design.md`, "this is too long"):
 
 1. Identify the mode and the readers from the target, not from the conversation. A design doc is Mode 1 even if the request arrived in chat. If the target names no readers, take them from the roster or ask once.
-2. Apply the mode's rules and the cut pass. Cut first; rewrite only what the cut leaves broken. Cut history, argument, and cross-section restatement; do not cut enumeration the reader scans. Where the document's house style and these rules conflict, house style wins.
+2. Apply the mode's rules and the cut pass. Cut first; rewrite only what the cut leaves broken. Cut history, argument, and cross-section restatement; do not cut enumeration the reader scans. Where the document's house style conflicts with these rules, house style wins (§ Project-specific overrides has the full order).
 3. Write the edited text to the file. The chat reply is the report, in this shape and no other, because a reader skims anything longer:
    - One line: the path written, and what was preserved (every rule, anchor, and list; name any exception). Stale or contradictory claims you found go here too, since those are the findings the reader acts on.
    - One before/after paragraph pair, next, introduced by a sentence that says what it is ("Here is one paragraph before and after, as an example of the change:"). A bare "Before (§6.3 ...):" has no context. This pair is what the reader uses to judge; it gives the flavor of the edit without a pile of detail.
@@ -300,14 +304,16 @@ That is a cut-pass failure, not a style preference. Re-run the cut pass on the l
 ### When invoked on an existing project
 
 1. Show the current Writing Conventions block
-2. Ask what the user wants to adjust — a different budget, rows in the reader roster, project-specific anti-patterns
+2. Ask what the user wants to adjust — a different tripwire, rows in the reader roster, project-specific anti-patterns
 3. Make the changes, preserving the breadcrumb
 
 ### Project-specific overrides
 
-Projects may legitimately override defaults: a public library wants fuller doc comments than Mode 2's default; a team may set a 500-word spec budget. Record overrides inside the Writing Conventions block so they load every session. The shared core does not get overridden.
+Projects may legitimately override defaults: a public library wants fuller doc comments than Mode 2's default; a team may set its spec tripwire at 500 words. Record overrides inside the Writing Conventions block so they load every session.
 
-When a reader rejects a cut, record the category as an override the same way ("keep row-by-row teaching bullets under tables", "keep one-fact sub-bullets", "spec budget 500"), so the next pass starts calibrated instead of relearning it. One line per rejection; the reason is the reader's, not yours.
+When rules conflict, the project wins, in this order: the document's house style, then recorded overrides, then the mode's rules, then the shared core.
+
+When a reader rejects a cut, record the category as an override the same way ("keep row-by-row teaching bullets under tables", "keep one-fact sub-bullets", "spec tripwire 500"), so the next pass starts calibrated instead of relearning it. One line per rejection; the reason is the reader's, not yours.
 
 ---
 

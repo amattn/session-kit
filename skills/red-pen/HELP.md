@@ -5,9 +5,9 @@
 **Ongoing:** Always-on — no invocation needed. Before writing anything, the agent decides which output type it is producing, writes to that type's rules, and runs a cut pass before delivering. Your side:
 - Say `red-pen this` or `/red-pen <file>` to edit a file or section against the rules — the file is edited and you get a short report: what was found, one before/after paragraph, and a small symptom table
 - Say `too long` or `too wordy` — the agent re-runs the cut pass on its last output and resends, no explanation
-- Sentences stay short (about 20 words in steps, 25 elsewhere), active, and consistent in their terms, borrowed from Simplified Technical English at about 80% strength; every cut is checked for lost facts
+- Sentences stay short (about 20 words in numbered steps, 25 elsewhere), active, and consistent in their terms, borrowed from Simplified Technical English at about 80% strength; every cut is checked for lost facts
 - Ask for a plan, spec, or design note — it opens with a preamble saying who it's for and how to read it, then what it needs from you, not an overview
-- Override a default for the project (a bigger spec budget, a different reader) — it's recorded in the Writing Conventions block, and so is any cut you reject, so the next pass starts calibrated
+- Override a default for the project (a higher spec tripwire, a different reader) — it's recorded in the Writing Conventions block, and so is any cut you reject, so the next pass starts calibrated
 - The report after an edit is by symptom, not word count: `scripts/symptoms.py --compare before.md after.md` counts restated phrases, "This is / That is" openers, bold leads, dated markers, header density, sentence and paragraph length, passive voice, and likely term switches
 
 **Example — editing a target:**

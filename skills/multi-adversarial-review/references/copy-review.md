@@ -84,6 +84,8 @@ Name the kind. It tells the editor what the fix is.
 | `undefined` | A term this reader was never given |
 | `scaffolding` | Headers, bold, or summaries that carry nothing |
 | `no-route` | No preamble, or no way to tell where to stop |
+| `term-switch` | A second word for one concept, and a check for whether it is a second thing |
+| `over-compressed` | Telegraphic fragments or stacked nouns to unpack before the meaning arrives |
 | `over-cut` | A rule, a step, or an enumeration the reader scans, gone or collapsed |
 
 `over-cut` is a finding like any other. A review that only ever asks for less
@@ -172,8 +174,9 @@ Append or adapt this text in the external reviewer prompt:
     Do not change what the document says. A fix that would alter a rule, a
     number, or a decision is a `meaning` finding for the owner. Every finding
     quotes its sentence, names its kind (restated, stale, unsourced, history,
-    argument-first, buried, undefined, scaffolding, no-route, over-cut), names
-    the reader affected, and proposes one change.
+    argument-first, buried, undefined, scaffolding, no-route, term-switch,
+    over-compressed, over-cut), names the reader affected, and proposes one
+    change.
 
     Keep the assessment under 300 words before the findings and do not restate
     the document. Output: Overall; Strong (what must survive any edit); Needs

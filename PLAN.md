@@ -138,4 +138,4 @@ Run the skill-creator trigger optimization loop on each skill's description to i
 
 ### /red-pen eval iteration 5 (optional)
 
-Confirm v0.2.1+ fixes; replace the assertions that do not discriminate; align the pr-description assertions with the owner's preference.
+Confirm v0.2.1+ fixes; add an idempotence case (red-pen on its own output should change almost nothing); replace the assertions that do not discriminate; align the pr-description assertions with the owner's preference.
