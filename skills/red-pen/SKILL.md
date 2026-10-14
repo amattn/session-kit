@@ -214,7 +214,7 @@ Run it before delivering anything longer than a sentence. A chat reply of a para
 
 Read the draft as the copy desk chief whose job is to make it clear without losing a rule, then run the checks; the frame sets the stance, the checks catch what the stance misses.
 
-The targets are counts that reach zero, not a length: facts lost, sentences over about 25 words, rules stated twice, claims with no source, "It is / That is" openers. A second pass on the output should change nothing. A pass that keeps cutting is cutting facts.
+The targets are counts that reach zero, not a length: facts lost, sentences over about 25 words (20 in a numbered step), rules stated twice, claims with no source, "It is / That is" openers. A second pass on the output should change nothing. A pass that keeps cutting is cutting facts.
 
 0. Anything over its mode's tripwire is a draft, not a deliverable. Write it, run `${CLAUDE_SKILL_DIR}/scripts/symptoms.py` on it (or the checklist below when there is no shell), fix what it finds, then deliver. The symptoms are easier to see in a draft than to avoid while writing.
 1. Before cutting anything, list the facts the text carries: rules, numbers, names, conditions, consequences. Step 7 checks the cut against this list.
@@ -224,7 +224,7 @@ The targets are counts that reach zero, not a length: facts lost, sentences over
 5. Check the bins: each ask fires a § Surface by Stakes signal, and no item that fires one is sitting in tell.
 6. Check provenance: every number and every concrete claim traces to the record, the thread, or the source. One that does not is either cut or labelled an estimate with its basis. An invented figure reads as fluent and is the hardest error for the reader to find.
 7. Check what the cut left out. Each fact on the step 1 list survived, or dropping it was a choice the reader would agree with. Shortening that loses facts is not editing.
-8. Check the mode's anti-patterns.
+8. Check the draft against its mode's rules (Modes 1 to 4).
 9. Check that the first sentence after any preamble is the thing the reader came for.
 
 The cut pass is the step generated text skips. It is not optional.
@@ -289,7 +289,7 @@ When the user points /red-pen at something ("red-pen this", `/red-pen docs/desig
 3. Write the edited text to the file. The chat reply is the report, in this shape and no other, because a reader skims anything longer:
    - One line: the path written, and what was preserved (every rule, anchor, and list; name any exception). Stale or contradictory claims you found go here too, since those are the findings the reader acts on.
    - One before/after paragraph pair, next, introduced by a sentence that says what it is ("Here is one paragraph before and after, as an example of the change:"). A bare "Before (§6.3 ...):" has no context. This pair is what the reader uses to judge; it gives the flavor of the edit without a pile of detail.
-   - A symptom table of at most four rows, the ones that moved most. It is evidence, and readers skim it, so keep it short and put it after the pair. `${CLAUDE_SKILL_DIR}/scripts/symptoms.py --compare before.md after.md` gives the literal counts (save the original before writing, or read it back with `git show HEAD:<path>`; `-` reads stdin); you add what it cannot see (stale claims, cross-section restatement, argument before rule, paraphrased restatement).
+   - A symptom table of at most four rows, the ones that moved most. It is evidence, and readers skim it, so keep it short and put it after the pair. `${CLAUDE_SKILL_DIR}/scripts/symptoms.py --compare before.md after.md` gives the literal counts (save the original before writing; `git show HEAD:<path>` recovers it only when the file had no uncommitted changes; `-` reads stdin); you add what it cannot see (stale claims, cross-section restatement, argument before rule, paraphrased restatement).
    - Nothing else. No narration of each cut, no word count unless the reader asked. Under 150 words outside the pair. `references/worked_example.md` is the shape.
 4. Do not add anything the original lacked unless the mode requires it (a Mode 1 doc with no preamble gets one; it does not get an Overview).
 

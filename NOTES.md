@@ -596,7 +596,7 @@ Prompted by Kruno Golubić, "ASD-STE100: What It Is and What It Has to Do with L
 - **Guards against over-compression:** keep articles and verbs, stack at most three nouns, and a new cut-pass step that lists the facts before cutting and checks each survived.
 - **Agents as readers.** From the article: an agent reading another agent's output cannot ask what was meant. Added as a named reader type.
 - **Counted, not opinion:** "'Clearly' is an opinion, while STE rules you can count." `symptoms.py` now counts sentence length, long paragraphs, passive voice (estimate), and likely term switches.
-- **Eval result (iteration 4):** 46 facts enumerated before the runs, three cases, one run per configuration. v0.3.0 kept 45/46, the same as v0.2.5; the no-skill run kept 46/46 at 2 to 3.5 times the length and added unsupported claims in two of three cases. Average sentence length fell in every case (for example 18.3 to 14.7 words explaining code). On the section edit all three kept 20/20 facts; v0.3.0 had no meaning changes, v0.2.5 had two small ones, and the no-skill run switched "lattice" to "grid", the term switch the new rule targets. At 80% strength the rules did not reproduce the article's fact loss. Limits: one run each, fact lists written by the skill author, graders from the same model family. Record: `skills/red-pen-workspace/iteration-4/summary.md`.
+- **Eval result (iteration 4):** 46 facts enumerated before the runs, three cases, one run per configuration. v0.3.0 kept 45/46, the same as v0.2.5; the no-skill run kept 46/46 at 1.2 to 3.4 times the length and added unsupported claims in two of three cases. Average sentence length fell in every case (for example 18.3 to 14.7 words explaining code). On the section edit all three kept 20/20 facts; v0.3.0 had no meaning changes, v0.2.5 had two small ones, and the no-skill run switched "lattice" to "grid", the term switch the new rule targets. At 80% strength the rules did not reproduce the article's fact loss. Limits: one run each, fact lists written by the skill author, graders from the same model family. Record: `skills/red-pen-workspace/iteration-4/summary.md`.
 
 ### /red-pen MAR spec review, stage 1 (2026-10-14)
 
@@ -617,6 +617,14 @@ First MAR run on /red-pen, target `spec`. GLM could not connect (its API failed 
 - **Ruled: a short cut pass for chat.** A chat reply of a paragraph or two runs steps 2, 7, and 9 (nothing the reader knows, no fact lost, first sentence is the answer); documents, edits, and anything over its tripwire run every step. User: "a". The short pass names step numbers rather than restating them. Rejected: one pass for everything (skipped in practice); no pass for chat.
 - **Ruled: a step is a numbered item.** The 20-word limit applies to numbered steps; bullets and prose get 25. User: "a". A numbered list is how a document marks a procedure, so the script needs no guessing. Also fixed: `symptoms.py` joined a list's items, so bullets without a closing period ran together. Rejected: every list item as a step (flagged 41 lines of SKILL.md, mostly rules); one limit everywhere. Noticed: SKILL.md itself breaks its sentence rules (9 steps over 20, 34 other sentences over 25), so red-pen gets a red-pen pass after the review chain.
 - **Possible cause of the iteration-4 miss:** both skill versions dropped the 30-second invariant, and the old worked example dropped the same kind of bound. Untested.
+
+### /red-pen MAR spec review, stage 2 (2026-10-14)
+
+GLM, the chain's first independent family, reviewed 6b6250c on top of stage 1b. It confirmed every stage-1b fix landed and broke nothing. Six findings and two nits; record: `stage-2-glm/` in the MAR workspace.
+
+- **Fixed:** iteration-4's length ratio was overstated ("2 to 3.5 times"; the table gives 1.2 to 3.4), HELP.md named CLAUDE.md only, the `git show HEAD:` fallback ignored uncommitted changes, the zero-target list omitted the 20-word step limit, and cut-pass step 8 named anti-patterns only Mode 1 has.
+- **Deferred to the final bump:** CHANGELOG entries for 6b6250c, per the hold on versions.
+- **Pending owner rulings:** whether the short pass adds step 6, the provenance check (F2); which pass a chat reply over two paragraphs runs (F3).
 
 ### vog_kit is out of scope (2026-10-02)
 

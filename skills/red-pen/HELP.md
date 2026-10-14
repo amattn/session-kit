@@ -1,6 +1,6 @@
 # /red-pen — Quick Reference
 
-**Setup:** Run `/red-pen` in your project. It adds a Writing Conventions section to CLAUDE.md: the shared core (know the reader, omit what they know, pace by uncertainty, checkable over fluent) a one-line rule of thumb per output type — spec/plan, code comment, code/diff/commit, chat — and a reader roster (who reads this project's output, what they know, what they decide, where they stop reading).
+**Setup:** Run `/red-pen` in your project. It adds a Writing Conventions section to AGENTS.md and/or CLAUDE.md: the shared core (know the reader, omit what they know, pace by uncertainty, checkable over fluent) a one-line rule of thumb per output type — spec/plan, code comment, code/diff/commit, chat — and a reader roster (who reads this project's output, what they know, what they decide, where they stop reading).
 
 **Ongoing:** Always-on — no invocation needed. Before writing anything, the agent decides which output type it is producing, writes to that type's rules, and runs a cut pass before delivering. Your side:
 - Say `red-pen this` or `/red-pen <file>` to edit a file or section against the rules — the file is edited and you get a short report: what was found, one before/after paragraph, and a small symptom table

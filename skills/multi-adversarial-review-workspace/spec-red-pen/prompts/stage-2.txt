@@ -1,0 +1,32 @@
+Adversarial review — you are an auditor, not a contributor.
+Repository: <worktree>
+Scope: the skill at <worktree>/skills/red-pen/ as of commit <sha>. Recent history: git -C <worktree> log --oneline -12.
+Target mode: spec. The artifact is a Claude Code skill: normative instructions that an AI agent loads and follows when it writes or edits text. Judge what the skill proposes and whether an agent can follow it, not its prose style.
+Capability mode: No Writing Anywhere. Do not create, edit, delete, stage, or commit files.
+
+Required authority (absolute paths). Read every listed file:
+- <worktree>/skills/red-pen/SKILL.md (the artifact, in full)
+- <worktree>/skills/red-pen/HELP.md, <worktree>/skills/red-pen/references/worked_example.md, <worktree>/skills/red-pen/scripts/symptoms.py (the rest of the skill)
+- <authority>/WRITING_DIRECTIVES.md (the source the skill was built from; read-only snapshot)
+- <worktree>/CLAUDE.md (project directives)
+- <worktree>/NOTES.md (the decision record; read every section whose heading mentions /red-pen, plus "Important Concepts & Insights")
+- <worktree>/CHANGELOG.md
+- <worktree>/skills/multi-adversarial-review/references/copy-review.md (a consumer: it says it uses red-pen's symptom list, roster, and conventions)
+- <worktree>/skills/start/SKILL.md (a consumer: it runs red-pen's bootstrap)
+- <worktree>/skills/red-pen-workspace/iteration-4/summary.md (the latest eval evidence)
+- <worktree>/skills/multi-adversarial-review-workspace/spec-red-pen/stage-1b-claude/disposition.md (the prior stage)
+Begin your response with `Authority coverage: complete` and the files read. If a listed path is inaccessible, stop and output `route-failed: authority-unavailable — <path>`.
+
+This review is cumulative. A prior stage (a Claude same-host sanity pass) reviewed b58cc31. Its dispositions are in <worktree>/skills/multi-adversarial-review-workspace/spec-red-pen/stage-1b-claude/disposition.md, and the owner rulings are in the NOTES.md entry "/red-pen MAR spec review, stage 1". The fixes are the range b58cc31..<sha>, saved as <root>/range.diff (git log and diff output; you have no shell). Build on that pass: check that each fix landed and broke nothing else, and challenge a disposition only with evidence. Then hunt separately for what that pass missed. Treat owner rulings in NOTES.md as settled unless the skill contradicts them; for example, "enumeration is not duplication", "default to less" (point to where a fact lives), the precedence order, and "numbers on symptoms, not length" are rulings, not open questions.
+
+Focus:
+- Coherence: do any two instructions contradict each other, or leave an agent unable to tell which wins (for example, word budgets vs. the lost-facts check, "default to less" vs. over-cut guards, mode rules vs. shared core)?
+- Followability: can an agent actually execute each rule, in the order given, without information it does not have? Which rules are untestable or will be silently skipped?
+- Fidelity to the source and the record: what in WRITING_DIRECTIVES.md or a NOTES.md ruling was lost, inverted, or overstated?
+- Consumers: do HELP.md, the worked example, symptoms.py, /start, and MAR's copy-review.md still match SKILL.md (names, step numbers, counts, thresholds)?
+- Evidence honesty: does anything claim more than the evals show?
+- Scope: what is in SKILL.md that does not pull its weight for the agent reading it?
+
+Finding bar: concrete evidence with file and line or section; no style nits unless they would make an agent act wrongly. Do not force findings. "No findings" is valid only if it names the weakest remaining assumption.
+
+Keep the response concise and do not restate the skill. Output: Overall assessment; Strong (up to seven); Needs work (severity-ranked, each with an identifier like F1, evidence, why it matters, and a proposed change); Viability (can an agent follow it as written); Open design (owner choices) vs Mechanical work; Readiness by topic.
