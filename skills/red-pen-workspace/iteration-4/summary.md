@@ -22,6 +22,6 @@ One run per configuration. Facts enumerated before the runs; graded by an indepe
 
 Findings:
 - The sentence rules lost no facts relative to v0.2.5: 45/46 for both. The one miss, shared by both skill versions, is the 30-second balance invariant when explaining rate-limiting decisions; arguably out of scope for that question, but it is on the list.
-- On the section edit all three kept 20/20 facts; the difference was meaning drift. v0.3.0 had none; v0.2.5 had two small meaning changes; no skill added unsupported claims and switched "lattice" to "grid", the term-switch failure the new one-term-per-concept rule targets.
+- On the section edit all three kept 20/20 facts; the difference was meaning drift. v0.3.0 had none; v0.2.5 had two small meaning changes; the no-skill run added unsupported claims and switched "lattice" to "grid", the term-switch failure the new one-term-per-concept rule targets.
 - No skill kept 46/46 but was 2 to 3.5 times longer and added claims the source does not support in two of three cases.
 - Limits: one run each, fact lists written by the skill author, graders from the same model family. The explain-code case does not discriminate (15/15 everywhere).

@@ -12,6 +12,11 @@ All notable changes to session-kit. Versions track the plugin version in `.claud
   - README Origin credits the article that prompted it
 
 ### Changed
+- `/red-pen` v0.3.1: fixes from the first MAR spec review
+  - Cut pass lists the facts before cutting, not after
+  - Commit default is session-kit's `<prefix>: <description>` style, replacing the retired verb style
+  - PR descriptions route to Mode 3; records (commit bullets, PR labels, status lines) are exempt from the no-fragments rule
+  - Worked example replaced: the old one dropped a fact and shared an eval project's invariant
 - `/red-pen` v0.2.5: How It Fits section trimmed
 
 ## [0.10.0] — 2026-10-02

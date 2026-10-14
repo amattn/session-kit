@@ -1,6 +1,6 @@
 ---
 name: red-pen
-version: 0.3.0
+version: 0.3.1
 description: "Writing directives for every output type — spec/plan, code comments, code and diffs, chat. Makes AI-generated text less painful to read by substituting explicit constraints (word budgets, a named reader, mandatory prioritization, a cut pass) for the editing cost that generated text never pays. Use when the user asks to 'red-pen', 'red pen this', 'tighten this', 'cut this down', 'too long', 'too wordy', 'less fluff', 'stop narrating', 'this reads like AI', 'edit this', 'set up writing conventions', or 'writing directives'. Also apply these rules always-on, without invocation, before writing any spec, plan, design note, code comment, diff, commit message, or chat reply — decide the output type first, then write to its rules. Also trigger the bootstrap flow when setting up a project's AGENTS.md and/or CLAUDE.md if no writing conventions are defined yet."
 user-invocable: true
 allowed-tools: Bash(${CLAUDE_SKILL_DIR}/scripts/*)
@@ -24,7 +24,7 @@ AI-generated text is painful to read. Not because it is wrong, but because it is
 ## The Job
 
 1. **Always-on**: before writing anything, decide which output type you are producing (see § Mode Selection), apply that mode's rules, then run the cut pass. If a task spans several types (implement a change, then report back), apply each mode to its part.
-2. **On invocation with a target** (`/red-pen PLAN.md`, "red-pen this section"): edit the target against the rules for its mode. Return the edited text and a one-line account of what was cut and why.
+2. **On invocation with a target** (`/red-pen PLAN.md`, "red-pen this section"): edit the target against the rules for its mode, then report as § Editing a target says.
 3. **On invocation without a target**: detect whether writing conventions exist in AGENTS.md and/or CLAUDE.md. If not, bootstrap. If yes, show the current block and ask what to adjust.
 
 ---
@@ -55,7 +55,7 @@ The same defaults do different damage in different places: a bloated spec wastes
 - **Omit what the reader already knows.** Restating the prompt, the diff, or the previous message is a bug.
 - **Pace by uncertainty.** Settled things get one line. Judgment calls get the words.
 - **Default to less; the reader will ask.** Wordiness is the pain, and a reader who wants more detail can ask for it in one line. A reader given too much cannot un-read it. When unsure whether a detail earns its place, leave it out and say it is available.
-- **No scaffolding that carries no information.** No headers on short sections, no bold on every lead, no closing summary that repeats the body, no "it's worth noting", "in summary", "let me explain". Structure that isolates one fact per line is not scaffolding; do not fold a standalone bullet into a paragraph to save a line.
+- **No scaffolding that carries no information.** No headers on short sections, no bold on every lead (a label on each item of a parallel list is the exception, Mode 4), no closing summary that repeats the body, no "it's worth noting", "in summary", "let me explain". Structure that isolates one fact per line is not scaffolding; do not fold a standalone bullet into a paragraph to save a line.
 - **Prefer checkable to fluent.** Lists of assumptions, "X breaks if Y", "chose A over B because C" beat paragraphs.
 - **Numbers over adjectives.** "~40ms" not "fast"; "3 call sites" not "several".
 
@@ -70,7 +70,7 @@ Borrowed from ASD-STE100 Simplified Technical English at about 80% strength. Cou
 - **Active voice.** Use the passive only when the actor is unknown or does not matter.
 - **One topic per paragraph,** at most about six sentences.
 - **One term per concept.** Pick "folder" or "directory" and keep it for the whole document. A second word for the same thing makes the reader check whether it is a second thing.
-- **Do not compress below English.** Keep articles and verbs; never write telegraphic fragments to save words. Stack at most three nouns ("webhook retry policy", not "partner webhook retry backoff policy"). Shorter is the goal only while every fact survives.
+- **Do not compress below English.** Keep articles and verbs; never write telegraphic fragments to save words. Records are the exception: commit bullets, PR label lines, and status updates may be terse fragments, because the reader scans them. Stack at most three nouns ("webhook retry policy", not "partner webhook retry backoff policy"). Shorter is the goal only while every fact survives.
 
 ---
 
@@ -155,11 +155,11 @@ Purpose: be read and changed by someone else. Readability is a property of the w
 - **Tests test behavior**, not that the code runs. One descriptive name per test; no test whose body is `assert True` or mirrors the implementation.
 - **Delete, don't comment out.** Version control remembers.
 - **Commit messages:** a project's own commit style in AGENTS.md and/or CLAUDE.md wins. When none is specified, use this default:
-  - Subject: `<verb> <what>: <brief description>`, under 72 chars. Common verbs: Add, Update, Fix, Drop, Rename.
+  - Subject: `<prefix>: <description>`, under 72 chars. The prefix is a lowercase whole word naming the purpose: `fix`, `feature`, `docs`, `refactor`, `test`, `chore`.
   - Body only when there's a non-obvious decision. Group related changes under short theme headers; each bullet is a concise fact, not a sentence. No bullet list of every file.
   - Skip the body for trivial commits (single-file wording tweaks, typo fixes).
   ```
-  Add retry to webhook client: exponential backoff on 5xx
+  feature: webhook client retries with exponential backoff on 5xx
 
   Mechanics:
   - 3 attempts, 200ms base, jitter
@@ -201,7 +201,7 @@ If the project uses /fast-chat, its structured formats (NL options in fenced cod
 |---|---|
 | "plan", "spec", "design", "proposal", "RFC", approval requested | Mode 1 Spec |
 | Writing inside a source file | Mode 2 Comments + Mode 3 Code |
-| Producing a diff, PR, or commit | Mode 3 Code (and Mode 4 for the PR description) |
+| Producing a diff, PR, or commit | Mode 3 Code, including its PR description paragraph |
 | Everything else in the conversation | Mode 4 Chat |
 
 When unsure, use Mode 4. It is the mode with the least surface area for bloat.
@@ -213,14 +213,15 @@ When unsure, use Mode 4. It is the mode with the least surface area for bloat.
 Run it before delivering anything longer than a sentence. Read the draft as the copy desk chief who has to cut a third without losing a rule, then run the checks; the frame sets the stance, the checks catch what the stance misses.
 
 0. Anything over its mode's budget is a draft, not a deliverable. Write it, run `${CLAUDE_SKILL_DIR}/scripts/symptoms.py` on it (or the checklist below when there is no shell), cut, then deliver. The symptoms are easier to see in a draft than to avoid while writing.
-1. Re-read as the named reader. What do they already know? Cut it.
-2. Check the draft against § The Recognizable Shape. Any match is a cut, not a rewrite.
-3. If a preamble sentence could be deleted without a reader losing a way to stop early, delete it.
-4. Check the asks: each one fires a § Surface by Stakes signal, and a tell that should have been an ask is the costlier miss.
-5. Check provenance: every number and every concrete claim traces to the record, the thread, or the source. One that does not is either cut or labelled an estimate with its basis. An invented figure reads as fluent and is the hardest error for the reader to find.
-6. Check what the cut left out. Before cutting, list the facts the text carries: rules, numbers, names, conditions, consequences. After cutting, check each one survived, or that dropping it was a choice the reader would agree with. Shortening that loses facts is not editing.
-7. Check the mode's budget and anti-patterns.
-8. Check that the first sentence is the thing the reader came for.
+1. Before cutting anything, list the facts the text carries: rules, numbers, names, conditions, consequences. Step 7 checks the cut against this list.
+2. Re-read as the named reader. What do they already know? Cut it.
+3. Check the draft against § The Recognizable Shape. Any match is a cut, not a rewrite.
+4. If a preamble sentence could be deleted without a reader losing a way to stop early, delete it.
+5. Check the bins: each ask fires a § Surface by Stakes signal, and no item that fires one is sitting in tell.
+6. Check provenance: every number and every concrete claim traces to the record, the thread, or the source. One that does not is either cut or labelled an estimate with its basis. An invented figure reads as fluent and is the hardest error for the reader to find.
+7. Check what the cut left out. Each fact on the step 1 list survived, or dropping it was a choice the reader would agree with. Shortening that loses facts is not editing.
+8. Check the mode's budget and anti-patterns.
+9. Check that the first sentence after any preamble is the thing the reader came for.
 
 The cut pass is the step generated text skips. It is not optional.
 
@@ -250,16 +251,15 @@ Example AGENTS.md and/or CLAUDE.md section:
 |---|---|
 | Spec / plan / design note | Preamble: who it is for and how to read it; asks go in their own section, not the preamble. `chose A over B because C; revisit if D`. Assumptions as a tick-list, risks as `X breaks if Y`. 300-word budget. |
 | Code comment | Only why, an invariant, an external fact, or a deliberate omission. Never restate the code or narrate the session. |
-| Code / diff / commit | Smallest diff that does the job. Match repo idioms. No speculative abstraction, no defensive noise, no placeholder stubs. Commit subject `<verb> <what>: <brief description>`; body only for a non-obvious decision. |
+| Code / diff / commit | Smallest diff that does the job. Match repo idioms. No speculative abstraction, no defensive noise, no placeholder stubs. Commit subject `<prefix>: <description>`; body only for a non-obvious decision. |
 | Chat | Answer first. Length matches the question. No restating, no performative phrases. Formatting is rare. One question back at most. |
 
-Everywhere: name the readers and omit what they know. Sentences of about 20 words in steps and 25 elsewhere, active voice, one term per concept, and never at the cost of a fact. One layer per distinct
-stopping point, ordered by who stops first; one reader means answer first. Pace by
-uncertainty: settled things get one line. Surface by stakes: record what has no real
-alternative, tell in one line what you chose for a reason, ask when a reader owns it,
-it is hard to reverse, the blast radius is large, or you guessed. No scaffolding that
-carries no information. Checkable beats fluent. Numbers over adjectives. Run a cut
-pass before delivering.
+Everywhere: name the readers and omit what they know. Sentences of about 20 words in
+steps and 25 elsewhere, active voice, one term per concept, never at the cost of a fact.
+One layer per stopping point; one reader means answer first. Settled things get one
+line. Record what has no real alternative, tell what you chose and why, ask when a
+reader owns it, it is hard to reverse, the blast radius is large, or you guessed.
+No empty scaffolding. Checkable beats fluent. Numbers over adjectives. Run a cut pass.
 
 Readers (default for code, comments, chat: an insider who knows this codebase and this thread):
 
@@ -285,7 +285,7 @@ When the user points /red-pen at something ("red-pen this", `/red-pen docs/desig
 3. Write the edited text to the file. The chat reply is the report, in this shape and no other, because a reader skims anything longer:
    - One line: the path written, and what was preserved (every rule, anchor, and list; name any exception). Stale or contradictory claims you found go here too, since those are the findings the reader acts on.
    - One before/after paragraph pair, next, introduced by a sentence that says what it is ("Here is one paragraph before and after, as an example of the change:"). A bare "Before (§6.3 ...):" has no context. This pair is what the reader uses to judge; it gives the flavor of the edit without a pile of detail.
-   - A symptom table of at most four rows, the ones that moved most. It is evidence, and readers skim it, so keep it short and put it after the pair. `${CLAUDE_SKILL_DIR}/scripts/symptoms.py --compare before.md after.md` gives the literal counts; you add what it cannot see (stale claims, cross-section restatement, argument before rule, paraphrased restatement).
+   - A symptom table of at most four rows, the ones that moved most. It is evidence, and readers skim it, so keep it short and put it after the pair. `${CLAUDE_SKILL_DIR}/scripts/symptoms.py --compare before.md after.md` gives the literal counts (save the original before writing, or read it back with `git show HEAD:<path>`; `-` reads stdin); you add what it cannot see (stale claims, cross-section restatement, argument before rule, paraphrased restatement).
    - Nothing else. No narration of each cut, no word count unless the reader asked. Under 150 words outside the pair. `references/worked_example.md` is the shape.
 4. Do not add anything the original lacked unless the mode requires it (a Mode 1 doc with no preamble gets one; it does not get an Overview).
 
@@ -335,7 +335,8 @@ AGENTS.md and/or CLAUDE.md  → Writing Conventions block (shared core + mode ta
                                (cut first, rewrite only what the cut breaks)
 
 scripts/symptoms.py         → counts the recognizable shape before and after
-                               (restated phrases, openers, bold leads, dated markers)
+                               (restated phrases, openers, bold leads, dated markers,
+                                sentence and paragraph length, passive voice, term switches)
 
 Mode 1 Spec                 → the shape every plan, spec, and design note takes
                                (preamble, decisions, assumptions, risks, scope out)

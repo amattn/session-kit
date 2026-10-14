@@ -447,7 +447,7 @@ Agent: (adds to Important Concepts & Insights, under "From the user")
 - Sentences stay short (about 20 words in steps, 25 elsewhere), active, and consistent in their terms, borrowed from Simplified Technical English at about 80% strength; every cut is checked for lost facts
 - Ask for a plan, spec, or design note — it opens with a preamble saying who it's for and how to read it, then what it needs from you, not an overview
 - Override a default for the project (a bigger spec budget, a different reader) — it's recorded in the Writing Conventions block, and so is any cut you reject, so the next pass starts calibrated
-- The report after an edit is by symptom, not word count: `scripts/symptoms.py --compare before.md after.md` counts restated phrases, "This is / That is" openers, bold leads, dated markers, and header density
+- The report after an edit is by symptom, not word count: `scripts/symptoms.py --compare before.md after.md` counts restated phrases, "This is / That is" openers, bold leads, dated markers, header density, sentence and paragraph length, passive voice, and likely term switches
 
 **Example — editing a target:**
 ```

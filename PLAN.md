@@ -128,6 +128,10 @@ Sentence and paragraph rules at about 80% strength, a lost-facts check in the cu
 
 ## Next Steps
 
+### /red-pen MAR spec review: finish the chain
+
+Stage 1 (Claude, sanity pass) is dispositioned at v0.3.1. Next: GLM once the sandbox can reach it, then Codex last. Six owner rulings are pending; see NOTES "/red-pen MAR spec review, stage 1".
+
 ### Description optimization
 
 Run the skill-creator trigger optimization loop on each skill's description to improve triggering accuracy.

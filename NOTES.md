@@ -478,7 +478,7 @@ Source: `WRITING_DIRECTIVES.md` (user's standalone file). Inspiration: Ayman Nad
 - **Chose new always-on skill over folding into /fast-chat** — /fast-chat is interaction mechanics (codes, review tail); only §4 Chat overlaps. §1/§2/§3 have no home in any existing skill, and folding would bloat /fast-chat. Rejected /warmup (explicitly excludes content). Revisit if the skill ends up only ever used for chat.
 - **Bootstrap shape:** concise CLAUDE.md block (shared core + mode table, ~150 words) with the full per-mode rules in SKILL.md — same tradeoff /fast-chat makes. Rejected copying the full file into the project + Required Reading (heavier, duplicates the skill).
 - **"Why this file exists" preamble:** compressed into SKILL.md as the "recognizable shape" checklist (the diagnosis list is operational — it's what to avoid); long-form rationale goes to README per "value-add context belongs in README."
-- **Commit messages (Mode 3):** a project's own commit style wins; when none is specified, session-kit's own style is the default (`<verb> <what>: <brief description>`, themed bullet body only for non-obvious decisions, no body for trivial commits). User: "defers to a project's own commit style, but use session-kit's commit style as the default when not specified." Rejected: the source file's bare rule ("first line is what changed and why, under 72 chars") — too thin to produce consistent subjects.
+- **Commit messages (Mode 3):** a project's own commit style wins; when none is specified, session-kit's own style is the default (`<prefix>: <description>` since 2026-10-14; this entry first recorded the retired verb style by mistake, themed bullet body only for non-obvious decisions, no body for trivial commits). User: "defers to a project's own commit style, but use session-kit's commit style as the default when not specified." Rejected: the source file's bare rule ("first line is what changed and why, under 72 chars") — too thin to produce consistent subjects.
 - **Name:** `/red-pen` — see next entry.
 
 ### /red-pen reader axis and layering rule (2026-10-01)
@@ -533,7 +533,7 @@ User: "how else can we improve the skill? can we give the skill personas? like '
 
 - **Symptom script** (`scripts/symptoms.py`): the prose-to-tooling escalation from the 2026-03-14 decision, first use in session-kit. Counts what the judged-convincing table counted: restated phrases (5-word shingles recurring across sentences), "This is / That is" openers, bold leads, sentence-length headers, dated status markers, forward references, hedges, em-dash density, section-length spread. `--compare` prints the delta. Path-based `allowed-tools` per the portability decision. Known blind spots, stated in the skill: stale claims, cross-section restatement, argument in front of a rule.
 - **Self-edit loop**: anything over its mode's budget is a draft; measure, cut, deliver. This is the only in-skill answer to the open question (prevent vs. remove); the eval still has to test it.
-- **Worked example** (`references/worked_example.md`): a before/after pair with its symptom table and the two rejected vog cuts as the counter-example. (Replaced on 2026-10-02 with a text unrelated to any eval input.)
+- **Worked example** (`references/worked_example.md`): a before/after pair with its symptom table and the two rejected vog cuts as the counter-example. (Replaced on 2026-10-02 with a text unrelated to any eval input. Replaced again on 2026-10-14: the MAR spec review found that the cache-TTL text shared ledgerd's 30-second invariant, dropped its staleness bound in the After, and invented an open item. The new text is a backup-retention note and shows the fact list.)
 - **Calibration overrides**: a rejected cut is recorded in the Writing Conventions block as a one-line override.
 - **Personas, qualified.** Chose per-step reader frames (copy desk chief for the cut pass, decision-maker with four minutes for Mode 1, colleague at the next desk for Mode 4, the 2am maintainer already in Mode 2) over a global "you are a professional editor." Rejected the global persona: role prompts move tone and fluency, not accuracy, and fluency is the failure the skill exists to catch. Today's evidence: what the user accepted was checkable counts; what they rejected was judgment. Recorded in What Does NOT Go.
 
@@ -596,7 +596,28 @@ Prompted by Kruno Golubić, "ASD-STE100: What It Is and What It Has to Do with L
 - **Guards against over-compression:** keep articles and verbs, stack at most three nouns, and a new cut-pass step that lists the facts before cutting and checks each survived.
 - **Agents as readers.** From the article: an agent reading another agent's output cannot ask what was meant. Added as a named reader type.
 - **Counted, not opinion:** "'Clearly' is an opinion, while STE rules you can count." `symptoms.py` now counts sentence length, long paragraphs, passive voice (estimate), and likely term switches.
-- **Eval result (iteration 4):** 46 facts enumerated before the runs, three cases, one run per configuration. v0.3.0 kept 45/46, the same as v0.2.5; no skill kept 46/46 at 2 to 3.5 times the length and added unsupported claims in two of three cases. Average sentence length fell in every case (for example 18.3 to 14.7 words explaining code). On the section edit all three kept 20/20 facts; v0.3.0 had no meaning changes, v0.2.5 had two small ones, and no skill switched "lattice" to "grid", the term switch the new rule targets. At 80% strength the rules did not reproduce the article's fact loss. Limits: one run each, fact lists written by the skill author, graders from the same model family. Record: `skills/red-pen-workspace/iteration-4/summary.md`.
+- **Eval result (iteration 4):** 46 facts enumerated before the runs, three cases, one run per configuration. v0.3.0 kept 45/46, the same as v0.2.5; the no-skill run kept 46/46 at 2 to 3.5 times the length and added unsupported claims in two of three cases. Average sentence length fell in every case (for example 18.3 to 14.7 words explaining code). On the section edit all three kept 20/20 facts; v0.3.0 had no meaning changes, v0.2.5 had two small ones, and the no-skill run switched "lattice" to "grid", the term switch the new rule targets. At 80% strength the rules did not reproduce the article's fact loss. Limits: one run each, fact lists written by the skill author, graders from the same model family. Record: `skills/red-pen-workspace/iteration-4/summary.md`.
+
+### /red-pen MAR spec review, stage 1 (2026-10-14)
+
+First MAR run on /red-pen, target `spec`. GLM could not connect (its API failed the sandbox proxy's TLS check), so a Claude subagent ran as a same-host sanity pass, which is not an independent gate. 14 findings; record: `skills/multi-adversarial-review-workspace/spec-red-pen/`.
+
+- **Fixed (v0.3.1):**
+  - The cut pass listed facts after cutting; now step 1.
+  - The bins check contradicted "doubt goes to tell"; it now checks only that an ask-signal item is not sitting in tell.
+  - The commit default had kept the retired verb style; the ruling says session-kit's style, which is `<prefix>: <description>`.
+  - PR descriptions now route to Mode 3, and records are exempt from the no-fragments rule.
+  - Bold labels on parallel-list items are the stated exception to "no bold on every lead".
+  - The worked example taught fact loss.
+  - Also: The Job #2, cut-pass step 9 after the preamble, `symptoms.py` usage notes, and the bootstrap block trimmed to its budget.
+- **Deferred to the owner:**
+  - How far "default to less" reaches for readers who cannot ask.
+  - Precedence between house style, overrides, mode rules, and the shared core.
+  - Whether the 300-word budget applies to an edit.
+  - New finding kinds in MAR copy-review.
+  - Scaling the cut pass for short chat replies.
+  - `symptoms.py` counting rule bullets as steps.
+- **Possible cause of the iteration-4 miss:** both skill versions dropped the 30-second invariant, and the old worked example dropped the same kind of bound. Untested.
 
 ### vog_kit is out of scope (2026-10-02)
 
