@@ -85,7 +85,8 @@ def sentence_stats(prose):
         # and prose get the general limit (25).
         items = []
         for l in lines:
-            m = re.match(r"\s*([-*]|\d+\.)\s+", l)
+            l = re.sub(r"^\s*(?:>\s?)+", "", l)  # blockquoted text counts as text
+            m = re.match(r"\s*([-*+]|\d+[.)])\s+", l)
             if m or not items: items.append([m.group(1) if m else "", l[m.end():] if m else l])
             else: items[-1][1] += " " + l.strip()
         for marker, text in items:

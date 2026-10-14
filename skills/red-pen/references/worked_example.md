@@ -37,7 +37,7 @@ The edit goes to the file. The chat reply is this and nothing more:
 > | Symptom | Before | After |
 > |---|---|---|
 > | "14 days was deliberate" stated | 3 times | once |
-> | Sentences opening "It is / That is" | 3 | 0 |
+> | "This is / That is / Note that" openers (script count) | 3 | 0 |
 > | Prose sentences over 25 words | 2 | 0 |
 > | Passive voice (estimate) | 5 | 2 |
 

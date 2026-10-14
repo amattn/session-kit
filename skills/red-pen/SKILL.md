@@ -25,7 +25,7 @@ AI-generated text is painful to read. Not because it is wrong, but because it is
 
 1. **Always-on**: before writing anything, decide which output type you are producing (see § Mode Selection), apply that mode's rules, then run the cut pass. If a task spans several types (implement a change, then report back), apply each mode to its part.
 2. **On invocation with a target** (`/red-pen PLAN.md`, "red-pen this section"): edit the target against the rules for its mode, then report as § Editing a target says.
-3. **On invocation without a target**: detect whether writing conventions exist in AGENTS.md and/or CLAUDE.md. If not, bootstrap. If yes, show the current block and ask what to adjust.
+3. **On invocation without a target**: detect whether a Writing Conventions block (`<!-- managed by /red-pen -->`) exists in AGENTS.md and/or CLAUDE.md. If not, bootstrap; other style rules the project already has stay, per § Bootstrap step 1. If yes, show the block and ask what to adjust.
 
 ---
 
@@ -214,9 +214,9 @@ Run it before delivering anything longer than a sentence. The default is the sho
 
 Read the draft as the copy desk chief whose job is to make it clear without losing a rule, then run the checks; the frame sets the stance, the checks catch what the stance misses.
 
-The targets are counts that reach zero, not a length: facts lost, sentences over about 25 words (20 in a numbered step), rules stated twice, claims with no source, "It is / That is" openers. A second pass on the output should change nothing. A pass that keeps cutting is cutting facts.
+The targets are counts that reach zero, not a length: facts lost, sentences over about 25 words (20 in a numbered step), rules stated twice, claims with no source, "This is / That is" openers. A second pass on the output should change nothing. A pass that keeps cutting is cutting facts.
 
-0. Anything over its mode's tripwire is a draft, not a deliverable. Fix its symptoms, then deliver. When the text is in a file and you have a shell, run `${CLAUDE_SKILL_DIR}/scripts/symptoms.py` on it; otherwise use the checklist below. The symptoms are easier to see in a draft than to avoid while writing.
+0. Anything over its mode's tripwire is a draft, not a deliverable. Measure it first and change nothing yet; steps 1 to 9 do the fixing. When the text is in a file and you have a shell, run `${CLAUDE_SKILL_DIR}/scripts/symptoms.py` on it; otherwise use the checklist below. The symptoms are easier to see in a draft than to avoid while writing.
 1. Before cutting anything, list the facts the text carries: rules, numbers, names, conditions, consequences. Step 7 checks the cut against this list.
 2. Re-read as the named reader. What do they already know? Cut it.
 3. Check the draft against § The Recognizable Shape. Any match is a cut, not a rewrite.

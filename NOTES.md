@@ -627,6 +627,14 @@ GLM, the chain's first independent family, reviewed 6b6250c on top of stage 1b. 
 - **Ruled: the short pass adds step 6** (F2). Chat replies now run steps 2, 6, 7, and 9, so every number and claim in a reply traces to a source. User: "a". Chose over a one-line provenance rule in Mode 4 and over no change. Reason: invented content is the one failure class every eval missed, and "numbers over adjectives" pushes figures into chat.
 - **Ruled: one rule picks the pass, in every mode** (F3). The short pass is the default. Documents, edits, and anything over its mode's tripwire get every step. Chat's tripwire is two paragraphs. Step 0, the script, runs only on text already in a file. User: "d". GLM found the gap for long chat replies; the lead found the same gap for comments and commit messages, which had no tripwire and were neither chat nor document. Rejected: a chat-only fix (steps 1 to 9 for long replies); every step including the script for chat (a tool call per long reply); the short pass for all chat; capping chat at two paragraphs and offering the rest (a length target, against the symptoms ruling, and the offer is a flagged anti-pattern).
 
+### /red-pen MAR spec review, stage 3 (2026-10-14)
+
+Codex, last in the chain, reviewed 2025615 on top of stages 1b and 2. Five findings; record: `stage-3-codex/` in the MAR workspace.
+
+- **What sequencing found:** stage 1b's fact-list fix was half done, because step 0 still said to fix symptoms before step 1 listed the facts. Stage 2 had checked the worked example's opener count against the script's regex, not against the row's label.
+- **Fixed:** step 0 now only measures; The Job #3 detects the managed block, so other style rules no longer block bootstrap; `symptoms.py` counts `1)` and blockquoted steps; the opener label matches the script.
+- **Pending owner ruling:** what the reply is when the target is pasted text, not a file (F3).
+
 ### vog_kit is out of scope (2026-10-02)
 
 User: "pls totally disregard vog_kit." No syncing, mirroring, or follow-ups there; session-kit's copy of /multi-adversarial-review is the only one this project maintains.
