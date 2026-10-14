@@ -624,7 +624,8 @@ GLM, the chain's first independent family, reviewed 6b6250c on top of stage 1b. 
 
 - **Fixed:** iteration-4's length ratio was overstated ("2 to 3.5 times"; the table gives 1.2 to 3.4), HELP.md named CLAUDE.md only, the `git show HEAD:` fallback ignored uncommitted changes, the zero-target list omitted the 20-word step limit, and cut-pass step 8 named anti-patterns only Mode 1 has.
 - **Deferred to the final bump:** CHANGELOG entries for 6b6250c, per the hold on versions.
-- **Pending owner rulings:** whether the short pass adds step 6, the provenance check (F2); which pass a chat reply over two paragraphs runs (F3).
+- **Ruled: the short pass adds step 6** (F2). Chat replies now run steps 2, 6, 7, and 9, so every number and claim in a reply traces to a source. User: "a". Chose over a one-line provenance rule in Mode 4 and over no change. Reason: invented content is the one failure class every eval missed, and "numbers over adjectives" pushes figures into chat.
+- **Ruled: one rule picks the pass, in every mode** (F3). The short pass is the default. Documents, edits, and anything over its mode's tripwire get every step. Chat's tripwire is two paragraphs. Step 0, the script, runs only on text already in a file. User: "d". GLM found the gap for long chat replies; the lead found the same gap for comments and commit messages, which had no tripwire and were neither chat nor document. Rejected: a chat-only fix (steps 1 to 9 for long replies); every step including the script for chat (a tool call per long reply); the short pass for all chat; capping chat at two paragraphs and offering the rest (a length target, against the symptoms ruling, and the offer is a flagged anti-pattern).
 
 ### vog_kit is out of scope (2026-10-02)
 

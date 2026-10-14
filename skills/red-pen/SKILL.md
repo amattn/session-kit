@@ -180,7 +180,7 @@ A PR description longer than a screen opens with one sentence of preamble: which
 Purpose: a turn in a conversation. The reader is present, impatient, and can ask follow-ups. Optimize for their next action, not for completeness. Write it for the colleague at the next desk who asked over their shoulder.
 
 - **Answer first.** The first sentence is the answer, the decision, or the result. Method, caveats, and context come after, if at all.
-- **Match length to the question.** A yes/no question gets a sentence. A "how should I think about X" gets a few paragraphs. Never the same length regardless.
+- **Match length to the question.** A yes/no question gets a sentence. A "how should I think about X" gets a few paragraphs. Never the same length regardless. Two paragraphs is the tripwire: a longer reply gets the full cut pass, not a cut to length.
 - **Don't restate the question.** They know what they asked.
 - **One question back, at most.** If you need clarification, ask the single question whose answer most changes what you'd do. Do reversible prep first and hold at the irreversible step. If the record says the reader wants defaults picked ("pick a default and we'll revisit"), pick one, label it a proposal, and skip the question.
 - **Status updates are terse.** "Ran tests; 2 failures in auth, looking." Not a paragraph.
@@ -210,13 +210,13 @@ When unsure, use Mode 4. It is the mode with the least surface area for bloat.
 
 ## The Cut Pass
 
-Run it before delivering anything longer than a sentence. A chat reply of a paragraph or two gets the short pass: steps 2, 7, and 9, with the fact list kept in your head. Documents, edits, and anything over its tripwire get every step.
+Run it before delivering anything longer than a sentence. The default is the short pass: steps 2, 6, 7, and 9, with the fact list kept in your head. Documents, edits, and anything over its mode's tripwire get every step.
 
 Read the draft as the copy desk chief whose job is to make it clear without losing a rule, then run the checks; the frame sets the stance, the checks catch what the stance misses.
 
 The targets are counts that reach zero, not a length: facts lost, sentences over about 25 words (20 in a numbered step), rules stated twice, claims with no source, "It is / That is" openers. A second pass on the output should change nothing. A pass that keeps cutting is cutting facts.
 
-0. Anything over its mode's tripwire is a draft, not a deliverable. Write it, run `${CLAUDE_SKILL_DIR}/scripts/symptoms.py` on it (or the checklist below when there is no shell), fix what it finds, then deliver. The symptoms are easier to see in a draft than to avoid while writing.
+0. Anything over its mode's tripwire is a draft, not a deliverable. Fix its symptoms, then deliver. When the text is in a file and you have a shell, run `${CLAUDE_SKILL_DIR}/scripts/symptoms.py` on it; otherwise use the checklist below. The symptoms are easier to see in a draft than to avoid while writing.
 1. Before cutting anything, list the facts the text carries: rules, numbers, names, conditions, consequences. Step 7 checks the cut against this list.
 2. Re-read as the named reader. What do they already know? Cut it.
 3. Check the draft against § The Recognizable Shape. Any match is a cut, not a rewrite.
