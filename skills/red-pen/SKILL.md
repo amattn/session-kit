@@ -13,19 +13,19 @@ allowed-tools: Bash(${CLAUDE_SKILL_DIR}/scripts/*)
 > read and respond from HELP.md — you may not need to read the full SKILL.md.
 > For detailed mechanics or edge cases, the full SKILL.md has the complete specification.
 
-AI-generated text is painful to read. Not because it is wrong, but because it is unedited. A human writer pays for every sentence in time and effort, and that cost acts as a filter: what survives is what the author judged worth the reader's attention. Generated text has no such cost, so nothing filters it.
+AI-generated text is painful to read. Not because it is wrong, but because it is unedited. A human writer pays for every sentence in time and effort. That cost filters: what survives is what the author judged worth the reader's attention. Generated text has no such cost, so nothing filters it.
 
-/red-pen is the editor. It substitutes explicit constraints for the missing cost: counted limits stand in for effort, a named reader stands in for the author's sense of audience, mandatory prioritization stands in for editorial judgment, a required cut pass stands in for revision. The goal is clarity; shorter text is a side effect, not the target.
+/red-pen is the editor. It substitutes explicit constraints for the missing cost. Counted limits stand in for effort, and a named reader for the author's sense of audience. Mandatory prioritization stands in for editorial judgment, and a required cut pass for revision. The goal is clarity; shorter text is a side effect, not the target.
 
-**This is an always-on writing style, not just a tool you invoke.** Invoking `/red-pen` runs the bootstrap (writes conventions to AGENTS.md and/or CLAUDE.md) or edits a target. The rules themselves apply to everything you write, every time, no setup required.
+**The rules are always on; invoking the skill is optional.** Invoking `/red-pen` edits a target or runs the bootstrap, which writes conventions to AGENTS.md and/or CLAUDE.md. The rules themselves apply to everything you write, every time, no setup required.
 
 ---
 
 ## The Job
 
-1. **Always-on**: before writing anything, decide which output type you are producing (see § Mode Selection), apply that mode's rules, then run the cut pass. If a task spans several types (implement a change, then report back), apply each mode to its part.
-2. **On invocation with a target** (`/red-pen PLAN.md`, "red-pen this section"): edit the target against the rules for its mode, then report as § Editing a target says.
-3. **On invocation without a target**: detect whether a Writing Conventions block (`<!-- managed by /red-pen -->`) exists in AGENTS.md and/or CLAUDE.md. If not, bootstrap; other style rules the project already has stay, per § Bootstrap step 1. If yes, show the block and ask what to adjust.
+1. **Always-on**: before writing anything, decide the output type (§ Mode Selection). Write to that mode's rules, then run the cut pass. If a task spans several types (implement a change, then report back), apply each mode to its part.
+2. **On invocation with a target** (`/red-pen PLAN.md`, "red-pen this section"): edit it to its mode's rules. Report as § Editing a target says.
+3. **On invocation without a target**: look for the Writing Conventions block (`<!-- managed by /red-pen -->`) in AGENTS.md and/or CLAUDE.md. If not, bootstrap; other style rules the project already has stay, per § Bootstrap step 1. If yes, show the block and ask what to adjust.
 
 ---
 
@@ -41,21 +41,23 @@ Unedited generated text has a shape. Use this list as the cut-pass checklist —
 - **Fluent rather than checkable.** Errors hide in good sentences. The reader wanted to find where this is wrong, and prose makes that hardest.
 - **Session narration.** Text that records the process of producing it ("as requested", "I've now updated", "this function takes X") rather than anything the reader needs.
 - **A rule stated in more than one place.** The same rule in two sections, so the reader has to check whether the second is a variant. A table and the prose that teaches its rows are not this: they are one rule in two registers, and both stay.
-- **A claim with no source.** A number, a cause, or a fact that is in the text because it sounded right, not because the record, the thread, or the source says it. Fluent and unfindable.
+- **A claim with no source.** A number, a cause, or a fact that is in the text because it sounded right. The record, the thread, and the source do not say it. Fluent and unfindable.
 
-The same defaults do different damage in different places: a bloated spec wastes a decision-maker's attention, a narrating comment misleads a debugger years later, an over-defensive diff burdens a reviewer, a padded chat reply slows a conversation. So the rules are split by output type.
+The same defaults do different damage in different places, so the rules are split by output type. A bloated spec wastes a decision-maker's attention. A narrating comment misleads a debugger years later. An over-defensive diff burdens a reviewer, and a padded chat reply slows a conversation.
 
 ---
 
 ## Shared Core (applies everywhere)
 
-- **Know the readers.** Name them before writing. For each: what they already know, what they decide, where they stop reading. Default reader for code, comments, and chat: an insider who knows this codebase and this thread. Specs and anything with more than one reader name theirs explicitly. A reader can be an agent: an agent reading another agent's output (a tool description, an error message, a handoff note) cannot ask what was meant, so write for it the way you would for a reader who cannot reply. When a named reader may not share a term, gloss it once in the sentence that first uses it ("a token bucket, a burst allowance that refills at a fixed rate") rather than avoiding the term.
-- **Layers are stopping points.** One layer per distinct stop. Each layer is complete for the reader who stops there and assumes everything above it. Readers who stop at the same depth share a layer. A document may stack layers top-down by audience, repeat them per section with a summary first, or split a layer out as a derived artifact (a summary document that points at its full source); the preamble says which. One reader means one layer: answer first.
+- **Know the readers.** Name them before writing. For each: what they already know, what they decide, where they stop reading. Default reader for code, comments, and chat: an insider who knows this codebase and this thread. Specs and anything with more than one reader name theirs explicitly.
+- **A reader can be an agent.** An agent reading another agent's output (a tool description, an error message, a handoff note) cannot ask what was meant. Write for it as for a reader who cannot reply.
+- **Gloss a term once.** When a named reader may not share a term, gloss it where it first appears; do not avoid the term. Example: "a token bucket, a burst allowance that refills at a fixed rate".
+- **Layers are stopping points.** One layer per distinct stop. Each layer is complete for the reader who stops there and assumes everything above it. Readers who stop at the same depth share a layer. A document may stack layers top-down by audience or repeat them per section, summary first. It may also split a layer out as a derived artifact: a summary document that points at its full source. The preamble says which. One reader means one layer: answer first.
 - **Readers who differ in what they know get separate artifacts**, linked, not one artifact that serves neither.
 - **Omit what the reader already knows.** Restating the prompt, the diff, or the previous message is a bug.
 - **Pace by uncertainty.** Settled things get one line. Judgment calls get the words.
 - **Default to less; the reader will ask.** Wordiness is the pain, and a reader who wants more detail can ask for it in one line. A reader given too much cannot un-read it. When unsure whether a detail earns its place, leave it out and point to where it lives: the record, a link, the source. A fact that lives nowhere else stays, because a reader who cannot ask (an agent, a maintainer years later) has no one to ask.
-- **No scaffolding that carries no information.** No headers on short sections, no bold on every lead (a label on each item of a parallel list is the exception, Mode 4), no closing summary that repeats the body, no "it's worth noting", "in summary", "let me explain". Structure that isolates one fact per line is not scaffolding; do not fold a standalone bullet into a paragraph to save a line.
+- **No scaffolding that carries no information.** No headers on short sections and no bold on every lead; a label on each item of a parallel list is the exception (Mode 4). No closing summary that repeats the body, no "it's worth noting", "in summary", "let me explain". Structure that isolates one fact per line is not scaffolding; do not fold a standalone bullet into a paragraph to save a line.
 - **Prefer checkable to fluent.** Lists of assumptions, "X breaks if Y", "chose A over B because C" beat paragraphs.
 - **Numbers over adjectives.** "~40ms" not "fast"; "3 call sites" not "several".
 
@@ -79,8 +81,8 @@ Borrowed from ASD-STE100 Simplified Technical English at about 80% strength. Cou
 Sort every item into one of three bins, in ascending stakes.
 
 - **Record.** No real alternative, or the record already settles it. It lives in the diff, the appendix, or NOTES.md. Not restated, never re-raised.
-- **Tell.** You picked between alternatives for a reason you can cite. One line each, so the reader can overrule. This includes a case the ask's wording covers but its intent may not: told to "fail fast on 4xx", say that 429 is the one 4xx that arguably deserves a retry and that you followed the wording.
-- **Ask.** Any of: a reader owns the decision, it is hard to reverse, the blast radius is large (many call sites, many users, cross-cutting), you picked with no reason you can cite, it contradicts the record, it deviates from what was asked. Goes at the start of its owner's layer, with your lean.
+- **Tell.** You picked between alternatives for a reason you can cite. One line each, so the reader can overrule. This includes a case the ask's wording covers but its intent may not. Told to "fail fast on 4xx", say that 429 is the one 4xx that arguably deserves a retry, and that you followed the wording.
+- **Ask.** Any of these signals: a reader owns the decision, it is hard to reverse, or the blast radius is large (many call sites, many users, cross-cutting). Also: you picked with no reason you can cite, it contradicts the record, or it deviates from what was asked. Goes at the start of its owner's layer, with your lean.
 
 Doubt between tell and ask goes to tell: a misplaced item can still be found, an unneeded ask costs the reader a judgment. Doubt about reversibility goes to ask. Too many asks means the plan is underdetermined: find the one question that settles most of them and ask it first.
 
@@ -91,13 +93,13 @@ Doubt between tell and ask goes to tell: a misplaced item can still be found, an
 Purpose: let a human make or ratify decisions, then verify the result. It is not a record of your reasoning — keep that elsewhere or discard it. Write it for the decision-maker with four minutes before the meeting.
 
 Shape:
-- **Preamble.** Two to five sentences of prose under the title, no heading. Who the document is for and what each audience comes for, then how it is organized so they can stop early. Describe the convention the reader can use, not a section-by-section routing. With one reader it is a sentence that says so: "This document is for the engineers implementing the queue migration; it assumes familiarity with the current consumer code."
+- **Preamble.** Two to five sentences of prose under the title, no heading. Who the document is for and what each audience comes for, then how it is organized so they can stop early. Describe the convention the reader can use, not a section-by-section routing. With one reader it is a sentence that says so: "This document is for the engineers implementing the queue migration. It assumes they know the current consumer code."
 
   Example for a product spec with four stops (exec summary, business logic, design, technical implementation):
 
-  > This document is written for three audiences: executives deciding whether to fund the work, product owners confirming the business rules, and the engineers who will build it. Each major section opens with a short summary, so reading only the summaries gives the complete picture at the executive level. Business rules are in §2; implementation detail starts at §4.
+  > This document is for three audiences: executives deciding whether to fund the work, product owners confirming the business rules, and the engineers building it. Each major section opens with a short summary, so reading only the summaries gives the complete picture at the executive level. Business rules are in §2; implementation detail starts at §4.
 
-- **Asks never go in the preamble.** If the document needs something from a reader — a decision, a confirmation — that goes in a dedicated section such as open items, when the document needs one. Whether it needs one and what it looks like is case by case; this skill does not prescribe the form.
+- **Asks never go in the preamble.** What the document needs from a reader, such as a decision or a confirmation, goes in a dedicated section such as open items. Whether it needs one and what it looks like is case by case; this skill does not prescribe the form.
 - **Decisions section.** Each as `chose A over B because C; revisit if D`. No balanced menus. If you truly can't choose, say which way you lean and what information would settle it.
 - **Assumptions as a tick-list.** One line each. The reader should be able to scan and mark any that are false.
 - **Risks as conditionals.** `X could break if Y.` Not "there are some risks around X."
@@ -138,7 +140,7 @@ Doc comments on public API: one sentence on what it does, then only the non-obvi
 
 Length: if a comment is longer than the code it annotates, either the code needs restructuring or the comment belongs in a design doc.
 
-Match the repository's existing comment density and style. A sparse codebase should not acquire a verbose file. Sparse is not silent: an edge case you decided on purpose (a status code lumped in with its class, an error left to propagate) is exactly the "deliberately not handled" comment, and cutting it loses the one note a maintainer needed.
+Match the repository's existing comment density and style. A sparse codebase should not acquire a verbose file. Sparse is not silent. An edge case you decided on purpose is the "deliberately not handled" comment. Examples: a status code lumped in with its class, an error left to propagate. Cutting it loses the one note a maintainer needed.
 
 ---
 
@@ -169,7 +171,7 @@ Purpose: be read and changed by someone else. Readability is a property of the w
   - Backoff lives in the client, not the caller — one policy, 4 call sites
   ```
 
-Before delivering, re-read the diff as the reviewer: anything that makes them stop and ask "why is this here?" either gets a `why` comment (Mode 2) or gets removed.
+Before delivering, re-read the diff as the reviewer. Anything that makes them ask "why is this here?" gets a `why` comment (Mode 2) or gets removed.
 
 A PR description longer than a screen opens with one sentence of preamble: which part needs the reviewer's judgment and which is mechanical. A PR description is a record, not prose: terse label lines ("Risk:", "Mechanical, skip:") are fine and scan better than sentences.
 
@@ -186,12 +188,12 @@ Purpose: a turn in a conversation. The reader is present, impatient, and can ask
 - **Status updates are terse.** "Ran tests; 2 failures in auth, looking." Not a paragraph.
 - **Report what changed and what you're unsure of.** Not what you did step by step. The reader can ask for the steps.
 - **No performative phrases.** No "Great question", "Certainly!", "I'd be happy to", "I hope this helps".
-- **Formatting is rare, but parallel items get a list.** Three reasons, three options, three steps: bullet them, because a reader sees "three reasons" at a glance and has to dig them out of a paragraph. Bold the first word or two of each bullet as its label; that is the one place bold earns its keep. Past about five bullets the reader skims instead of reads, so group or cut. Headers almost never. Code blocks for code.
+- **Formatting is rare, but parallel items get a list.** Three reasons, three options, three steps: bullet them. A reader sees "three reasons" in a list at a glance, and has to dig them out of a paragraph. Bold the first word or two of each bullet as its label; that is the one place bold earns its keep. Past about five bullets the reader skims instead of reads, so group or cut. Headers almost never. Code blocks for code.
 - **The cost gets its own line.** What the recommendation costs, or the caveat that could change the reader's mind, is never the tail of a bullet about something else. Put it on a line by itself after the reasons, where it cannot be missed.
 - **Disagree plainly.** "I'd do X instead because Y" rather than three paragraphs of hedged framing.
 - **Stop when done.** Don't offer a menu of further things you could do unless there's a specific, likely next step worth naming.
 
-If the project uses /fast-chat, its structured formats (NL options in fenced code blocks, the R/O review tail) are the exception to "formatting is rare" — they are the agreed interface, not scaffolding.
+If the project uses /fast-chat, its structured formats are the exception to "formatting is rare": NL options in fenced code blocks, the R/O review tail. They are the agreed interface, not scaffolding.
 
 ---
 
@@ -212,16 +214,16 @@ When unsure, use Mode 4. It is the mode with the least surface area for bloat.
 
 Run it before delivering anything longer than a sentence. The default is the short pass: steps 2, 6, 7, and 9, with the fact list kept in your head. Documents, edits, and anything over its mode's tripwire get every step.
 
-Read the draft as the copy desk chief whose job is to make it clear without losing a rule, then run the checks; the frame sets the stance, the checks catch what the stance misses.
+Read the draft as the copy desk chief, whose job is to make it clear without losing a rule. Then run the checks: the frame sets the stance, and the checks catch what the stance misses.
 
-The targets are counts that reach zero, not a length: facts lost, sentences over about 25 words (20 in a numbered step), rules stated twice, claims with no source, "This is / That is" openers. A second pass on the output should change nothing. A pass that keeps cutting is cutting facts.
+The targets are counts that reach zero, not a length. Count facts lost, rules stated twice, claims with no source, and "This is / That is" openers. Count sentences over about 25 words, or 20 in a numbered step. A second pass on the output should change nothing. A pass that keeps cutting is cutting facts.
 
-0. Anything over its mode's tripwire is a draft, not a deliverable. Measure it first and change nothing yet; steps 1 to 9 do the fixing. When the text is in a file and you have a shell, run `${CLAUDE_SKILL_DIR}/scripts/symptoms.py` on it; otherwise use the checklist below. The symptoms are easier to see in a draft than to avoid while writing.
+0. Anything over its mode's tripwire is a draft, not a deliverable. Measure it first and change nothing yet; steps 1 to 9 do the fixing. For text in a file, with a shell, run `${CLAUDE_SKILL_DIR}/scripts/symptoms.py` on it. Otherwise use the checklist below. The symptoms are easier to see in a draft than to avoid while writing.
 1. Before cutting anything, list the facts the text carries: rules, numbers, names, conditions, consequences. Step 7 checks the cut against this list.
 2. Re-read as the named reader. What do they already know? Cut it.
 3. Check the draft against § The Recognizable Shape. Any match is a cut, not a rewrite.
 4. If a preamble sentence could be deleted without a reader losing a way to stop early, delete it.
-5. Check the bins: each ask fires a § Surface by Stakes signal, and no item that fires one is sitting in tell.
+5. Check the bins. Each ask fires a § Surface by Stakes signal. No item that fires one sits in tell.
 6. Check provenance: every number and every concrete claim traces to the record, the thread, or the source. One that does not is either cut or labelled an estimate with its basis. An invented figure reads as fluent and is the hardest error for the reader to find.
 7. Check what the cut left out. Each fact on the step 1 list survived, or dropping it was a choice the reader would agree with. Shortening that loses facts is not editing.
 8. Check the draft against its mode's rules (Modes 1 to 4).
@@ -237,11 +239,11 @@ When invoked on a project for the first time:
 
 1. **Audit AGENTS.md and/or CLAUDE.md** — check for existing writing or style conventions. Some projects already have a commit style, a comment policy, or a "be concise" directive. Keep those; the block below complements them.
 
-2. **Add a Writing Conventions section** — a reference card, not a tutorial: about 250 words before the reader roster (the roster is a table and does not count). The shared core and the mode table, with a pointer to /red-pen for the full per-mode rules. Mark with `<!-- managed by /red-pen -->`.
+2. **Add a Writing Conventions section**: a reference card, not a tutorial. About 250 words, plus the reader roster table, which does not count. The shared core and the mode table, with a pointer to /red-pen for the full per-mode rules. Mark with `<!-- managed by /red-pen -->`.
 
-3. **Seed the reader roster** — ask one question: who reads what this project produces? Propose rows from the answer (and from README, NOTES.md, and the org structure if visible). For each reader: what they know, what they decide, where they stop. A project whose only reader is the insider skips the table, and then the block states the default in one sentence instead of leaving a "Readers:" line with nothing under it. When `/start` runs this bootstrap as part of the suite, skip the question and use the insider default; say once that a roster can be added later with `/red-pen`.
+3. **Seed the reader roster** — ask one question: who reads what this project produces? Propose rows from the answer (and from README, NOTES.md, and the org structure if visible). For each reader: what they know, what they decide, where they stop. A project whose only reader is the insider skips the table. The block then states the default in one sentence, not a "Readers:" line with nothing under it. Under `/start`, skip the question and use the insider default. Say once that `/red-pen` can add a roster later.
 
-4. **Inform the user** — one or two sentences. Mention that `/red-pen <target>` edits a file or section against the rules, and that "too long" or "red-pen this" works mid-conversation.
+4. **Inform the user** — one or two sentences. Mention that `/red-pen <target>` edits a file or section. "Too long" or "red-pen this" works mid-conversation.
 
 Example AGENTS.md and/or CLAUDE.md section:
 
@@ -288,20 +290,22 @@ When the user points /red-pen at something ("red-pen this", `/red-pen docs/desig
 2. Apply the mode's rules and the cut pass. Cut first; rewrite only what the cut leaves broken. Cut history, argument, and cross-section restatement; do not cut enumeration the reader scans. Where the document's house style conflicts with these rules, house style wins (§ Project-specific overrides has the full order).
 3. Write the edited text to the file. The chat reply is the report, in this shape and no other, because a reader skims anything longer:
    - One line: the path written, and what was preserved (every rule, anchor, and list; name any exception). Stale or contradictory claims you found go here too, since those are the findings the reader acts on.
-   - One before/after paragraph pair, next, introduced by a sentence that says what it is ("Here is one paragraph before and after, as an example of the change:"). A bare "Before (§6.3 ...):" has no context. This pair is what the reader uses to judge; it gives the flavor of the edit without a pile of detail.
-   - A symptom table of at most four rows, the ones that moved most. It is evidence, and readers skim it, so keep it short and put it after the pair. `${CLAUDE_SKILL_DIR}/scripts/symptoms.py --compare before.md after.md` gives the literal counts (save the original before writing; `git show HEAD:<path>` recovers it only when the file had no uncommitted changes; `-` reads stdin); you add what it cannot see (stale claims, cross-section restatement, argument before rule, paraphrased restatement).
+   - One before/after paragraph pair, next. A sentence introduces it and says what it is: "Here is one paragraph before and after, as an example of the change:". A bare "Before (§6.3 ...):" has no context. This pair is what the reader uses to judge; it gives the flavor of the edit without a pile of detail.
+   - A symptom table of at most four rows, the ones that moved most. It is evidence, and readers skim it, so keep it short and put it after the pair. `${CLAUDE_SKILL_DIR}/scripts/symptoms.py --compare before.md after.md` gives the literal counts, and `-` reads stdin. Save the original before writing; `git show HEAD:<path>` recovers it only if the file had no uncommitted changes. You add what the script cannot see: stale claims, cross-section restatement, argument before rule, paraphrased restatement.
    - Nothing else. No narration of each cut, no word count unless the reader asked. Under 150 words outside the pair. `references/worked_example.md` is the shape.
-4. Do not add anything the original lacked unless the mode requires it (a Mode 1 doc with no preamble gets one; it does not get an Overview).
+4. Add nothing the original lacked unless the mode requires it. A Mode 1 doc with no preamble gets one, not an Overview.
 
 Pasted text has no file; the user will copy the result to where it goes. The reply is the edited text in one fenced block, then one line naming any fact dropped or stale claim found. No pair and no table: the before is already on screen.
 
 ### Independent review
 
-The author of a document cannot see what its reader does not know. For a document that matters (a spec others will ratify, a README, anything with several audiences), an editing pass by the author is not a review. If the project has /multi-adversarial-review, use its `copy` target: one independent reviewer per named reader, findings that quote the sentence and name the symptom, and a disposition for each. This skill supplies the vocabulary that review uses: the symptom list, the reader roster, and the writing conventions. A cut the owner rejects there becomes a project override here.
+The author of a document cannot see what its reader does not know. For a document that matters, an editing pass by the author is not a review. That covers a spec others will ratify, a README, anything with several audiences. If the project has /multi-adversarial-review, use its `copy` target.
+
+That target runs one independent reviewer per named reader. Findings quote the sentence and name the symptom, and each gets a disposition. This skill supplies the vocabulary that review uses: the symptom list, the reader roster, and the writing conventions. A cut the owner rejects there becomes a project override here.
 
 ### When the user says "too long" or "too wordy"
 
-That is a cut-pass failure, not a style preference. Re-run the cut pass on the last output and resend. Don't explain why it was long.
+"Too long" is a cut-pass failure, not a style preference. Re-run the cut pass on the last output and resend. Don't explain why it was long.
 
 ### When invoked on an existing project
 
@@ -311,20 +315,20 @@ That is a cut-pass failure, not a style preference. Re-run the cut pass on the l
 
 ### Project-specific overrides
 
-Projects may legitimately override defaults: a public library wants fuller doc comments than Mode 2's default; a team may set its spec tripwire at 500 words. Record overrides inside the Writing Conventions block so they load every session.
+Projects may legitimately override defaults. A public library wants fuller doc comments than Mode 2's default; a team may set its spec tripwire at 500 words. Record overrides inside the Writing Conventions block so they load every session.
 
 When rules conflict, the project wins, in this order: the document's house style, then recorded overrides, then the mode's rules, then the shared core.
 
-When a reader rejects a cut, record the category as an override the same way ("keep row-by-row teaching bullets under tables", "keep one-fact sub-bullets", "spec tripwire 500"), so the next pass starts calibrated instead of relearning it. One line per rejection; the reason is the reader's, not yours.
+When a reader rejects a cut, record the category as an override the same way, so the next pass starts calibrated. Examples: "keep row-by-row teaching bullets under tables", "keep one-fact sub-bullets", "spec tripwire 500". One line per rejection; the reason is the reader's, not yours.
 
 ---
 
 ## What Does NOT Go in /red-pen
 
 - **Interaction mechanics** — numbered options, batch answers, the review tail are /fast-chat. /red-pen governs how the words read; /fast-chat governs how decisions are exchanged.
-- **Decision capture** — what was decided and why goes in NOTES.md via /notes. /red-pen shapes how a decision entry reads (Mode 1's `chose A over B because C`), not whether it gets written.
+- **Decision capture**: what was decided and why goes in NOTES.md via /notes. /red-pen shapes how a decision entry reads, not whether it gets written: Mode 1's `chose A over B because C`.
 - **Code formatting and lint rules** — tabs, line length, import order belong to the project's formatter. Mode 3 is about diff readability, not whitespace.
-- **Selecting which outputs deserve attention** — /red-pen decides what within an output gets the reader's attention (§ Surface by Stakes) and orders it by who stops where. It does not decide which outputs a human should read at all. That is a selection problem above the writing layer.
+- **Selecting which outputs deserve attention**: /red-pen decides what within an output gets the reader's attention (§ Surface by Stakes), ordered by who stops where. Which outputs a human should read at all is a selection problem above the writing layer.
 - **Input correction** — garbled or shorthand input is /dictation.
 - **A global persona** — "you are a professional editor" buys tone and fluency, which is the failure the skill exists to catch. Reader frames are per step and always paired with a check.
 

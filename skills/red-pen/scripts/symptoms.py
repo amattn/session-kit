@@ -17,6 +17,8 @@ see a lost fact; compare the facts in the before and after yourself.
 import argparse, json, re, statistics, sys
 from collections import defaultdict
 
+# A sentence ends at . ! or ?, or after a bold label such as "**Label.** Next".
+SPLIT = r"(?:(?<=[.!?])|(?<=[.!?]\*\*))\s+(?=[A-Z`*\"(/])"
 OPENERS = r"\b(?:This is|That is|That's|It is worth|It's worth|Note that|Importantly|In other words|Crucially|Essentially|Basically)\b"
 HEDGES = r"\b(?:probably|likely|may well|appears to|seems to|presumably|should probably|arguably|more or less)\b"
 DATED = r"\b(?:DECIDED|RESOLVED|ANSWERED|Refined|Updated|Amended|Superseded)\b[^.\n]{0,20}\(?\d{4}-\d{2}-\d{2}|\bas of \d{4}-\d{2}-\d{2}"
@@ -46,7 +48,7 @@ def section(text, heading):
 def sentences(prose):
     body = re.sub(r"^#{1,6}.*$", "", prose, flags=re.M)
     body = re.sub(r"\|.*\|", "", body)
-    parts = re.split(r"(?<=[.!?])\s+(?=[A-Z`*\"(])", body)
+    parts = re.split(SPLIT, body)
     return [re.sub(r"\s+", " ", p).strip() for p in parts if len(p.split()) >= 6]
 
 def normalize(s):
@@ -90,7 +92,7 @@ def sentence_stats(prose):
             if m or not items: items.append([m.group(1) if m else "", l[m.end():] if m else l])
             else: items[-1][1] += " " + l.strip()
         for marker, text in items:
-            sents = [x for x in re.split(r"(?<=[.!?])\s+(?=[A-Z`*\"(])", text) if len(x.split()) >= 3]
+            sents = [x for x in re.split(SPLIT, text) if len(x.split()) >= 3]
             if not marker and len(sents) > 6: long_paras += 1
             step = marker[:-1].isdigit()
             for x in sents:

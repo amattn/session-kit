@@ -635,6 +635,14 @@ Codex, last in the chain, reviewed 2025615 on top of stages 1b and 2. Five findi
 - **Fixed:** step 0 now only measures; The Job #3 detects the managed block, so other style rules no longer block bootstrap; `symptoms.py` counts `1)` and blockquoted steps; the opener label matches the script.
 - **Ruled: pasted text comes back ready to copy** (F3). User: "if something is pasted in we can assume tht the maintainer will copy the results out to paste where they need to go." The reply is the edited text in one fenced block, then one line naming any fact dropped or stale claim found; no before/after pair and no table. The fence is the lead's addition, from the README-fence insight (a fence copies as one unit). Rejected: the file report with the text in place of the path line; asking where to write it.
 
+### /red-pen self-pass and v0.4.0 (2026-10-16)
+
+After the chain, red-pen ran on its own SKILL.md: about 40 long sentences split, no rule changed. Prose sentences over 25 words went from 30 to 4, numbered steps over 20 words from 10 to 0.
+
+- **Left long on purpose:** the frontmatter description and the Quick Reference block, which keep the same format in every session-kit skill.
+- **Script bug found:** `symptoms.py` ran a sentence into a bold label ending in a period (`**Label.** Next`) and into a sentence starting with `/`. One `SPLIT` pattern now serves both counters. The worked example's long-sentence row was 2 → 0 because of it; the true count is 1 → 0.
+- **Version:** one bump for everything since v0.3.2, held until the chain ended (user: "stop bumbing until we are totally done"). /red-pen v0.4.0, minor because the short pass, precedence order, tripwires, and pasted-text reply change behavior. /multi-adversarial-review v0.2.1 for the two copy-review kinds. Plugin version unchanged until a publish.
+
 ### vog_kit is out of scope (2026-10-02)
 
 User: "pls totally disregard vog_kit." No syncing, mirroring, or follow-ups there; session-kit's copy of /multi-adversarial-review is the only one this project maintains.
