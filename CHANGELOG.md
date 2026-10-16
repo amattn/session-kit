@@ -4,6 +4,10 @@ All notable changes to session-kit. Versions track the plugin version in `.claud
 
 ## [Unreleased]
 
+## [0.11.0] — 2026-10-16
+
+/red-pen sentence rules and the fixes from its MAR spec review. Plugin 0.11.0, marketplace metadata 0.6.0 (unchanged).
+
 ### Added
 - `/red-pen` v0.3.0: sentence and paragraph rules borrowed from ASD-STE100 at about 80% strength (sentence length, one instruction per step, active voice, one topic per paragraph, one term per concept, no compression below English)
   - Cut pass checks which facts the cut left out

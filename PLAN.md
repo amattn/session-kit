@@ -130,6 +130,10 @@ Sentence and paragraph rules at about 80% strength, a lost-facts check in the cu
 
 Three stages (Claude sanity pass, GLM, Codex), each dispositioned and ruled; see the NOTES entry for each. Then red-pen on its own SKILL.md. One bump covers it all: /red-pen v0.4.0, /multi-adversarial-review v0.2.1.
 
+### 25. Publish v0.11.0 ✓
+
+/red-pen v0.3.0 through v0.4.0 and /multi-adversarial-review v0.2.1. Plugin 0.11.0; marketplace metadata stays 0.6.0, since no description or keyword changed. Tagged v0.11.0.
+
 ## Next Steps
 
 ### Description optimization
