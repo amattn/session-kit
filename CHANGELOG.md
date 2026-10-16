@@ -12,6 +12,17 @@ All notable changes to session-kit. Versions track the plugin version in `.claud
   - README Origin credits the article that prompted it
 
 ### Changed
+- `/red-pen` v0.4.0: fixes and owner rulings from the MAR spec review (Claude, GLM, Codex)
+  - Precedence: house style, then recorded overrides, then mode rules, then the shared core
+  - No length targets: symptom counts that reach zero; 300 words is a tripwire, not a budget
+  - One rule picks the cut pass: short pass (steps 2, 6, 7, 9) by default; documents, edits, and anything over its tripwire get every step; chat's tripwire is two paragraphs
+  - Step 0 only measures, and runs only on text in a file
+  - Pasted text comes back as the edited text in one fence, plus one line on anything dropped
+  - A step is a numbered item (20 words); bullets and prose get 25
+  - The Job #3 detects the managed Writing Conventions block; HELP.md says the bootstrap writes AGENTS.md and/or CLAUDE.md
+  - `symptoms.py` no longer runs bullets together, counts `1)` and blockquoted steps, and splits after a bold label
+  - Self-pass on its own SKILL.md: long sentences split, no rule changed
+- `/multi-adversarial-review` v0.2.1: copy review gains `term-switch` and `over-compressed` finding kinds
 - `/red-pen` v0.3.2: "default to less" points to where a fact lives; a fact that lives nowhere else stays
 - `/red-pen` v0.3.1: fixes from the first MAR spec review
   - Cut pass lists the facts before cutting, not after

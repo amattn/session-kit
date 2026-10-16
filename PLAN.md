@@ -126,11 +126,11 @@ Rebased onto the May changes (/start, OpenCode, /warmup scaffolding). Plugin 0.1
 
 Sentence and paragraph rules at about 80% strength, a lost-facts check in the cut pass, agents as readers, and new symptom counts. Iteration 4 measured fact retention: 45/46 for both v0.3.0 and v0.2.5, with shorter sentences and no meaning drift on the edit.
 
+### 24. /red-pen v0.4.0: MAR spec review ✓
+
+Three stages (Claude sanity pass, GLM, Codex), each dispositioned and ruled; see the NOTES entry for each. Then red-pen on its own SKILL.md. One bump covers it all: /red-pen v0.4.0, /multi-adversarial-review v0.2.1.
+
 ## Next Steps
-
-### /red-pen MAR spec review: finish the chain
-
-All three stages are dispositioned (Claude sanity pass, GLM, Codex); see the NOTES entry for each. Every owner ruling is in. Next: red-pen on its own SKILL.md, then one version bump with a CHANGELOG entry for everything since v0.3.2.
 
 ### Description optimization
 

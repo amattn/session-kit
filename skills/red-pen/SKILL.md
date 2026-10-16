@@ -1,6 +1,6 @@
 ---
 name: red-pen
-version: 0.3.2
+version: 0.4.0
 description: "Writing directives for every output type — spec/plan, code comments, code and diffs, chat. Makes AI-generated text less painful to read by substituting explicit constraints (counted limits, a named reader, mandatory prioritization, a cut pass) for the editing cost that generated text never pays. Use when the user asks to 'red-pen', 'red pen this', 'tighten this', 'cut this down', 'too long', 'too wordy', 'less fluff', 'stop narrating', 'this reads like AI', 'edit this', 'set up writing conventions', or 'writing directives'. Also apply these rules always-on, without invocation, before writing any spec, plan, design note, code comment, diff, commit message, or chat reply — decide the output type first, then write to its rules. Also trigger the bootstrap flow when setting up a project's AGENTS.md and/or CLAUDE.md if no writing conventions are defined yet."
 user-invocable: true
 allowed-tools: Bash(${CLAUDE_SKILL_DIR}/scripts/*)

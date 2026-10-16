@@ -1,6 +1,6 @@
 ---
 name: multi-adversarial-review
-version: 0.2.0
+version: 0.2.1
 description: "Sequential multi-model adversarial review. A lead commits a stable code, plan, or specification state; independent reviewer models inspect it one at a time; after each pass the lead verifies, fixes, revises, or defers the findings and commits the outcome before the next model reviews. Use when the user says 'mar', 'run mar', 'multi-adversarial-review', asks for a Claude/Codex/GLM review chain, cross-model review commits, adversarial plan review, spec or design-note review through project design principles, copy review of a document with its readers as the lenses, or a repeated review-disposition-commit gate. Do not use for ordinary one-pass code review, same-model subagent review, simultaneous panel discussion, or review synthesis with no lead response between passes."
 user-invocable: true
 ---
